@@ -124,7 +124,7 @@ var et,it;class rt extends g{constructor(){super(...arguments),this.renderOption
             width:85px;
             cursor: pointer;
             transition: box-shadow 0.2s ease-in-out;
-            background-image: url("http://localhost:8123/local/fader.svg");
+            background-image: url("/hacsfiles/mixer-card/fader.svg");
             background-size: cover;
             border-radius: 7px;
         }

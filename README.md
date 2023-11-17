@@ -60,7 +60,7 @@ This is the configuration for each individual fader
 
 ### Example Configuration
 ```yaml
-  - type: custom:custom-mixer-card
+    type: custom:custom-mixer-card
     faderWidth: 150px
     faderHeight: 400px
     borderRadius: 12px
@@ -95,13 +95,6 @@ This makes the faders look more like physical faders
 #### HACS installation:
 Go to the hacs store and use the repo url https://github.com/wrodie/mixer-card and add this as a custom repository under settings.
 
-Add the following to your ui-lovelace.yaml:
-
-```yaml
-resources:
-  url: /community_plugin/mixer-card/mixer-card.js
-  type: module
-```
 
 ## TODO
  - Allow this to work for media_player as well as number faders.
