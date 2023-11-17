@@ -1,6 +1,6 @@
 # mixer-card
 
-An Audio mixer card for Home Assistant. Includes the ability to change volume and mute channels.
+A Lovelace Audio Mixer card for Home Assistant. Includes the ability to change volume and mute channels.
 
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
@@ -17,9 +17,13 @@ An Audio mixer card for Home Assistant. Includes the ability to change volume an
 This card provides a series of vertical 'faders', each reflecting a 'channel' that allows you to control the audio volume of a number of audio sources.
 
 Each fader has three elements
- - A Fader - giving the current set volumne for the channel
+ - A Fader - giving the current set volume for the channel
  - A Display element - giving the current volume.
  - An Active/Mute button - Allow you to mute the channel
+
+## Compatibility
+A fader to be controlled is expected to be a `number` entity with values ranging from 0-1.
+It does not currently support volume for media players (but on the TODO list).
 
 
 ## Options
@@ -33,7 +37,8 @@ This configuration applies to all faders in the card
 
 | Name                       | Description                                                  | Default                                      |
 | -------------------------- | ------------------------------------------------------------ | -------------------------------------------- |
-| `border-radius` | The border radius for the individual faders | `12px` |
+| `faders` | An array of faders - See *Fader Card Configuration*| **Required**  |
+| `bordeRadius` | The border radius for the individual faders | `12px` |
 | `faderWidth` | The width of each individual fader | `150px` |
 | `faderHeight` | The height of each individual fader | `400px` |
 | `faderThumbColor` | The color of the 'thumb' element of the fader (only valid for modern theme) | `#ddd` |
@@ -42,7 +47,7 @@ This configuration applies to all faders in the card
 | `faderInactiveColor` | The color of the track when the channel is muted/not-active | `#f00` |
 | `faderTheme` | How should the fader's display. Options are `modern`/`physical` | `modern` |
 | `haCard` | Should the card include a `<ha-card>` element? Boolean | `true` |
-| `faders` | A list of fader options | [] |
+
 
 ### Fader Card Configuration
 This is the configuration for each individual fader
@@ -50,12 +55,27 @@ This is the configuration for each individual fader
 | -------------------------- | ------------------------------------------------------------ | -------------------------------------------- |
 | `entity_id` | The entity_id of the fader entity.  This is expected to be a `number` with values from 0-1.| **Required**|
 | `name` | A friendly name for the channel. If not specified the name of the entity_id will be used| Optional |
-| `active_entity_id` | The entity_id of a `switch` entity that controls the active/mute state of the fader.  If not present then the active/mute button will not appear| Optional |
+| `active_entity_id` | The entity_id of a `switch` entity that controls the active/mute state of the fader.  If not present then the active/mute button will not appear.| Optional |
 | `value_entity_id` | The entity_id of a `sensor` entity that contains the current value of the fader (eg in dB).  If not present the value of the fader will be represented as a percentage (%) of the fader. | Optional |
 
 ### Example Configuration
 ```yaml
-ADD Example here
+  - type: custom:custom-mixer-card
+    faderWidth: 150px
+    faderHeight: 400px
+    borderRadius: 12px
+    faderThumbColor: '#DDD'
+    faderTrackColor: '#DDD'
+    faderActiveColor: '#22ba00'
+    faderInactiveColor: '#F00'
+    faderTheme: modern
+    faders:
+      - entity_id: number.9f3fea35f92bc3ab474f8f76ad071ab9_bus_11_fader
+        name: test name
+        value_entity_id: sensor.9f3fea35f92bc3ab474f8f76ad071ab9_bus_11_fader_db
+      - entity_id: number.9f3fea35f92bc3ab474f8f76ad071ab9_bus_12_fader
+        active_entity_id: switch.9f3fea35f92bc3ab474f8f76ad071ab9_bus_12_on
+        value_entity_id: sensor.9f3fea35f92bc3ab474f8f76ad071ab9_bus_12_fader_db
 ```
 
 ### Themes
@@ -63,9 +83,12 @@ This card can display the faders in two different options.
 1. `modern` (Default)
 This renders the faders as larger 'block' type faders similar to home assistant light faders.  This allows easier access for touch etc.
 
+![Example of modern theme](doc/mixer-example-modern.png)
+
 2. `physical`
 This makes the faders look more like physical faders
 
+![Example of physical theme](doc/mixer-example-physical.png)
 
 ## Installation
 

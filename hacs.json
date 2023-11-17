@@ -1,5 +1,5 @@
 {
-    "name": "Media player popup card (homekit style)",
+    "name": "Card to control audio mixer levels/faders",
     "render_readme": true,
-    "filename": "media_player-popup-card.js"
+    "filename": "mixer-card.js"
 }
