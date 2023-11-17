@@ -1,5 +1,5 @@
 {
-    "name": "Card to control audio mixer levels/faders",
+    "name": "Audio Mixer Card",
     "render_readme": true,
     "filename": "mixer-card.js"
 }
