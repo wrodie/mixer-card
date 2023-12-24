@@ -25,11 +25,14 @@ class MixerCard extends LitElement {
     const faderInactiveColor = "faderInactiveColor" in this.config ? this.config.faderInactiveColor : "#f00";
     const faderTheme = "faderTheme" in this.config ? this.config.faderTheme : "modern";
     const haCard = "haCard" in this.config ? this.config.haCard: true;
+    const description = this.config ? this.config.description : "";
+    const title = this.config ? this.config.title : "";
 
     const faderTemplates = [];
     for (const fader_index in this.config.faders) {
         let fader_row = this.config.faders[fader_index]
         let stateObj = this.hass.states[fader_row.entity_id]
+        let unavailable = stateObj.state == "unavailable" ? true : false
         let domain = computeStateDomain(stateObj)
         if(domain != 'number') {
             continue
@@ -42,7 +45,7 @@ class MixerCard extends LitElement {
         let fader_value_state = fader_row.value_entity_id ? this.hass.states[fader_row.value_entity_id] : null
         const activeButton = fader_row.active_entity_id
             ? html`
-             <div class = "active-button" @click="${e => this._toggleActive(e)}" data-entity="${fader_row.active_entity_id}" data-current-state="${activeState}">
+             <div class = "active-button" ${unavailable ? " disabled " : ""} @click="${e => this._toggleActive(e)}" data-entity="${fader_row.active_entity_id}" data-current-state="${activeState}">
                 <span class="color" style="color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};"><ha-icon icon="${icon}" /></span>
              </div>
         `
@@ -50,15 +53,19 @@ class MixerCard extends LitElement {
         faderTemplates.push(html`
             <div class = "fader" id = "fader_${fader_row.entity_id}">
               <div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
-                  <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};--fader-thumb-color:${faderThumbColor};--fader-track-color:${this.faderTrackColor};--fader-track-inactive-color:${faderInactiveColor};" .value="${Math.round(stateObj.state * 100)}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
+                  <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};--fader-thumb-color:${faderThumbColor};--fader-track-color:${this.faderTrackColor};--fader-track-inactive-color:${faderInactiveColor};" .value="${Math.round(stateObj.state * 100)}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
               </div>
               <div class = "fader-name">${fader_name}</div>
               <div class = "fader-value">${activeState === 'on' ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`}</div>
-              <div class = "active-button-holder">${activeButton}</div>
+              <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
             </div>
         `);
     }
+    let headers_title = title ? html`<h1 class="card-header"><div class = "name">${title}</div></div>` : ""
+    let headers_description = description ? html`<p class = "mixer-description">${description}</p>` : ""
     const card = html`
+     ${headers_title}
+     ${headers_description}
       <div>
         <div class="mixer-card" >
             <div class="fader-holder fader-theme-${faderTheme}" >
@@ -157,7 +164,7 @@ class MixerCard extends LitElement {
           display: flex;
         }
         .fader {
-            margin-right: 20px;
+            padding: 6px 10px;
         }
         .fader-value {
             margin-top: 10px;
@@ -170,7 +177,7 @@ class MixerCard extends LitElement {
             display: block;
             font-weight: 300;
             text-align: center;
-            font-size:18px;
+            font-size:14px;
             text-transform: capitalize;
         }
         .range-holder {
@@ -178,6 +185,8 @@ class MixerCard extends LitElement {
             width: var(--fader-width);
             position:relative;
             display: block;
+            margin-right: auto;
+            margin-left: auto;
         }
         .range-holder input[type="range"] {
             margin: 0;
@@ -221,6 +230,10 @@ class MixerCard extends LitElement {
             border-radius: 7px;
         }
 
+        .fader-unavailable, .button-disabled {
+            opacity: 20%;
+            pointer-events: none;
+        }
 
         /* Theme Modern */
 
@@ -256,6 +269,7 @@ class MixerCard extends LitElement {
             position: relative;
             top: calc((var(--fader-width) - 80px) / 2);
         }
+
         .active-button {
             margin:20px;
             margin-top: 30px;
@@ -275,7 +289,10 @@ class MixerCard extends LitElement {
         .active-button ha-icon {
           pointer-events: none;
         }
-
+        p.mixer-description {
+            margin: 16px;
+            margin-top: 0px;
+        }
     `;
   }
 }
