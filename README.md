@@ -48,6 +48,8 @@ This configuration applies to all faders in the card
 | `faderInactiveColor` | The color of the track when the channel is muted/not-active | `#f00` |
 | `faderTheme` | How should the fader's display. Options are `modern`/`physical` | `modern` |
 | `haCard` | Should the card include a `<ha-card>` element? Boolean | `true` |
+| `title` | Add a title to the card |  |
+| `description` | Add a description to the card |  |
 
 
 ### Fader Card Configuration
