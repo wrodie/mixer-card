@@ -1,7 +1,8 @@
 import {LitElement, html, css} from 'lit';
 import {
   computeStateDisplay,
-  computeStateDomain
+  computeStateDomain,
+  computeDomain
 } from 'custom-card-helpers';
 
 class MixerCard extends LitElement {
@@ -34,18 +35,27 @@ class MixerCard extends LitElement {
         let stateObj = this.hass.states[fader_row.entity_id]
         let unavailable = stateObj.state == "unavailable" ? true : false
         let domain = computeStateDomain(stateObj)
-        if(domain != 'number') {
+        if(!(['number', 'media_player'].includes(domain))) {
             continue
         }
         const fader_name = fader_row['name'] 
             || this._entity_property(fader_row.entity_id, this.hass.states, '-name')
-        const activeState = fader_row.active_entity_id ? this._entity_property(fader_row.active_entity_id, this.hass.states, 'state') : 'on';
+        let fader_value_raw = 0
+        let activeState = fader_row.active_entity_id ? this._entity_property(fader_row.active_entity_id, this.hass.states, 'state') : 'on';
+        if(domain == "media_player") {
+            fader_value_raw = this._entity_property(fader_row.entity_id, this.hass.states, '-volume') || 0
+            activeState = this._entity_property(fader_row.entity_id, this.hass.states, '-muted') ? 'off' : 'on'
+        }
+        else {
+            fader_value_raw = stateObj.state
+        }
         const icon = activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute'
-        const fader_value = Math.round(stateObj.state * 100) + '%';
+        const fader_value = Math.round(fader_value_raw * 100) + '%';
         let fader_value_state = fader_row.value_entity_id ? this.hass.states[fader_row.value_entity_id] : null
-        const activeButton = fader_row.active_entity_id
+        const active_entity = fader_row.active_entity_id || (domain == "media_player" ? fader_row.entity_id : "")
+        const activeButton = active_entity
             ? html`
-             <div class = "active-button" ${unavailable ? " disabled " : ""} @click="${e => this._toggleActive(e)}" data-entity="${fader_row.active_entity_id}" data-current-state="${activeState}">
+             <div class = "active-button" ${unavailable ? " disabled " : ""} @click="${e => this._toggleActive(e)}" data-entity="${active_entity}" data-current-state="${activeState}">
                 <span class="color" style="color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};"><ha-icon icon="${icon}" /></span>
              </div>
         `
@@ -53,7 +63,7 @@ class MixerCard extends LitElement {
         faderTemplates.push(html`
             <div class = "fader" id = "fader_${fader_row.entity_id}">
               <div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
-                  <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};--fader-thumb-color:${faderThumbColor};--fader-track-color:${this.faderTrackColor};--fader-track-inactive-color:${faderInactiveColor};" .value="${Math.round(stateObj.state * 100)}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
+                  <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};--fader-thumb-color:${faderThumbColor};--fader-track-color:${this.faderTrackColor};--fader-track-inactive-color:${faderInactiveColor};" .value="${Math.round(fader_value_raw * 100)}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
               </div>
               <div class = "fader-name">${fader_name}</div>
               <div class = "fader-value">${activeState === 'on' ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`}</div>
@@ -86,16 +96,31 @@ class MixerCard extends LitElement {
         if(property === '-name')    {
             return hass_state[entity]['attributes']['friendly_name']
         }
+        if(property === '-volume')    {
+            return hass_state[entity]['attributes']['volume_level']
+        }
+        if(property === '-muted')    {
+            return hass_state[entity]['attributes']['is_volume_muted']
+        }
         return hass_state[entity][property]
     }
     return ""
   }
 
   _setFaderLevel(state, value) {
-    this.hass.callService("number", "set_value", {
-      entity_id: state.entity_id,
-      value: value / 100
-    });
+    let domain = computeStateDomain(state)
+    if(domain == "media_player")    {
+        this.hass.callService("media_player", "volume_set", {
+          entity_id: state.entity_id,
+          volume_level: value / 100
+        });
+    }
+    else    {
+        this.hass.callService("number", "set_value", {
+          entity_id: state.entity_id,
+          value: value / 100
+        });
+    }
   }
 
   _previewLevel(entity_id, value) {
@@ -107,9 +132,19 @@ class MixerCard extends LitElement {
 
   _toggleActive(e) {
     if (e.target.dataset && e.target.dataset.entity) {
-      this.hass.callService("switch", "toggle", {
-          entity_id: e.target.dataset.entity,
-      });
+      let domain = computeDomain(e.target.dataset.entity)
+      if(domain == "media_player")  {
+        let mute_value = e.target.dataset.currentState == "on" ? true : false;
+        this.hass.callService("media_player", "volume_mute", {
+            entity_id: e.target.dataset.entity,
+            is_volume_muted: mute_value
+        });
+      }
+      else  {
+        this.hass.callService("switch", "toggle", {
+            entity_id: e.target.dataset.entity,
+        });
+      }
     }
     this.update_track_color();
   }

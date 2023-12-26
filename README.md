@@ -22,8 +22,9 @@ Each fader has three elements
  - An Active/Mute button - Allow you to mute the channel
 
 ## Compatibility
-A fader to be controlled is expected to be a `number` entity with values ranging from 0-1.
-It does not currently support volume for media players (but on the TODO list).
+A fader to be controlled is expected to be one of two things:
+1. a `number` entity with values ranging from 0-1.
+2. a `media_player`
 
 
 ## Options
@@ -55,7 +56,7 @@ This is the configuration for each individual fader
 | -------------------------- | ------------------------------------------------------------ | -------------------------------------------- |
 | `entity_id` | The entity_id of the fader entity.  This is expected to be a `number` with values from 0-1.| **Required**|
 | `name` | A friendly name for the channel. If not specified the name of the entity_id will be used| Optional |
-| `active_entity_id` | The entity_id of a `switch` entity that controls the active/mute state of the fader.  If not present then the active/mute button will not appear.| Optional |
+| `active_entity_id` | The entity_id of a `switch` entity that controls the active/mute state of the fader.  If not present (for a number element) then the active/mute button will not appear. If entity_id is a `media_player` this is handled automatically. | Optional |
 | `value_entity_id` | The entity_id of a `sensor` entity that contains the current value of the fader (eg in dB).  If not present the value of the fader will be represented as a percentage (%) of the fader. | Optional |
 
 ### Example Configuration
@@ -95,9 +96,6 @@ This makes the faders look more like physical faders
 #### HACS installation:
 Go to the hacs store and use the repo url https://github.com/wrodie/mixer-card and add this as a custom repository under settings.
 
-
-## TODO
- - Allow this to work for media_player as well as number faders.
 
 # Thanks
 I took ideas and some code from - https://github.com/DBuit/media_player-popup-card
