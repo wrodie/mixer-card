@@ -208,7 +208,6 @@ class MixerCard extends LitElement {
         .fader-name {
             margin-top: 30px;
             text-align: center;
-            color: #000;
             display: block;
             font-weight: 300;
             text-align: center;
