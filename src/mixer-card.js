@@ -35,6 +35,7 @@ class MixerCard extends LitElement {
         let stateObj = this.hass.states[fader_row.entity_id]
         let unavailable = stateObj.state == "unavailable" ? true : false
         let domain = computeStateDomain(stateObj)
+        let max_value = stateObj.attributes['max']
         if(!(['number', 'media_player'].includes(domain))) {
             continue
         }
@@ -50,7 +51,7 @@ class MixerCard extends LitElement {
             fader_value_raw = stateObj.state
         }
         const icon = activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute'
-        const fader_value = Math.round(fader_value_raw * 100) + '%';
+        const fader_value = Math.round(fader_value_raw / max_value * 100 ) + '%';
         let fader_value_state = fader_row.value_entity_id ? this.hass.states[fader_row.value_entity_id] : null
         const active_entity = fader_row.active_entity_id || (domain == "media_player" ? fader_row.entity_id : "")
         const activeButton = active_entity
@@ -63,7 +64,7 @@ class MixerCard extends LitElement {
         faderTemplates.push(html`
             <div class = "fader" id = "fader_${fader_row.entity_id}">
               <div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
-                  <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};--fader-thumb-color:${faderThumbColor};--fader-track-color:${this.faderTrackColor};--fader-track-inactive-color:${faderInactiveColor};" .value="${Math.round(fader_value_raw * 100)}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
+                  <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};--fader-thumb-color:${faderThumbColor};--fader-track-color:${this.faderTrackColor};--fader-track-inactive-color:${faderInactiveColor};" .value="${Math.round(fader_value_raw / max_value * 100)}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
               </div>
               <div class = "fader-name">${fader_name}</div>
               <div class = "fader-value">${activeState === 'on' ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`}</div>
@@ -116,9 +117,10 @@ class MixerCard extends LitElement {
         });
     }
     else    {
+        let max_value = state.attributes['max']
         this.hass.callService("number", "set_value", {
           entity_id: state.entity_id,
-          value: value / 100
+          value: value / 100 * max_value
         });
     }
   }
