@@ -9,7 +9,7 @@ A Lovelace Audio Mixer card for Home Assistant. Includes the ability to change v
 [![hacs][hacsbadge]][hacs]
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
-![Maintenance](https://img.shields.io/maintenance/yes/2023?style=for-the-badge)
+![Maintenance](https://img.shields.io/maintenance/yes/2024?style=for-the-badge)
 
 
 ## Description
