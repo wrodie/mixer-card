@@ -32,28 +32,35 @@ class MixerCard extends LitElement {
     const faderTemplates = [];
     for (const fader_index in this.config.faders) {
         let fader_row = this.config.faders[fader_index]
-        let stateObj = this.hass.states[fader_row.entity_id]
-        let unavailable = stateObj.state == "unavailable" ? true : false
-        let domain = computeStateDomain(stateObj)
-        let max_value = stateObj.attributes['max']
-        if(!(['number', 'media_player'].includes(domain))) {
+        const stateObj = this.hass.states[fader_row.entity_id]
+        if (!stateObj) return null;
+
+        const unavailable = stateObj.state == "unavailable" ? true : false
+        const domain = computeStateDomain(stateObj)
+        const max_value = stateObj.attributes['max']
+        const min_value = stateObj.attributes['min']
+
+        if(!(['number', 'media_player', 'input_number'].includes(domain))) {
             continue
         }
-        const fader_name = fader_row['name'] 
-            || this._entity_property(fader_row.entity_id, this.hass.states, '-name')
+        const fader_name = fader_row['name'] || this._entity_property(fader_row.entity_id, '-name')
+        const invertActive = fader_row.invertActive || false
         let fader_value_raw = 0
-        let activeState = fader_row.active_entity_id ? this._entity_property(fader_row.active_entity_id, this.hass.states, 'state') : 'on';
-        if(domain == "media_player") {
-            fader_value_raw = this._entity_property(fader_row.entity_id, this.hass.states, '-volume') || 0
-            activeState = this._entity_property(fader_row.entity_id, this.hass.states, '-muted') ? 'off' : 'on'
+        let activeState = fader_row.active_entity_id ? this._entity_property(fader_row.active_entity_id, 'state') : 'on';
+        if(invertActive) {
+          activeState = activeState === 'on' ? 'off' : 'on'
         }
-        else {
+        if(domain == "media_player") {
+            fader_value_raw = this._entity_property(fader_row.entity_id, '-volume') || 0
+            activeState = this._entity_property(fader_row.entity_id, '-muted') ? 'off' : 'on'
+        } else {
             fader_value_raw = stateObj.state
         }
         const icon = activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute'
-        const fader_value = Math.round(fader_value_raw / max_value * 100 ) + '%';
+        const fader_value = Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 ) + '%';
         let fader_value_state = fader_row.value_entity_id ? this.hass.states[fader_row.value_entity_id] : null
         const active_entity = fader_row.active_entity_id || (domain == "media_player" ? fader_row.entity_id : "")
+
         const activeButton = active_entity
             ? html`
              <div class = "active-button" ${unavailable ? " disabled " : ""} @click="${e => this._toggleActive(e)}" data-entity="${active_entity}" data-current-state="${activeState}">
@@ -64,7 +71,7 @@ class MixerCard extends LitElement {
         faderTemplates.push(html`
             <div class = "fader" id = "fader_${fader_row.entity_id}">
               <div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
-                  <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};--fader-thumb-color:${faderThumbColor};--fader-track-color:${this.faderTrackColor};--fader-track-inactive-color:${faderInactiveColor};" .value="${Math.round(fader_value_raw / max_value * 100)}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
+                  <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};--fader-thumb-color:${faderThumbColor};--fader-track-color:${this.faderTrackColor};--fader-track-inactive-color:${faderInactiveColor};" .value="${Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 )}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
               </div>
               <div class = "fader-name">${fader_name}</div>
               <div class = "fader-value">${activeState === 'on' ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`}</div>
@@ -92,20 +99,20 @@ class MixerCard extends LitElement {
 
   }
 
-  _entity_property(entity, hass_state, property) {
-    if(hass_state[entity]) {
-        if(property === '-name')    {
-            return hass_state[entity]['attributes']['friendly_name']
-        }
-        if(property === '-volume')    {
-            return hass_state[entity]['attributes']['volume_level']
-        }
-        if(property === '-muted')    {
-            return hass_state[entity]['attributes']['is_volume_muted']
-        }
-        return hass_state[entity][property]
+  _entity_property(entity, property) {
+    const state = this.hass.states[entity];
+    if (!state) return '';
+
+    switch (property) {
+      case '-name':
+        return state.attributes.friendly_name;
+      case '-volume':
+        return state.attributes.volume_level;
+      case '-muted':
+        return state.attributes.is_volume_muted;
+      default:
+        return state[property];
     }
-    return ""
   }
 
   _setFaderLevel(state, value) {
@@ -118,9 +125,10 @@ class MixerCard extends LitElement {
     }
     else    {
         let max_value = state.attributes['max']
-        this.hass.callService("number", "set_value", {
+        let min_value = state.attributes['min'] || 0
+        this.hass.callService(domain, "set_value", {
           entity_id: state.entity_id,
-          value: value / 100 * max_value
+          value: value / 100 * (max_value-min_value) + min_value
         });
     }
   }
@@ -133,24 +141,21 @@ class MixerCard extends LitElement {
   }
 
   _toggleActive(e) {
-    if (e.target.dataset && e.target.dataset.entity) {
-      let domain = computeDomain(e.target.dataset.entity)
-      if(domain == "media_player")  {
-        let mute_value = e.target.dataset.currentState == "on" ? true : false;
-        this.hass.callService("media_player", "volume_mute", {
-            entity_id: e.target.dataset.entity,
-            is_volume_muted: mute_value
-        });
-      }
-      else  {
-        this.hass.callService("switch", "toggle", {
-            entity_id: e.target.dataset.entity,
-        });
-      }
+    const { entity, currentState } = e.target.dataset;
+    if (!entity) return;
+
+    const domain = computeDomain(entity);
+    const serviceData = { entity_id: entity };
+
+    if (domain === 'media_player') {
+      serviceData.is_volume_muted = currentState === 'on';
+      this.hass.callService('media_player', 'volume_mute', serviceData);
+    } else {
+      this.hass.callService('switch', 'toggle', serviceData);
     }
+
     this.update_track_color();
   }
-
 
   async update_track_color() {
     const children = this.shadowRoot.querySelectorAll('.fader input[type="range"]');
