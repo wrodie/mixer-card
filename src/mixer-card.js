@@ -44,10 +44,10 @@ class MixerCard extends LitElement {
             continue
         }
         const fader_name = fader_row['name'] || this._entity_property(fader_row.entity_id, '-name')
-        const invertActive = fader_row.invertActive || false
+        const invert_active = fader_row.invert_active || false
         let fader_value_raw = 0
         let activeState = fader_row.active_entity_id ? this._entity_property(fader_row.active_entity_id, 'state') : 'on';
-        if(invertActive) {
+        if(invert_active) {
           activeState = activeState === 'on' ? 'off' : 'on'
         }
         if(domain == "media_player") {
