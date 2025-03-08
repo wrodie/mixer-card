@@ -39,7 +39,7 @@ This configuration applies to all faders in the card
 | Name                       | Description                                                  | Default                                      |
 | -------------------------- | ------------------------------------------------------------ | -------------------------------------------- |
 | `faders` | An array of faders - See *Fader Card Configuration*| **Required**  |
-| `bordeRadius` | The border radius for the individual faders | `12px` |
+| `borderRadius` | The border radius for the individual faders | `12px` |
 | `faderWidth` | The width of each individual fader | `150px` |
 | `faderHeight` | The height of each individual fader | `400px` |
 | `faderThumbColor` | The color of the 'thumb' element of the fader (only valid for modern theme) | `#ddd` |
@@ -60,6 +60,7 @@ This is the configuration for each individual fader
 | `name` | A friendly name for the channel. If not specified the name of the entity_id will be used| Optional |
 | `active_entity_id` | The entity_id of a `switch` entity that controls the active/mute state of the fader.  If not present (for a number element) then the active/mute button will not appear. If entity_id is a `media_player` this is handled automatically. | Optional |
 | `value_entity_id` | The entity_id of a `sensor` entity that contains the current value of the fader (eg in dB).  If not present the value of the fader will be represented as a percentage (%) of the fader. | Optional |
+| `invert_active` | If set to true, then the active state of the fader is inverted. | Optional |
 
 ### Example Configuration
 ```yaml
@@ -79,6 +80,7 @@ This is the configuration for each individual fader
       - entity_id: number.9f3fea35f92bc3ab474f8f76ad071ab9_bus_12_fader
         active_entity_id: switch.9f3fea35f92bc3ab474f8f76ad071ab9_bus_12_on
         value_entity_id: sensor.9f3fea35f92bc3ab474f8f76ad071ab9_bus_12_fader_db
+        invert_active: true
 ```
 
 ### Themes
