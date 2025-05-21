@@ -109,7 +109,8 @@ This makes the faders look more like physical faders
 
 When the card is in BEHRINGER mode, the fader value changes to a calculated dB value
 based on the fader to dB conversion used in the BEHRINGER mixing desks and corresponding APIs and
-software.
+software. Not relying on another value entity allows for the dB value to be updated instantly while
+moving the fader.
 BEHRINGER Mode also flips the defaults for the `alwaysShowFaderValue` and `updateWhileMoving` to true,
 as the BEHRINGER APIs effortlessly can handle the amount of requests sent by the moving faders
 and the always shown dB values come closer to the presentation of the faders in the companion
