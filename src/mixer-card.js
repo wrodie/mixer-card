@@ -106,7 +106,7 @@ class MixerCard extends LitElement {
                       <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? fader_active_color : fader_inactive_color};--fader-thumb-color:${fader_thumb_color};--fader-track-color:${fader_track_color};--fader-track-inactive-color:${fader_inactive_color};" .value="${Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 )}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
                   </div>
                   <div class = "fader-name">${fader_name}</div>
-                  <div class = "fader-value" id="fader_value_${fader_row.entity_id}">${(activeState === 'on') || alwaysShowFaderValue ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`} dB</div>
+                  <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`} dB</div>
                   <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
                 </div>
             `);

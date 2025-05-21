@@ -39,7 +39,7 @@ var et,it;class rt extends _{constructor(){super(...arguments),this.renderOption
                       <input type="range" class = "${"off"===g?"fader-inactive":"fader-active"} ${h?"fader-unavailable":""}" id = "fader_range_${l.entity_id}" style="--fader-width: ${e};--fader-height: ${i}; --fader-border-radius: ${t};--fader-color:${"on"===g?x:S};--fader-thumb-color:${E};--fader-track-color:${w};--fader-track-inactive-color:${S};" .value="${Math.round((_-f)/(p-f)*100)}" @change=${t=>this._setFaderLevel(d,t.target.value)}>
                   </div>
                   <div class = "fader-name">${v}</div>
-                  <div class = "fader-value" id="fader_value_${l.entity_id}">${"on"===g||a?b?$t(this.hass.localize,b,this.hass.language):y:D`<br>`} dB</div>
+                  <div class = "fader-value">${"on"===g||a?b?$t(this.hass.localize,b,this.hass.language):y:D`<br>`} dB</div>
                   <div class = "active-button-holder ${h?"button-disabled":""}">${C}</div>
                 </div>
             `)}let u=h?D`<h1 class="card-header"><div class = "name">${h}</div></div>`:"",p=d?D`<p class = "mixer-description">${d}</p>`:"";const f=D`
