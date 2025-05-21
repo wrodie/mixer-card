@@ -27,11 +27,14 @@ class MixerCard extends LitElement {
     this.faderActiveColor = "faderActiveColor" in this.config ? this.config.faderActiveColor : "#22ba00";
     const faderInactiveColor = "faderInactiveColor" in this.config ? this.config.faderInactiveColor : "#f00";
     const faderTheme = "faderTheme" in this.config ? this.config.faderTheme : "modern";
+    const updateWhileMoving = "updateWhileMoving" in this.config ? this.config.updateWhileMoving : false;
+    const alwaysShowFaderValue = "alwaysShowFaderValue" in this.config ? this.config.alwaysShowFaderValue : false;
     const haCard = "haCard" in this.config ? this.config.haCard: true;
     const description = this.config ? this.config.description : "";
     const title = this.config ? this.config.title : "";
 
     const faderTemplates = [];
+    this.faderColors = {};
     for (let fader_index = 0; fader_index < this.config.faders.length; fader_index++) {
         let fader_row = this.config.faders[fader_index];
         const stateObj = this.hass.states[fader_row.entity_id];
@@ -65,23 +68,49 @@ class MixerCard extends LitElement {
         let fader_value_state = fader_row.value_entity_id ? this.hass.states[fader_row.value_entity_id] : null;
         const active_entity = fader_row.active_entity_id || (domain === "media_player" ? fader_row.entity_id : "");
 
+        const fader_track_color = fader_row.track_color || this.faderTrackColor;
+        const fader_active_color = fader_row.active_color || this.faderActiveColor;
+        const fader_inactive_color = fader_row.inactive_color || faderInactiveColor;
+        const fader_thumb_color = fader_row.thumb_color || faderThumbColor;
+        this.faderColors[`fader_range_${fader_row.entity_id}`] = {
+            track_color: fader_track_color,
+            active_color: fader_active_color,
+            inactive_color: fader_inactive_color,
+            thumb_color: fader_thumb_color,
+        };
+
         const activeButton = active_entity
             ? html`
              <div class = "active-button" ${unavailable ? " disabled " : ""} @click="${e => this._toggleActive(e)}" data-entity="${active_entity}" data-current-state="${activeState}">
-                <span class="color" style="color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};"><ha-icon icon="${icon}" /></span>
+                <span class="color" style="color:${activeState === 'on' ? fader_active_color : fader_inactive_color};"><ha-icon icon="${icon}" /></span>
              </div>
         `
             : html `&nbsp;`;
-        faderTemplates.push(html`
-            <div class = "fader" id = "fader_${fader_row.entity_id}">
-              <div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
-                  <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? this.faderActiveColor : faderInactiveColor};--fader-thumb-color:${faderThumbColor};--fader-track-color:${this.faderTrackColor};--fader-track-inactive-color:${faderInactiveColor};" .value="${Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 )}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
-              </div>
-              <div class = "fader-name">${fader_name}</div>
-              <div class = "fader-value">${activeState === 'on' ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`}</div>
-              <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
-            </div>
-        `);
+
+        if (updateWhileMoving) {
+            faderTemplates.push(html`
+                <div class = "fader" id = "fader_${fader_row.entity_id}">
+                  <div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
+                      <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? fader_active_color : fader_inactive_color};--fader-thumb-color:${fader_thumb_color};--fader-track-color:${fader_track_color};--fader-track-inactive-color:${fader_inactive_color};" .value="${Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 )}" @input=${e => this._setFaderLevel(stateObj, e.target.value)}>
+                  </div>
+                  <div class = "fader-name">${fader_name}</div>
+                  <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`}</div>
+                  <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
+                </div>
+            `);
+        }
+        else {
+            faderTemplates.push(html`
+                <div class = "fader" id = "fader_${fader_row.entity_id}">
+                  <div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
+                      <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? fader_active_color : fader_inactive_color};--fader-thumb-color:${fader_thumb_color};--fader-track-color:${fader_track_color};--fader-track-inactive-color:${fader_inactive_color};" .value="${Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 )}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
+                  </div>
+                  <div class = "fader-name">${fader_name}</div>
+                  <div class = "fader-value" id="fader_value_${fader_row.entity_id}">${(activeState === 'on') || alwaysShowFaderValue ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`} dB</div>
+                  <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
+                </div>
+            `);
+        }
     }
     let headers_title = title ? html`<h1 class="card-header"><div class = "name">${title}</div></div>` : "";
     let headers_description = description ? html`<p class = "mixer-description">${description}</p>` : "";
@@ -142,7 +171,7 @@ class MixerCard extends LitElement {
   _previewLevel(entity_id, value) {
     const el = this.shadowRoot.getElementById(entity_id);
     if(el && !el.className.includes('fader-inactive')) {
-        el.style.background = `linear-gradient(to right, ${this.faderActiveColor} ${value}%, ${this.faderTrackColor} ${value}%)`;
+        el.style.background = `linear-gradient(to right, ${this.faderColors[entity_id].active_color} ${value}%, ${this.faderColors[entity_id].track_color} ${value}%)`;
     }
   }
 
