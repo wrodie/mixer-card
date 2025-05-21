@@ -36,31 +36,38 @@ Configuration is done by using YAML in the card config.
 
 This configuration applies to all faders in the card
 
-| Name                       | Description                                                  | Default                                      |
-| -------------------------- | ------------------------------------------------------------ | -------------------------------------------- |
-| `faders` | An array of faders - See *Fader Card Configuration*| **Required**  |
-| `borderRadius` | The border radius for the individual faders | `12px` |
-| `faderWidth` | The width of each individual fader | `150px` |
-| `faderHeight` | The height of each individual fader | `400px` |
-| `faderThumbColor` | The color of the 'thumb' element of the fader (only valid for modern theme) | `#ddd` |
-| `faderTrackColor` | The color of the fader track | `#ddd` |
-| `faderActiveColor` | The color of the active portion of the track when above 0 | `#22ba00` |
-| `faderInactiveColor` | The color of the track when the channel is muted/not-active | `#f00` |
-| `faderTheme` | How should the fader's display. Options are `modern`/`physical` | `modern` |
-| `haCard` | Should the card include a `<ha-card>` element? Boolean | `true` |
-| `title` | Add a title to the card |  |
-| `description` | Add a description to the card |  |
+| Name                   | Description                                                                                                       | Default      |
+|------------------------|-------------------------------------------------------------------------------------------------------------------|--------------|
+| `faders`               | An array of faders - See *Fader Card Configuration*                                                               | **Required** |
+| `borderRadius`         | The border radius for the individual faders                                                                       | `12px`       |
+| `faderWidth`           | The width of each individual fader                                                                                | `150px`      |
+| `faderHeight`          | The height of each individual fader                                                                               | `400px`      |
+| `faderThumbColor`      | The color of the 'thumb' element of the fader (only valid for modern theme)                                       | `#ddd`       |
+| `faderTrackColor`      | The color of the fader track                                                                                      | `#ddd`       |
+| `faderActiveColor`     | The color of the active portion of the track when above 0                                                         | `#22ba00`    |
+| `faderInactiveColor`   | The color of the track when the channel is muted/not-active                                                       | `#f00`       |
+| `faderTheme`           | How should the fader's display. Options are `modern`/`physical`                                                   | `modern`     |
+| `updateWhileMoving`    | If set, the entity values will be updated while moving the fader. Off by default to prevent API request flooding. | `false`      |
+| `alwaysShowFaderValue` | If set, the fader value will be displayed even when the fader is not active.                                      | `false`      |
+| `haCard`               | Should the card include a `<ha-card>` element? Boolean                                                            | `true`       |
+| `title`                | Add a title to the card                                                                                           |              |
+| `description`          | Add a description to the card                                                                                     |              |
 
 
 ### Fader Card Configuration
 This is the configuration for each individual fader
-| Name                       | Description                                                  | Default                                      |
-| -------------------------- | ------------------------------------------------------------ | -------------------------------------------- |
-| `entity_id` | The entity_id of the fader entity.  This is expected to be a `number` with values from 0-1.| **Required**|
-| `name` | A friendly name for the channel. If not specified the name of the entity_id will be used| Optional |
-| `active_entity_id` | The entity_id of a `switch` entity that controls the active/mute state of the fader.  If not present (for a number element) then the active/mute button will not appear. If entity_id is a `media_player` this is handled automatically. | Optional |
-| `value_entity_id` | The entity_id of a `sensor` entity that contains the current value of the fader (eg in dB).  If not present the value of the fader will be represented as a percentage (%) of the fader. | Optional |
-| `invert_active` | If set to true, then the active state of the fader is inverted. | Optional |
+
+| Name               | Description                                                                                                                                                                                                                              | Default      |
+|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| `entity_id`        | The entity_id of the fader entity.  This is expected to be a `number` with values from 0-1.                                                                                                                                              | **Required** |
+| `name`             | A friendly name for the channel. If not specified the name of the entity_id will be used                                                                                                                                                 | Optional     |
+| `active_entity_id` | The entity_id of a `switch` entity that controls the active/mute state of the fader.  If not present (for a number element) then the active/mute button will not appear. If entity_id is a `media_player` this is handled automatically. | Optional     |
+| `value_entity_id`  | The entity_id of a `sensor` entity that contains the current value of the fader (eg in dB).  If not present the value of the fader will be represented as a percentage (%) of the fader.                                                 | Optional     |
+| `invert_active`    | If set to true, then the active state of the fader is inverted.                                                                                                                                                                          | Optional     |
+| `thumb_color`      | Locally overrides the faderThumbColor                                                                                                                                                                                                    | Optional     |
+| `track_color`      | Locally overrides the faderTrackColor                                                                                                                                                                                                    | Optional     |
+| `active_color`     | Locally overrides the faderActiveColor                                                                                                                                                                                                   | Optional     |
+| `inactive_color`   | Locally overrides the faderInactiveColor                                                                                                                                                                                                 | Optional     |
 
 ### Example Configuration
 ```yaml
