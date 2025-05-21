@@ -27,8 +27,9 @@ class MixerCard extends LitElement {
     this.faderActiveColor = "faderActiveColor" in this.config ? this.config.faderActiveColor : "#22ba00";
     const faderInactiveColor = "faderInactiveColor" in this.config ? this.config.faderInactiveColor : "#f00";
     const faderTheme = "faderTheme" in this.config ? this.config.faderTheme : "modern";
-    const updateWhileMoving = "updateWhileMoving" in this.config ? this.config.updateWhileMoving : false;
-    const alwaysShowFaderValue = "alwaysShowFaderValue" in this.config ? this.config.alwaysShowFaderValue : false;
+    const behringerMode = "behringerMode" in this.config ? this.config.behringerMode : false;
+    const alwaysShowFaderValue = "alwaysShowFaderValue" in this.config ? this.config.alwaysShowFaderValue : behringerMode;
+    const updateWhileMoving = "updateWhileMoving" in this.config ? this.config.updateWhileMoving : behringerMode;
     const haCard = "haCard" in this.config ? this.config.haCard: true;
     const description = this.config ? this.config.description : "";
     const title = this.config ? this.config.title : "";
@@ -66,6 +67,7 @@ class MixerCard extends LitElement {
         const icon = activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute';
         const fader_value = Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 ) + '%';
         let fader_value_state = fader_row.value_entity_id ? this.hass.states[fader_row.value_entity_id] : null;
+        const fader_behringer_db_value = this._fader_value_to_behringer_db(fader_value_raw);
         const active_entity = fader_row.active_entity_id || (domain === "media_player" ? fader_row.entity_id : "");
 
         const fader_track_color = fader_row.track_color || this.faderTrackColor;
@@ -94,7 +96,7 @@ class MixerCard extends LitElement {
                       <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? fader_active_color : fader_inactive_color};--fader-thumb-color:${fader_thumb_color};--fader-track-color:${fader_track_color};--fader-track-inactive-color:${fader_inactive_color};" .value="${Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 )}" @input=${e => this._setFaderLevel(stateObj, e.target.value)}>
                   </div>
                   <div class = "fader-name">${fader_name}</div>
-                  <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`}</div>
+                  <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? (behringerMode ? fader_behringer_db_value : (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value)) : html`<br>`}</div>
                   <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
                 </div>
             `);
@@ -106,7 +108,7 @@ class MixerCard extends LitElement {
                       <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? fader_active_color : fader_inactive_color};--fader-thumb-color:${fader_thumb_color};--fader-track-color:${fader_track_color};--fader-track-inactive-color:${fader_inactive_color};" .value="${Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 )}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
                   </div>
                   <div class = "fader-name">${fader_name}</div>
-                  <div class = "fader-value" id="fader_value_${fader_row.entity_id}">${(activeState === 'on') || alwaysShowFaderValue ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`} dB</div>
+                  <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? (behringerMode ? fader_behringer_db_value : (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value)) : html`<br>`}</div>
                   <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
                 </div>
             `);
@@ -166,6 +168,29 @@ class MixerCard extends LitElement {
           value: value / 100 * (max_value-min_value) + min_value
         });
     }
+  }
+
+  _fader_value_to_behringer_db(fader_value) {
+      if (fader_value >= 1) {
+          return 10.0;
+      }
+      else if (fader_value >= 0.5) {
+          return `${this._round_to_one_digit((40 * fader_value) - 30)} db`;
+      }
+      else if (fader_value >= 0.25) {
+          return `${this._round_to_one_digit((80 * fader_value) - 50)} db`;
+      }
+      else if (fader_value >= 0.0625) {
+          return `${this._round_to_one_digit((160 * fader_value) - 70)} db`;
+      }
+      else if (fader_value > 0) {
+          return `${this._round_to_one_digit((480 * fader_value) - 90)} db`;
+      }
+      return "-\u221e";
+  }
+
+  _round_to_one_digit(db_base) {
+      return Math.round((db_base + Number.EPSILON) * 10) / 10;
   }
 
   _previewLevel(entity_id, value) {
@@ -375,4 +400,3 @@ class MixerCard extends LitElement {
   }
 }
 customElements.define('custom-mixer-card', MixerCard);
-
