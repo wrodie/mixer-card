@@ -36,7 +36,8 @@ class MixerCard extends LitElement {
         let fader_row = this.config.faders[fader_index];
         const stateObj = this.hass.states[fader_row.entity_id];
         if (!stateObj) {
-            return null;
+          console.warn(`Entity ${fader_row.entity_id} not found in Home Assistant.`);
+          continue;
         }
 
         const unavailable = stateObj.state === "unavailable";
