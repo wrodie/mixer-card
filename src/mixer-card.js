@@ -40,7 +40,8 @@ class MixerCard extends LitElement {
         let fader_row = this.config.faders[fader_index];
         const stateObj = this.hass.states[fader_row.entity_id];
         if (!stateObj) {
-            return null;
+          console.warn(`Entity ${fader_row.entity_id} not found in Home Assistant.`);
+          continue;
         }
 
         const unavailable = stateObj.state === "unavailable";
@@ -89,30 +90,30 @@ class MixerCard extends LitElement {
         `
             : html `&nbsp;`;
 
+        const input_classes = `${activeState === 'off' ? "fader-inactive" : "fader-active"}${unavailable ? " fader-unavailable" : ""}`;
+        const input_id = `fader_range_${fader_row.entity_id}`;
+
+        let input_style = `--fader-width: ${faderWidth}; --fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius}; `;
+        input_style += `--fader-color: ${activeState === 'on' ? fader_active_color : fader_inactive_color}; `;
+        input_style += `--fader-thumb-color: ${fader_thumb_color}; --fader-track-color: ${fader_track_color}; --fader-track-inactive-color: ${fader_inactive_color};`;
+
+        const input_value = Math.round((fader_value_raw - min_value) / (max_value - min_value) * 100);
+
+        let range_input = html`<input type="range" class="${input_classes}" id="${input_id}" style="${input_style}" .value="${input_value}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
         if (updateWhileMoving) {
-            faderTemplates.push(html`
-                <div class = "fader" id = "fader_${fader_row.entity_id}">
-                  <div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
-                      <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? fader_active_color : fader_inactive_color};--fader-thumb-color:${fader_thumb_color};--fader-track-color:${fader_track_color};--fader-track-inactive-color:${fader_inactive_color};" .value="${Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 )}" @input=${e => this._setFaderLevel(stateObj, e.target.value)}>
-                  </div>
-                  <div class = "fader-name">${fader_name}</div>
-                  <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? (behringerMode ? fader_behringer_db_value : (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value)) : html`<br>`}</div>
-                  <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
-                </div>
-            `);
+            range_input = html`<input type="range" class="${input_classes}" id="${input_id}" style="${input_style}" .value="${input_value}" @input=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
         }
-        else {
-            faderTemplates.push(html`
-                <div class = "fader" id = "fader_${fader_row.entity_id}">
-                  <div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
-                      <input type="range" class = "${activeState === 'off' ? "fader-inactive" : "fader-active"} ${unavailable ? "fader-unavailable" : ""}" id = "fader_range_${fader_row.entity_id}" style="--fader-width: ${faderWidth};--fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius};--fader-color:${activeState === 'on' ? fader_active_color : fader_inactive_color};--fader-thumb-color:${fader_thumb_color};--fader-track-color:${fader_track_color};--fader-track-inactive-color:${fader_inactive_color};" .value="${Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 )}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>
-                  </div>
-                  <div class = "fader-name">${fader_name}</div>
-                  <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? (behringerMode ? fader_behringer_db_value : (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value)) : html`<br>`}</div>
-                  <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
+
+        faderTemplates.push(html`
+            <div class = "fader" id = "fader_${fader_row.entity_id}">
+                <div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
+                    ${range_input}
                 </div>
-            `);
-        }
+                <div class = "fader-name">${fader_name}</div>
+              <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? (behringerMode ? fader_behringer_db_value : (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value)) : html`<br>`}</div>
+                <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
+            </div>
+        `);
     }
     let headers_title = title ? html`<h1 class="card-header"><div class = "name">${title}</div></div>` : "";
     let headers_description = description ? html`<p class = "mixer-description">${description}</p>` : "";
