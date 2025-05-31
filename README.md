@@ -47,11 +47,14 @@ This configuration applies to all faders in the card
 | `faderActiveColor`     | The color of the active portion of the track when above 0                                                         | `#22ba00`    |
 | `faderInactiveColor`   | The color of the track when the channel is muted/not-active                                                       | `#f00`       |
 | `faderTheme`           | How should the fader's display. Options are `modern`/`physical`                                                   | `modern`     |
-| `updateWhileMoving`    | If set, the entity values will be updated while moving the fader. Off by default to prevent API request flooding. | `false`      |
-| `alwaysShowFaderValue` | If set, the fader value will be displayed even when the fader is not active.                                      | `false`      |
+| `behringerMode`        | Enables BEHRINGER mode (see section: [BEHRINGER Mode](#behringer-mode))                                           | `false`      |
+| `alwaysShowFaderValue` | If set, the fader value will be displayed even when the fader is not active.                                      | `false`*     |
+| `updateWhileMoving`    | If set, the entity values will be updated while moving the fader. Off by default to prevent API request flooding. | `false`*     |
 | `haCard`               | Should the card include a `<ha-card>` element? Boolean                                                            | `true`       |
 | `title`                | Add a title to the card                                                                                           |              |
 | `description`          | Add a description to the card                                                                                     |              |
+
+\* Unless in [BEHRINGER Mode](#behringer-mode)
 
 
 ### Fader Card Configuration
@@ -101,6 +104,17 @@ This renders the faders as larger 'block' type faders similar to home assistant 
 This makes the faders look more like physical faders
 
 ![Example of physical theme](doc/mixer-example-physical.png)
+
+### BEHRINGER Mode
+
+When the card is in BEHRINGER mode, the fader value changes to a calculated dB value
+based on the fader to dB conversion used in the BEHRINGER mixing desks and corresponding APIs and
+software. Not relying on another value entity allows for the dB value to be updated instantly while
+moving the fader.
+BEHRINGER Mode also flips the defaults for the `alwaysShowFaderValue` and `updateWhileMoving` to true,
+as the BEHRINGER APIs effortlessly can handle the amount of requests sent by the moving faders
+and the always shown dB values come closer to the presentation of the faders in the companion
+applications of the BEHRINGER desks.
 
 ## Installation
 
