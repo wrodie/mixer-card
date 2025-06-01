@@ -59,15 +59,17 @@ This is the configuration for each individual fader
 
 | Name               | Description                                                                                                                                                                                                                              | Default      |
 |--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------|
-| `entity_id`        | The entity_id of the fader entity.  This is expected to be a `number` with values from 0-1.                                                                                                                                              | **Required** |
-| `name`             | A friendly name for the channel. If not specified the name of the entity_id will be used                                                                                                                                                 | Optional     |
+| `entity_id`        | The entity_id of the fader entity.  This is expected to be a `number` with values from 0-1.  | **Required** |
+| `name`             | A friendly name for the channel. If not specified the name of the entity_id will be used   | Optional     |
 | `active_entity_id` | The entity_id of a `switch` entity that controls the active/mute state of the fader.  If not present (for a number element) then the active/mute button will not appear. If entity_id is a `media_player` this is handled automatically. | Optional     |
-| `value_entity_id`  | The entity_id of a `sensor` entity that contains the current value of the fader (eg in dB).  If not present the value of the fader will be represented as a percentage (%) of the fader.                                                 | Optional     |
-| `invert_active`    | If set to true, then the active state of the fader is inverted.                                                                                                                                                                          | Optional     |
-| `thumb_color`      | Locally overrides the faderThumbColor                                                                                                                                                                                                    | Optional     |
-| `track_color`      | Locally overrides the faderTrackColor                                                                                                                                                                                                    | Optional     |
-| `active_color`     | Locally overrides the faderActiveColor                                                                                                                                                                                                   | Optional     |
-| `inactive_color`   | Locally overrides the faderInactiveColor                                                                                                                                                                                                 | Optional     |
+| `value_entity_id`  | The entity_id of a `sensor` entity that contains the current value of the fader (eg in dB).  If `value_entity_id` or `value_attribute` are not present the value of the fader will be represented as a percentage (%) of the fader. | Optional     |
+| `value_attribute`  | The name of an `attribute` of the entity that contains the current value of the fader.  If `value_entity_id` or `value_attribute` are not present the value of the fader will be represented as a percentage (%) of the fader.  | Optional     |
+| `value_suffix`     | This string will be appended to the fader value, eg 'dB'  | Optional     |
+| `invert_active`    | If set to true, then the active state of the fader is inverted.  | Optional     |
+| `thumb_color`      | Locally overrides the faderThumbColor    | Optional     |
+| `track_color`      | Locally overrides the faderTrackColor  | Optional     |
+| `active_color`     | Locally overrides the faderActiveColor  | Optional     |
+| `inactive_color`   | Locally overrides the faderInactiveColor   | Optional     |
 
 ### Example Configuration
 ```yaml

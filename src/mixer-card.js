@@ -65,10 +65,18 @@ class MixerCard extends LitElement {
             fader_value_raw = stateObj.state;
         }
         const icon = activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute';
-        const fader_value = Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 ) + '%';
-        let fader_value_state = fader_row.value_entity_id ? this.hass.states[fader_row.value_entity_id] : null;
+        let fader_value = Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 ) + '%';
+        if (fader_row.value_entity_id && this.hass.states.hasOwnProperty(fader_row.value_entity_id)) {
+          fader_value = computeStateDisplay(this.hass.localize, this.hass.states[fader_row.value_entity_id], this.hass.language)
+        }
+        else if (fader_row.value_attribute && stateObj.attributes.hasOwnProperty(fader_row.value_attribute)) {
+          fader_value = stateObj.attributes[fader_row.value_attribute];
+        }
+        const suffix = fader_row.value_suffix || '';
+        if (suffix) {
+          fader_value += ` ${suffix}`;
+        }
         const active_entity = fader_row.active_entity_id || (domain === "media_player" ? fader_row.entity_id : "");
-
         const fader_track_color = fader_row.track_color || this.faderTrackColor;
         const fader_active_color = fader_row.active_color || this.faderActiveColor;
         const fader_inactive_color = fader_row.inactive_color || faderInactiveColor;
@@ -108,7 +116,7 @@ class MixerCard extends LitElement {
                     ${range_input}
                 </div>
                 <div class = "fader-name">${fader_name}</div>
-              <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`}</div>
+              <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? fader_value : html`<br>`}</div>
                 <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
             </div>
         `);
