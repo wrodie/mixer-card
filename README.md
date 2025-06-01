@@ -109,6 +109,20 @@ This makes the faders look more like physical faders
 #### HACS installation:
 Go to the hacs store and use the repo url https://github.com/wrodie/mixer-card and add this as a custom repository under settings.
 
+## Behringer Users
+For those users who are using this to control a Behringer mixer using https://github.com/wrodie/ha_behringer_mixer and are wanting something that works more like the Behringer native tools then you should consider setting the following settings.
+
+Global
+  ```yaml
+    updateWhileMoving: true
+    alwaysShowFaderValue: true
+  ```
+and per fader
+  ```yaml
+    value_attribute: db
+    value_suffix: dB
+  ```
+
 
 # Thanks
 I took ideas and some code from - https://github.com/DBuit/media_player-popup-card
