@@ -19,22 +19,26 @@ class MixerCard extends LitElement {
     };
   }
   render() {
-    const borderRadius = this.config.borderRadius ? this.config.borderRadius : '12px';
-    const faderWidth = this.config.faderWidth ? this.config.faderWidth : "150px";
-    const faderHeight = this.config.faderHeight ? this.config.faderHeight : "400px";
-    const faderThumbColor = "faderThumbColor" in this.config ? this.config.faderThumbColor : "#ddd";
-    this.faderTrackColor = "faderTrackColor" in this.config ? this.config.faderTrackColor : "#ddd";
-    this.faderActiveColor = "faderActiveColor" in this.config ? this.config.faderActiveColor : "#22ba00";
-    const faderInactiveColor = "faderInactiveColor" in this.config ? this.config.faderInactiveColor : "#f00";
-    const faderTheme = "faderTheme" in this.config ? this.config.faderTheme : "modern";
-    const updateWhileMoving = "updateWhileMoving" in this.config ? this.config.updateWhileMoving : false;
-    const alwaysShowFaderValue = "alwaysShowFaderValue" in this.config ? this.config.alwaysShowFaderValue : false;
-    const haCard = "haCard" in this.config ? this.config.haCard: true;
-    const description = this.config ? this.config.description : "";
-    const title = this.config ? this.config.title : "";
+    const borderRadius = this.config?.borderRadius || '12px';
+    const faderWidth = this.config?.faderWidth || '150px';
+    const faderHeight = this.config?.faderHeight || '400px';
+    const faderThumbColor = this.config?.faderThumbColor || '#ddd';
+    
+    this.faderTrackColor = this.config?.faderTrackColor || "#ddd";
+    this.faderActiveColor = this.config?.faderActiveColor || "#22ba00";
+    const faderInactiveColor = this.config?.faderInactiveColor || "#f00";
+    const faderTheme = this.config?.faderTheme || "modern";
+    const updateWhileMoving = this.config?.updateWhileMoving || false;
+    const alwaysShowFaderValue = this.config?.alwaysShowFaderValue || false;
+    const haCard = this.config?.haCard || true;
+    const description = this.config?.description || "";
+    const title = this.config?.title || "";
 
     const faderTemplates = [];
     this.faderColors = {};
+    if (!this.config?.faders || !Array.isArray(this.config.faders)) {
+      throw new Error('Invalid configuration: "faders" must be an array.');
+    }    
     for (let fader_index = 0; fader_index < this.config.faders.length; fader_index++) {
         let fader_row = this.config.faders[fader_index];
         const stateObj = this.hass.states[fader_row.entity_id];
@@ -65,10 +69,18 @@ class MixerCard extends LitElement {
             fader_value_raw = stateObj.state;
         }
         const icon = activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute';
-        const fader_value = Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 ) + '%';
-        let fader_value_state = fader_row.value_entity_id ? this.hass.states[fader_row.value_entity_id] : null;
+        let fader_value = Math.round((fader_value_raw-min_value) / (max_value-min_value) * 100 ) + '%';
+        if (fader_row.value_entity_id && this.hass.states.hasOwnProperty(fader_row.value_entity_id)) {
+          fader_value = computeStateDisplay(this.hass.localize, this.hass.states[fader_row.value_entity_id], this.hass.language)
+        }
+        else if (fader_row.value_attribute && stateObj.attributes.hasOwnProperty(fader_row.value_attribute)) {
+          fader_value = stateObj.attributes[fader_row.value_attribute];
+        }
+        const suffix = fader_row.value_suffix || '';
+        if (suffix) {
+          fader_value += ` ${suffix}`;
+        }
         const active_entity = fader_row.active_entity_id || (domain === "media_player" ? fader_row.entity_id : "");
-
         const fader_track_color = fader_row.track_color || this.faderTrackColor;
         const fader_active_color = fader_row.active_color || this.faderActiveColor;
         const fader_inactive_color = fader_row.inactive_color || faderInactiveColor;
@@ -80,14 +92,7 @@ class MixerCard extends LitElement {
             thumb_color: fader_thumb_color,
         };
 
-        const activeButton = active_entity
-            ? html`
-             <div class = "active-button" ${unavailable ? " disabled " : ""} @click="${e => this._toggleActive(e)}" data-entity="${active_entity}" data-current-state="${activeState}">
-                <span class="color" style="color:${activeState === 'on' ? fader_active_color : fader_inactive_color};"><ha-icon icon="${icon}" /></span>
-             </div>
-        `
-            : html `&nbsp;`;
-
+        const activeButton = this._renderActiveButton(active_entity, activeState, unavailable, fader_active_color, fader_inactive_color, icon);
         const input_classes = `${activeState === 'off' ? "fader-inactive" : "fader-active"}${unavailable ? " fader-unavailable" : ""}`;
         const input_id = `fader_range_${fader_row.entity_id}`;
 
@@ -108,7 +113,7 @@ class MixerCard extends LitElement {
                     ${range_input}
                 </div>
                 <div class = "fader-name">${fader_name}</div>
-              <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? (fader_value_state ? computeStateDisplay(this.hass.localize, fader_value_state, this.hass.language) : fader_value) : html`<br>`}</div>
+              <div class = "fader-value">${(activeState === 'on') || alwaysShowFaderValue ? fader_value : html`<br>`}</div>
                 <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
             </div>
         `);
@@ -130,14 +135,26 @@ class MixerCard extends LitElement {
       return card;
     }
     return html`<ha-card>${card} </ha-card>`;
-
+  }
+  
+  _renderActiveButton(active_entity, activeState, unavailable, fader_active_color, fader_inactive_color, icon) {
+    return active_entity
+      ? html`
+          <div class="active-button" ${unavailable ? 'disabled' : ''}
+               @click="${e => this._toggleActive(e)}"
+               data-entity="${active_entity}"
+               data-current-state="${activeState}">
+            <span class="color" style="color:${activeState === 'on' ? fader_active_color : fader_inactive_color};">
+              <ha-icon icon="${icon}" />
+            </span>
+          </div>
+        `
+      : html`&nbsp;`;
   }
 
   _entity_property(entity, property) {
     const state = this.hass.states[entity];
-    if (!state) {
-        return '';
-    }
+    if (!state) return '';
 
     switch (property) {
       case '-name':
@@ -171,16 +188,15 @@ class MixerCard extends LitElement {
 
   _previewLevel(entity_id, value) {
     const el = this.shadowRoot.getElementById(entity_id);
-    if(el && !el.className.includes('fader-inactive')) {
-        el.style.background = `linear-gradient(to right, ${this.faderColors[entity_id].active_color} ${value}%, ${this.faderColors[entity_id].track_color} ${value}%)`;
+    const colors = this.faderColors[entity_id];
+    if(el && colors && el.className.includes('fader-inactive')) {
+        el.style.background = `linear-gradient(to right, ${colors.active_color} ${value}%, ${colors.track_color} ${value}%)`;
     }
   }
 
   _toggleActive(e) {
     const { entity, currentState } = e.target.dataset;
-    if (!entity) {
-        return;
-    }
+    if (!entity) return;
 
     const domain = computeDomain(entity);
     const serviceData = { entity_id: entity };
@@ -209,10 +225,9 @@ class MixerCard extends LitElement {
       await this.update_track_color();
   }
     
-
   setConfig(config) {
-    if (!config.faders) {
-      throw new Error("You need to define faders");
+    if (!config?.faders || !Array.isArray(config.faders)) {
+      throw new Error('Invalid configuration: "faders" must be an array.');
     }
     this.config = config;
   }
