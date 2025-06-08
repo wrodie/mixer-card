@@ -189,7 +189,7 @@ class MixerCard extends LitElement {
   _previewLevel(entity_id, value) {
     const el = this.shadowRoot.getElementById(entity_id);
     const colors = this.faderColors[entity_id];
-    if(el && colors && el.className.includes('fader-inactive')) {
+    if(el && colors && !el.className.includes('fader-inactive')) {
         el.style.background = `linear-gradient(to right, ${colors.active_color} ${value}%, ${colors.track_color} ${value}%)`;
     }
   }
