@@ -200,13 +200,18 @@ class MixerCard extends LitElement {
 
     const domain = computeDomain(entity);
     const serviceData = { entity_id: entity };
+    let service = '';
 
     if (domain === 'media_player') {
       serviceData.is_volume_muted = currentState === 'on';
-      this.hass.callService('media_player', 'volume_mute', serviceData);
-    } else {
-      this.hass.callService('switch', 'toggle', serviceData);
+      service = "volume_mute";
     }
+    else if (domain === 'input_boolean') {
+      service = currentState === 'on' ? 'turn_off' : 'turn_on';
+    } else {
+      service = "toggle";
+    }
+    this.hass.callService(domain, service, serviceData);
 
     this.update_track_color();
   }
