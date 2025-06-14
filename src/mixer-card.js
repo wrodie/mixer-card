@@ -206,9 +206,7 @@ class MixerCard extends LitElement {
       serviceData.is_volume_muted = currentState === 'on';
       service = "volume_mute";
     }
-    else if (domain === 'input_boolean') {
-      service = currentState === 'on' ? 'turn_off' : 'turn_on';
-    } else {
+    else {
       service = "toggle";
     }
     this.hass.callService(domain, service, serviceData);
