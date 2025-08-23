@@ -70,6 +70,7 @@ This is the configuration for each individual fader
 | `track_color`      | Locally overrides the faderTrackColor  | Optional     |
 | `active_color`     | Locally overrides the faderActiveColor  | Optional     |
 | `inactive_color`   | Locally overrides the faderInactiveColor   | Optional     |
+| `max`              | Maximum value for this fader. If set, this overrides the entity's `max` attribute. Useful for custom scaling or limiting the fader range. | Optional     |
 
 ### Example Configuration
 ```yaml

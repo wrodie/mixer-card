@@ -49,8 +49,8 @@ class MixerCard extends LitElement {
 
         const unavailable = stateObj.state === "unavailable";
         const domain = computeStateDomain(stateObj);
-        const max_value = stateObj.attributes.max;
-        const min_value = stateObj.attributes.min;
+        const max_value = (typeof fader_row.max === 'number') ? fader_row.max : stateObj.attributes.max || 1;
+        const min_value = stateObj.attributes.min || 0;
 
         if(!(['number', 'media_player', 'input_number'].includes(domain))) {
             continue;
@@ -170,14 +170,16 @@ class MixerCard extends LitElement {
 
   _setFaderLevel(state, value) {
     let domain = computeStateDomain(state);
+    let fader_row = (this.config && this.config.faders) ? this.config.faders.find(f => f.entity_id === state.entity_id) : undefined;
+    let max_value = (fader_row && typeof fader_row.max === 'number') ? fader_row.max : state.attributes.max || 1;    
     if(domain === "media_player") {
         this.hass.callService("media_player", "volume_set", {
           entity_id: state.entity_id,
-          volume_level: value / 100
+          volume_level: value / 100 * (max_value || 1)
         });
     }
     else {
-        let max_value = state.attributes.max;
+        // Support per-fader max value from config if present
         let min_value = state.attributes.min || 0;
         this.hass.callService(domain, "set_value", {
           entity_id: state.entity_id,
