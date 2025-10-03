@@ -25,6 +25,15 @@ function getConfigDefaults(config) {
   }
 }
 
+function getFaderColor(faderRow, cfg) {
+  return {
+    track: faderRow.track_color || cfg.faderTrackColor,
+    active: faderRow.active_color || cfg.faderActiveColor,
+    inactive: faderRow.inactive_color || cfg.faderInactiveColor,
+    thumb: faderRow.thumb_color || cfg.faderThumbColor
+  }
+}
+
 function getFaderIcon(faderRow, stateObj, activeState) {
   return activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute'
 }
@@ -118,10 +127,11 @@ class MixerCard extends LitElement {
       const icon = getFaderIcon(faderRow, stateObj, activeState)
       let faderValue = getFaderValue(faderRow, stateObj, this.hass, minValue, maxValue)
       const activeEntity = faderRow.active_entity_id || (domain === 'media_player' ? faderRow.entity_id : '')
-      const faderTrackColor = faderRow.track_color || cfg.faderTrackColor
-      const faderActiveColor = faderRow.active_color || cfg.faderActiveColor
-      const faderInactiveColor = faderRow.inactive_color || cfg.faderInactiveColor
-      const faderThumbColor = faderRow.thumb_color || cfg.faderThumbColor
+      const faderColors = getFaderColor(faderRow, cfg)
+      const faderTrackColor = faderColors.track
+      const faderActiveColor = faderColors.active
+      const faderInactiveColor = faderColors.inactive
+      const faderThumbColor = faderColors.thumb
       this.faderColors[`fader_range_${faderRow.entity_id}`] = {
         track_color: faderTrackColor,
         active_color: faderActiveColor,
