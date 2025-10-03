@@ -56,10 +56,10 @@ class MixerCard extends s$3 {
     const borderRadius = this.config?.borderRadius || '12px';
     const faderWidth = this.config?.faderWidth || '150px';
     const faderHeight = this.config?.faderHeight || '400px';
-    const faderThumbColor = this.config?.faderThumbColor || '#ddd';
+    const defaultFaderInactiveColor = this.config?.faderInactiveColor || '#f00';
+    const defaultFaderThumbColor = this.config?.faderThumbColor || '#ddd';
     this.faderTrackColor = this.config?.faderTrackColor || '#ddd';
     this.faderActiveColor = this.config?.faderActiveColor || '#22ba00';
-    const faderInactiveColor = this.config?.faderInactiveColor || '#f00';
     const faderTheme = this.config?.faderTheme || 'modern';
     const updateWhileMoving = this.config?.updateWhileMoving || false;
     const alwaysShowFaderValue = this.config?.alwaysShowFaderValue || false;
@@ -71,113 +71,113 @@ class MixerCard extends s$3 {
     if (!this.config?.faders || !Array.isArray(this.config.faders)) {
       throw new Error('Invalid configuration: "faders" must be an array.');
     }
-    for (let fader_index = 0; fader_index < this.config.faders.length; fader_index++) {
-      let fader_row = this.config.faders[fader_index];
-      const stateObj = this.hass.states[fader_row.entity_id];
+    for (let faderIndex = 0; faderIndex < this.config.faders.length; faderIndex++) {
+      const faderRow = this.config.faders[faderIndex];
+      const stateObj = this.hass.states[faderRow.entity_id];
       if (!stateObj) {
-        console.warn(`Entity ${fader_row.entity_id} not found in Home Assistant.`);
+        console.warn(`Entity ${faderRow.entity_id} not found in Home Assistant.`);
         continue;
       }
-      const unavailable = stateObj.state === "unavailable";
+      const unavailable = stateObj.state === 'unavailable';
       const domain = L$1(stateObj);
-      const max_value = typeof fader_row.max === 'number' ? fader_row.max : stateObj.attributes.max || 1;
-      const min_value = typeof fader_row.min === 'number' ? fader_row.min : stateObj.attributes.min || 0;
+      const maxValue = typeof faderRow.max === 'number' ? faderRow.max : stateObj.attributes.max || 1;
+      const minValue = typeof faderRow.min === 'number' ? faderRow.min : stateObj.attributes.min || 0;
       if (!['number', 'media_player', 'input_number'].includes(domain)) {
         continue;
       }
-      const fader_name = fader_row.name || this._entity_property(fader_row.entity_id, '-name');
-      const invert_active = fader_row.invert_active || false;
-      let fader_value_raw = 0;
-      let activeState = fader_row.active_entity_id ? this._entity_property(fader_row.active_entity_id, 'state') : 'on';
-      if (invert_active) {
+      const faderName = faderRow.name || this._entity_property(faderRow.entity_id, '-name');
+      const invertActive = faderRow.invert_active || false;
+      let faderValueRaw = 0;
+      let activeState = faderRow.active_entity_id ? this._entity_property(faderRow.active_entity_id, 'state') : 'on';
+      if (invertActive) {
         activeState = activeState === 'on' ? 'off' : 'on';
       }
-      if (domain === "media_player") {
-        fader_value_raw = this._entity_property(fader_row.entity_id, '-volume') || 0;
-        activeState = this._entity_property(fader_row.entity_id, '-muted') ? 'off' : 'on';
+      if (domain === 'media_player') {
+        faderValueRaw = this._entity_property(faderRow.entity_id, '-volume') || 0;
+        activeState = this._entity_property(faderRow.entity_id, '-muted') ? 'off' : 'on';
       } else {
-        fader_value_raw = stateObj.state;
+        faderValueRaw = stateObj.state;
       }
       const icon = activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute';
-      let fader_value = Math.round((fader_value_raw - min_value) / (max_value - min_value) * 100) + '%';
-      if (fader_row.value_entity_id && this.hass.states.hasOwnProperty(fader_row.value_entity_id)) {
-        fader_value = W(this.hass.localize, this.hass.states[fader_row.value_entity_id], this.hass.language);
-      } else if (fader_row.value_attribute && stateObj.attributes.hasOwnProperty(fader_row.value_attribute)) {
-        fader_value = stateObj.attributes[fader_row.value_attribute];
+      let faderValue = Math.round((faderValueRaw - minValue) / (maxValue - minValue) * 100) + '%';
+      if (faderRow.value_entity_id && Object.prototype.hasOwnProperty.call(this.hass.states, faderRow.value_entity_id)) {
+        faderValue = W(this.hass.localize, this.hass.states[faderRow.value_entity_id], this.hass.language);
+      } else if (faderRow.value_attribute && Object.prototype.hasOwnProperty.call(stateObj.attributes, faderRow.value_attribute)) {
+        faderValue = stateObj.attributes[faderRow.value_attribute];
       }
-      const suffix = fader_row.value_suffix || '';
+      const suffix = faderRow.value_suffix || '';
       if (suffix) {
-        fader_value += ` ${suffix}`;
+        faderValue += ` ${suffix}`;
       }
-      const active_entity = fader_row.active_entity_id || (domain === "media_player" ? fader_row.entity_id : "");
-      const fader_track_color = fader_row.track_color || this.faderTrackColor;
-      const fader_active_color = fader_row.active_color || this.faderActiveColor;
-      const fader_inactive_color = fader_row.inactive_color || faderInactiveColor;
-      const fader_thumb_color = fader_row.thumb_color || faderThumbColor;
-      this.faderColors[`fader_range_${fader_row.entity_id}`] = {
-        track_color: fader_track_color,
-        active_color: fader_active_color,
-        inactive_color: fader_inactive_color,
-        thumb_color: fader_thumb_color
+      const activeEntity = faderRow.active_entity_id || (domain === 'media_player' ? faderRow.entity_id : '');
+      const faderTrackColor = faderRow.track_color || this.faderTrackColor;
+      const faderActiveColor = faderRow.active_color || this.faderActiveColor;
+      const faderInactiveColor = faderRow.inactive_color || defaultFaderInactiveColor;
+      const faderThumbColor = faderRow.thumb_color || defaultFaderThumbColor;
+      this.faderColors[`fader_range_${faderRow.entity_id}`] = {
+        track_color: faderTrackColor,
+        active_color: faderActiveColor,
+        inactive_color: faderInactiveColor,
+        thumb_color: faderThumbColor
       };
-      const activeButton = this._renderActiveButton(active_entity, activeState, unavailable, fader_active_color, fader_inactive_color, icon);
-      const input_classes = `${activeState === 'off' ? "fader-inactive" : "fader-active"}${unavailable ? " fader-unavailable" : ""}`;
-      const input_id = `fader_range_${fader_row.entity_id}`;
-      let input_style = `--fader-width: ${faderWidth}; --fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius}; `;
-      input_style += `--fader-color: ${activeState === 'on' ? fader_active_color : fader_inactive_color}; `;
-      input_style += `--fader-thumb-color: ${fader_thumb_color}; --fader-track-color: ${fader_track_color}; --fader-track-inactive-color: ${fader_inactive_color};`;
-      const input_value = Math.round((fader_value_raw - min_value) / (max_value - min_value) * 100);
-      let range_input;
+      const activeButton = this._renderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon);
+      const inputClasses = `${activeState === 'off' ? 'fader-inactive' : 'fader-active'}${unavailable ? ' fader-unavailable' : ''}`;
+      const inputId = `fader_range_${faderRow.entity_id}`;
+      let inputStyle = `--fader-width: ${faderWidth}; --fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius}; `;
+      inputStyle += `--fader-color: ${activeState === 'on' ? faderActiveColor : faderInactiveColor}; `;
+      inputStyle += `--fader-thumb-color: ${faderThumbColor}; --fader-track-color: ${faderTrackColor}; --fader-track-inactive-color: ${faderInactiveColor};`;
+      const inputValue = Math.round((faderValueRaw - minValue) / (maxValue - minValue) * 100);
+      let rangeInput;
       if (this.config?.relativeFader) {
         // Build style string for range input in relative fader mode (no pointer-events)
         let rangeInputStyle;
         if (faderTheme === 'physical') {
-          rangeInputStyle = `${input_style.replace(/;+\s*$/, '')}; width:var(--fader-height); height:5px;`;
+          rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:5px;`;
         } else {
-          rangeInputStyle = `${input_style.replace(/;+\s*$/, '')}; width:var(--fader-height); height:var(--fader-width);`;
+          rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:var(--fader-width);`;
         }
-        range_input = x`
-    <input type="range"
-      class="${input_classes}"
-      id="${input_id}"
-      style="${rangeInputStyle}"
-      value="${input_value}"
-      @mousedown=${e => this._onRelativeFaderDown(e, stateObj, min_value, max_value)}
-      @touchstart=${e => this._onRelativeFaderDown(e, stateObj, min_value, max_value)}>
-  `;
+        rangeInput = x`
+          <input type='range'
+            class='${inputClasses}'
+            id='${inputId}'
+            style='${rangeInputStyle}'
+            value='${inputValue}'
+            @mousedown=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}
+            @touchstart=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}>
+        `;
       } else if (updateWhileMoving) {
-        range_input = x`<input type="range" class="${input_classes}" id="${input_id}" style="${input_style}" value="${input_value}" @input=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
+        rangeInput = x`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' value='${inputValue}' @input=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
       } else {
-        range_input = x`<input type="range" class="${input_classes}" id="${input_id}" style="${input_style}" .value="${input_value}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
+        rangeInput = x`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' .value='${inputValue}' @change=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
       }
       faderTemplates.push(x`
-            <div class = "fader" id = "fader_${fader_row.entity_id}">
-<div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
-                     ${range_input}
-                </div>
-                <div class = "fader-name">${fader_name}</div>
-              <div class = "fader-value">${activeState === 'on' || alwaysShowFaderValue ? fader_value : x`<br>`}</div>
-                <div class = "active-button-holder ${unavailable ? "button-disabled" : ""}">${activeButton}</div>
-            </div>
-        `);
+        <div class='fader' id='fader_${faderRow.entity_id}'>
+          <div class='range-holder' style='--fader-height: ${faderHeight};--fader-width: ${faderWidth};'>
+            ${rangeInput}
+          </div>
+          <div class='fader-name'>${faderName}</div>
+          <div class='fader-value'>${activeState === 'on' || alwaysShowFaderValue ? faderValue : x`<br>`}</div>
+          <div class='active-button-holder ${unavailable ? 'button-disabled' : ''}'>${activeButton}</div>
+        </div>
+      `);
     }
-    let headers_title = title ? x`<h1 class="card-header"><div class = "name">${title}</div></div>` : "";
-    let headers_description = description ? x`<p class = "mixer-description">${description}</p>` : "";
+    const headersTitle = title ? x`<h1 class='card-header'><div class='name'>${title}</div></div>` : '';
+    const headersDescription = description ? x`<p class='mixer-description'>${description}</p>` : '';
     const card = x`
-     ${headers_title}
-     ${headers_description}
+      ${headersTitle}
+      ${headersDescription}
       <div>
-        <div class="mixer-card" >
-            <div class="fader-holder fader-theme-${faderTheme}" >
-                ${faderTemplates}
-            </div>
+        <div class='mixer-card'>
+          <div class='fader-holder fader-theme-${faderTheme}'>
+            ${faderTemplates}
+          </div>
         </div>
       </div>
     `;
     if (!haCard) {
       return card;
     }
-    return x`<ha-card>${card} </ha-card>`;
+    return x`<ha-card>${card}</ha-card>`;
   }
   _onRelativeFaderDown(e, stateObj, min, max) {
     e.preventDefault();
@@ -217,13 +217,13 @@ class MixerCard extends s$3 {
     this._relativeFaderStateObj = null;
     this._relativeFaderInput = null;
   }
-  _renderActiveButton(active_entity, activeState, unavailable, fader_active_color, fader_inactive_color, icon) {
-    return active_entity ? x`
+  _renderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon) {
+    return activeEntity ? x`
           <div class="active-button" ${unavailable ? 'disabled' : ''}
                @click="${e => this._toggleActive(e)}"
-               data-entity="${active_entity}"
+               data-entity="${activeEntity}"
                data-current-state="${activeState}">
-            <span class="color" style="color:${activeState === 'on' ? fader_active_color : fader_inactive_color};">
+            <span class="color" style="color:${activeState === 'on' ? faderActiveColor : faderInactiveColor};">
               <ha-icon icon="${icon}" />
             </span>
           </div>
@@ -244,26 +244,26 @@ class MixerCard extends s$3 {
     }
   }
   _setFaderLevel(state, value) {
-    let domain = L$1(state);
-    let fader_row = this.config && this.config.faders ? this.config.faders.find(f => f.entity_id === state.entity_id) : undefined;
-    let max_value = fader_row && typeof fader_row.max === 'number' ? fader_row.max : state.attributes.max || 1;
-    let min_value = fader_row && typeof fader_row.min === 'number' ? fader_row.min : state.attributes.min || 0;
-    if (domain === "media_player") {
-      this.hass.callService("media_player", "volume_set", {
+    const domain = L$1(state);
+    const faderRow = this.config && this.config.faders ? this.config.faders.find(f => f.entity_id === state.entity_id) : undefined;
+    const maxValue = faderRow && typeof faderRow.max === 'number' ? faderRow.max : state.attributes.max || 1;
+    const minValue = faderRow && typeof faderRow.min === 'number' ? faderRow.min : state.attributes.min || 0;
+    if (domain === 'media_player') {
+      this.hass.callService('media_player', 'volume_set', {
         entity_id: state.entity_id,
-        volume_level: value / 100 * (max_value - min_value) + min_value
+        volume_level: value / 100 * (maxValue - minValue) + minValue
       });
     } else {
       // Support per-fader max value from config if present
-      this.hass.callService(domain, "set_value", {
+      this.hass.callService(domain, 'set_value', {
         entity_id: state.entity_id,
-        value: value / 100 * (max_value - min_value) + min_value
+        value: value / 100 * (maxValue - minValue) + minValue
       });
     }
   }
-  _previewLevel(entity_id, value) {
-    const el = this.shadowRoot.getElementById(entity_id);
-    const colors = this.faderColors[entity_id];
+  _previewLevel(entityId, value) {
+    const el = this.shadowRoot.getElementById(entityId);
+    const colors = this.faderColors[entityId];
     if (el && colors && !el.className.includes('fader-inactive')) {
       el.style.background = `linear-gradient(to right, ${colors.active_color} ${value}%, ${colors.track_color} ${value}%)`;
     }
@@ -281,9 +281,9 @@ class MixerCard extends s$3 {
     let service = '';
     if (domain === 'media_player') {
       serviceData.is_volume_muted = currentState === 'on';
-      service = "volume_mute";
+      service = 'volume_mute';
     } else {
-      service = "toggle";
+      service = 'toggle';
     }
     this.hass.callService(domain, service, serviceData);
     this.update_track_color();

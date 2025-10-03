@@ -85,7 +85,7 @@ This is the configuration for each individual fader
     faderActiveColor: '#22ba00'
     faderInactiveColor: '#F00'
     faderTheme: modern
-    relativeFader: true  # <--- enables relative fader mode
+    relativeFader: true
     faders:
       - entity_id: number.9f3fea35f92bc3ab474f8f76ad071ab9_bus_11_fader
         name: test name
