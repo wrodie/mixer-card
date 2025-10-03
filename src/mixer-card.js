@@ -51,31 +51,35 @@ function getFaderIcon(faderRow, stateObj, activeState) {
   return activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute'
 }
 
-function getFaderValue(faderRow, stateObj, hass, minValue, maxValue) {
-  let faderValueRaw = 0
+function getFaderValue(faderRow, stateObj, hass) {
+  const maxValue = (typeof faderRow.max === 'number') ? faderRow.max : stateObj.attributes.max || 1
+  const minValue = (typeof faderRow.min === 'number') ? faderRow.min : stateObj.attributes.min || 0
+  let rawValue = 0
   const domain = computeStateDomain(stateObj)
   if (domain === 'media_player') {
-    faderValueRaw = stateObj.attributes.volume_level || 0
+    rawValue = stateObj.attributes.volume_level || 0
   } else {
-    faderValueRaw = stateObj.state
+    rawValue = stateObj.state
   }
-  let faderValue = Math.round((faderValueRaw - minValue) / (maxValue - minValue) * 100) + '%'
+  const inputValue = Math.round((rawValue - minValue) / (maxValue - minValue) * 100)
+  let displayValue = inputValue + '%'
   if (faderRow.value_entity_id && Object.prototype.hasOwnProperty.call(hass.states, faderRow.value_entity_id)) {
-    faderValue = computeStateDisplay(hass.localize, hass.states[faderRow.value_entity_id], hass.language)
+    displayValue = computeStateDisplay(hass.localize, hass.states[faderRow.value_entity_id], hass.language)
   } else if (faderRow.value_attribute && Object.prototype.hasOwnProperty.call(stateObj.attributes, faderRow.value_attribute)) {
-    faderValue = stateObj.attributes[faderRow.value_attribute]
+    displayValue = stateObj.attributes[faderRow.value_attribute]
   }
   const suffix = faderRow.value_suffix || ''
   if (suffix) {
-    faderValue += ` ${suffix}`
+    displayValue += ` ${suffix}`
   }
-  return faderValue
+  return { displayValue, inputValue }
 }
 
+
+
+
 class MixerCard extends LitElement {
-  get relativeFaderPointerEvents () {
-    return this._relativeFaderActive ? 'auto' : 'none'
-  }
+  
 
   constructor () {
     super()
@@ -115,87 +119,8 @@ class MixerCard extends LitElement {
         console.warn(`Entity ${faderRow.entity_id} not found in Home Assistant.`)
         continue
       }
-
-      const unavailable = stateObj.state === 'unavailable'
-      const domain = computeStateDomain(stateObj)
-      const maxValue = (typeof faderRow.max === 'number') ? faderRow.max : stateObj.attributes.max || 1
-      const minValue = (typeof faderRow.min === 'number') ? faderRow.min : stateObj.attributes.min || 0
-
-      if (!['number', 'media_player', 'input_number'].includes(domain)) {
-        continue
-      }
-      const faderName = faderRow.name || this._entity_property(faderRow.entity_id, '-name')
-      const invertActive = faderRow.invert_active || false
-      let faderValueRaw = 0
-      let activeState = faderRow.active_entity_id ? this._entity_property(faderRow.active_entity_id, 'state') : 'on'
-      if (invertActive) {
-        activeState = activeState === 'on' ? 'off' : 'on'
-      }
-      if (domain === 'media_player') {
-        faderValueRaw = this._entity_property(faderRow.entity_id, '-volume') || 0
-        activeState = this._entity_property(faderRow.entity_id, '-muted') ? 'off' : 'on'
-      } else {
-        faderValueRaw = stateObj.state
-      }
-      const icon = getFaderIcon(faderRow, stateObj, activeState)
-      let faderValue = getFaderValue(faderRow, stateObj, this.hass, minValue, maxValue)
-      const activeEntity = faderRow.active_entity_id || (domain === 'media_player' ? faderRow.entity_id : '')
-      const faderColors = getFaderColor(faderRow, cfg)
-      const faderTrackColor = faderColors.track
-      const faderActiveColor = faderColors.active
-      const faderInactiveColor = faderColors.inactive
-      const faderThumbColor = faderColors.thumb
-      this.faderColors[`fader_range_${faderRow.entity_id}`] = {
-        track_color: faderTrackColor,
-        active_color: faderActiveColor,
-        inactive_color: faderInactiveColor,
-        thumb_color: faderThumbColor
-      }
-
-      const activeButton = this._renderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon)
-      const inputClasses = `${activeState === 'off' ? 'fader-inactive' : 'fader-active'}${unavailable ? ' fader-unavailable' : ''}`
-      const inputId = `fader_range_${faderRow.entity_id}`
-
-      let inputStyle = getFaderStyle(faderColors, cfg, activeState)
-
-      const inputValue = Math.round((faderValueRaw - minValue) / (maxValue - minValue) * 100)
-
-      let rangeInput
-      if (this.config?.relativeFader) {
-        // Build style string for range input in relative fader mode (no pointer-events)
-        let rangeInputStyle
-        if (cfg.faderTheme === 'physical') {
-          rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:5px;`
-        } else {
-          rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:var(--fader-width);`
-        }
-        rangeInput = html`
-          <input type='range'
-            class='${inputClasses}'
-            id='${inputId}'
-            style='${rangeInputStyle}'
-            value='${inputValue}'
-            @mousedown=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}
-            @touchstart=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}>
-        `
-      } else if (updateWhileMoving) {
-        rangeInput = html`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' value='${inputValue}' @input=${e => this._setFaderLevel(stateObj, e.target.value)}>`
-      } else {
-        rangeInput = html`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' .value='${inputValue}' @change=${e => this._setFaderLevel(stateObj, e.target.value)}>`
-      }
-
-      faderTemplates.push(html`
-        <div class='fader' id='fader_${faderRow.entity_id}'>
-          <div class='range-holder' style='--fader-height: ${cfg.faderHeight};--fader-width: ${cfg.faderWidth};'>
-            ${rangeInput}
-          </div>
-          <div class='fader-name'>${faderName}</div>
-          <div class='fader-value'>${(activeState === 'on') || alwaysShowFaderValue ? faderValue : html`<br>`}</div>
-          <div class='active-button-holder ${unavailable ? 'button-disabled' : ''}'>${activeButton}</div>
-        </div>
-      `)
+      faderTemplates.push(this.renderFader(faderRow, stateObj, cfg))
     }
-
     const headerSection = generateHeader(cfg.title, cfg.description)
     const card = html`
       ${headerSection}
@@ -211,6 +136,83 @@ class MixerCard extends LitElement {
       return card
     }
     return html`<ha-card>${card}</ha-card>`
+  }
+
+  renderFader(faderRow, stateObj, cfg) {
+    const unavailable = stateObj.state === 'unavailable'
+    const domain = computeStateDomain(stateObj)
+    const maxValue = (typeof faderRow.max === 'number') ? faderRow.max : stateObj.attributes.max || 1
+    const minValue = (typeof faderRow.min === 'number') ? faderRow.min : stateObj.attributes.min || 0
+    if (!['number', 'media_player', 'input_number'].includes(domain)) {
+      return null
+    }
+    const faderName = faderRow.name || this._entity_property(faderRow.entity_id, '-name')
+    const invertActive = faderRow.invert_active || false
+    let faderValueRaw = 0
+    let activeState = faderRow.active_entity_id ? this._entity_property(faderRow.active_entity_id, 'state') : 'on'
+    if (invertActive) {
+      activeState = activeState === 'on' ? 'off' : 'on'
+    }
+    if (domain === 'media_player') {
+      faderValueRaw = this._entity_property(faderRow.entity_id, '-volume') || 0
+      activeState = this._entity_property(faderRow.entity_id, '-muted') ? 'off' : 'on'
+    } else {
+      faderValueRaw = stateObj.state
+    }
+    const icon = getFaderIcon(faderRow, stateObj, activeState)
+    const { displayValue, inputValue } = getFaderValue(faderRow, stateObj, this.hass)
+    const activeEntity = faderRow.active_entity_id || (domain === 'media_player' ? faderRow.entity_id : '')
+    const faderColors = getFaderColor(faderRow, cfg)
+    const faderTrackColor = faderColors.track
+    const faderActiveColor = faderColors.active
+    const faderInactiveColor = faderColors.inactive
+    const faderThumbColor = faderColors.thumb
+    this.faderColors[`fader_range_${faderRow.entity_id}`] = {
+      track_color: faderTrackColor,
+      active_color: faderActiveColor,
+      inactive_color: faderInactiveColor,
+      thumb_color: faderThumbColor
+    }
+    const activeButton = this._renderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon)
+    const inputClasses = `${activeState === 'off' ? 'fader-inactive' : 'fader-active'}${unavailable ? ' fader-unavailable' : ''}`
+    const inputId = `fader_range_${faderRow.entity_id}`
+    let inputStyle = getFaderStyle(faderColors, cfg, activeState)
+    let rangeInput
+    if (this.config?.relativeFader) {
+      let rangeInputStyle
+      if (cfg.faderTheme === 'physical') {
+        rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:5px;`
+      } else {
+        rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:var(--fader-width);`
+      }
+      rangeInput = html`
+        <input type='range'
+          class='${inputClasses}'
+          id='${inputId}'
+          style='${rangeInputStyle}'
+          value='${inputValue}'
+          @mousedown=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}
+          @touchstart=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}>
+      `
+    } else if (cfg.updateWhileMoving) {
+      rangeInput = html`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' value='${inputValue}' @input=${e => this._setFaderLevel(stateObj, e.target.value)}>`
+    } else {
+      rangeInput = html`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' .value='${inputValue}' @change=${e => this._setFaderLevel(stateObj, e.target.value)}>`
+    }
+    return html`
+      <div class='fader' id='fader_${faderRow.entity_id}'>
+        <div class='range-holder' style='--fader-height: ${cfg.faderHeight};--fader-width: ${cfg.faderWidth};'>
+          ${rangeInput}
+        </div>
+        <div class='fader-name'>${faderName}</div>
+        <div class='fader-value'>${(activeState === 'on') || cfg.alwaysShowFaderValue ? displayValue : html`<br>`}</div>
+        <div class='active-button-holder ${unavailable ? 'button-disabled' : ''}'>${activeButton}</div>
+      </div>
+    `
+  }
+
+  get relativeFaderPointerEvents () {
+    return this._relativeFaderActive ? 'auto' : 'none'
   }
 
   _onRelativeFaderDown (e, stateObj, min, max) {
