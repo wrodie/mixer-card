@@ -25,6 +25,10 @@ function getConfigDefaults(config) {
   }
 }
 
+function getFaderIcon(faderRow, stateObj, activeState) {
+  return activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute'
+}
+
 function getFaderValue(faderRow, stateObj, hass, minValue, maxValue) {
   let faderValueRaw = 0
   const domain = computeStateDomain(stateObj)
@@ -111,7 +115,7 @@ class MixerCard extends LitElement {
       } else {
         faderValueRaw = stateObj.state
       }
-      const icon = activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute'
+      const icon = getFaderIcon(faderRow, stateObj, activeState)
       let faderValue = getFaderValue(faderRow, stateObj, this.hass, minValue, maxValue)
       const activeEntity = faderRow.active_entity_id || (domain === 'media_player' ? faderRow.entity_id : '')
       const faderTrackColor = faderRow.track_color || cfg.faderTrackColor
