@@ -1,79 +1,19 @@
 /* jshint esversion: 8 */
 
-import { LitElement, html, css } from 'lit'
+import { LitElement, html } from 'lit'
 import {
-  computeStateDisplay,
-  computeStateDomain,
-  computeDomain
+  computeDomain,
+  computeStateDomain
 } from 'custom-card-helpers'
-
-function getConfigDefaults (config) {
-  return {
-    borderRadius: config?.borderRadius || '12px',
-    faderWidth: config?.faderWidth || '150px',
-    faderHeight: config?.faderHeight || '400px',
-    faderInactiveColor: config?.faderInactiveColor || '#f00',
-    faderThumbColor: config?.faderThumbColor || '#ddd',
-    faderTrackColor: config?.faderTrackColor || '#ddd',
-    faderActiveColor: config?.faderActiveColor || '#22ba00',
-    faderTheme: config?.faderTheme || 'modern',
-    updateWhileMoving: config?.updateWhileMoving || false,
-    alwaysShowFaderValue: config?.alwaysShowFaderValue || false,
-    haCard: config?.haCard !== false,
-    description: config?.description || '',
-    title: config?.title || ''
-  }
-}
-
-function generateHeader (cfg) {
-  const header = cfg.title ? html`<h1 class='card-header'><div class='name'>${cfg.title}</div></div>` : ''
-  const desc = cfg.description ? html`<p class='mixer-description'>${cfg.description}</p>` : ''
-  return html`${header}${desc}`
-}
-
-function getFaderStyle (faderColors, cfg, activeState) {
-  let style = `--fader-width: ${cfg.faderWidth}; --fader-height: ${cfg.faderHeight}; --fader-border-radius: ${cfg.borderRadius}; `
-  style += `--fader-color: ${activeState === 'on' ? faderColors.active : faderColors.inactive}; `
-  style += `--fader-thumb-color: ${faderColors.thumb}; --fader-track-color: ${faderColors.track}; --fader-track-inactive-color: ${faderColors.inactive};`
-  return style
-}
-
-function getFaderColor (faderRow, cfg) {
-  return {
-    track: faderRow.track_color || cfg.faderTrackColor,
-    active: faderRow.active_color || cfg.faderActiveColor,
-    inactive: faderRow.inactive_color || cfg.faderInactiveColor,
-    thumb: faderRow.thumb_color || cfg.faderThumbColor
-  }
-}
-
-function getFaderIcon (faderRow, stateObj, activeState) {
-  return activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute'
-}
-
-function getFaderValue (faderRow, stateObj, hass) {
-  const maxValue = (typeof faderRow.max === 'number') ? faderRow.max : stateObj.attributes.max || 1
-  const minValue = (typeof faderRow.min === 'number') ? faderRow.min : stateObj.attributes.min || 0
-  let rawValue = 0
-  const domain = computeStateDomain(stateObj)
-  if (domain === 'media_player') {
-    rawValue = stateObj.attributes.volume_level || 0
-  } else {
-    rawValue = stateObj.state
-  }
-  const inputValue = Math.round((rawValue - minValue) / (maxValue - minValue) * 100)
-  let displayValue = inputValue + '%'
-  if (faderRow.value_entity_id && Object.prototype.hasOwnProperty.call(hass.states, faderRow.value_entity_id)) {
-    displayValue = computeStateDisplay(hass.localize, hass.states[faderRow.value_entity_id], hass.language)
-  } else if (faderRow.value_attribute && Object.prototype.hasOwnProperty.call(stateObj.attributes, faderRow.value_attribute)) {
-    displayValue = stateObj.attributes[faderRow.value_attribute]
-  }
-  const suffix = faderRow.value_suffix || ''
-  if (suffix) {
-    displayValue += ` ${suffix}`
-  }
-  return { displayValue, inputValue }
-}
+import {
+  getConfigDefaults,
+  generateHeader,
+  getFaderStyle,
+  getFaderColor,
+  getFaderIcon,
+  getFaderValue
+} from './helpers.js'
+import { mixerCardStyles } from './styles.js'
 
 class MixerCard extends LitElement {
   constructor () {
@@ -99,12 +39,16 @@ class MixerCard extends LitElement {
     }
   }
 
+  static get styles () {
+    return mixerCardStyles
+  }
+
   render () {
     const cfg = getConfigDefaults(this.config)
 
     const faderTemplates = []
     this.faderColors = {}
-    if (!this.config?.faders || !Array.isArray(this.config.faders)) {
+    if (!this.config || !this.config.faders || !Array.isArray(this.config.faders)) {
       throw new Error('Invalid configuration: "faders" must be an array.')
     }
     for (let faderIndex = 0; faderIndex < this.config.faders.length; faderIndex++) {
@@ -116,7 +60,7 @@ class MixerCard extends LitElement {
       }
       faderTemplates.push(this.renderFader(faderRow, stateObj, cfg))
     }
-    const headerSection = generateHeader(cfg.title, cfg.description)
+    const headerSection = generateHeader(cfg)
     const card = html`
       ${headerSection}
       <div>
@@ -169,7 +113,7 @@ class MixerCard extends LitElement {
     const inputId = `fader_range_${faderRow.entity_id}`
     const inputStyle = getFaderStyle(faderColors, cfg, activeState)
     let rangeInput
-    if (this.config?.relativeFader) {
+    if (this.config && this.config.relativeFader) {
       let rangeInputStyle
       if (cfg.faderTheme === 'physical') {
         rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:5px;`
@@ -339,7 +283,7 @@ class MixerCard extends LitElement {
   }
 
   setConfig (config) {
-    if (!config?.faders || !Array.isArray(config.faders)) {
+    if (!config || !config.faders || !Array.isArray(config.faders)) {
       throw new Error('Invalid configuration: "faders" must be an array.')
     }
     this.config = config
@@ -348,161 +292,6 @@ class MixerCard extends LitElement {
   getCardSize () {
     return this.config.entities.length + 1
   }
-
-  static get styles () {
-    return css`
-
-        .fader-holder {
-            margin: 20px;
-        }
-        h4 {
-            color: #00F;
-            display: block;
-            font-weight: 300;
-            margin-bottom: 30px;
-            text-align: center;
-            font-size:20px;
-            margin-top:0;
-            text-transform: capitalize;
-        }
-        h4.brightness:after {
-          content: attr(data-value);
-          padding-left: 1px;
-        }
-
-        .fader-holder {
-          display: flex;
-        }
-        .fader {
-            padding: 6px 10px;
-        }
-        .fader-value {
-            margin-top: 10px;
-            text-align: center;
-        }
-        .fader-name {
-            margin-top: 30px;
-            text-align: center;
-            display: block;
-            font-weight: 300;
-            text-align: center;
-            font-size:14px;
-            text-transform: capitalize;
-        }
-        .range-holder {
-            height: var(--fader-height);
-            width: var(--fader-width);
-            position:relative;
-            display: block;
-            margin-right: auto;
-            margin-left: auto;
-        }
-        .range-holder input[type="range"] {
-            margin: 0;
-            outline: 0;
-            border: 0;
-            -webkit-transform:rotate(270deg);
-            -moz-transform:rotate(270deg);
-            -o-transform:rotate(270deg);
-            -ms-transform:rotate(270deg);
-            transform:rotate(270deg);
-            position: absolute;
-            top: calc(50% - (var(--fader-width) / 2));
-            right: calc(50% - (var(--fader-height) / 2));
-            background-color: var(--fader-track-color);
-            transition: box-shadow 0.2s ease-in-out;
-            -webkit-appearance: none;
-            appearance: none;
-            border-radius: var(--fader-border-radius, 12px);
-        }
-
-        /* Theme Physical */
-
-        .fader-theme-physical .range-holder input[type="range"] {
-            top: 50%;
-            width: var(--fader-height);
-            height: 5px;
-            background-color: var(--fader-track-color);
-        }
-        .fader-theme-physical .range-holder input[type="range"].fader-inactive {
-            background-color: var(--fader-track-inactive-color);
-        }
-
-        .fader-theme-physical .range-holder input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height:40px;
-            width:85px;
-            cursor: pointer;
-            transition: box-shadow 0.2s ease-in-out;
-            background-image: url("/hacsfiles/mixer-card/fader.svg");
-            background-size: cover;
-            border-radius: 7px;
-        }
-
-        .fader-unavailable, .button-disabled {
-            opacity: 20%;
-            pointer-events: none;
-        }
-
-        /* Theme Modern */
-
-        .fader-theme-modern .range-holder input[type="range"] {
-            width: var(--fader-height);
-            height: var(--fader-width);
-            -webkit-appearance: none;
-            background-color: var(--fader-track-color);
-            overflow: hidden;
-        }
-
-        .fader-theme-modern .range-holder input[type="range"]::-webkit-slider-runnable-track {
-            height: var(--fader-width);
-            -webkit-appearance: none;
-            background-color: var(--fader-track-color);
-            margin-top: -1px;
-            transition: box-shadow 0.2s ease-in-out;
-        }
-
-        .fader-theme-modern .range-holder input[type="range"]::-webkit-slider-thumb {
-            width: 25px;
-            border-right:10px solid var(--fader-color);
-            border-left:10px solid var(--fader-color);
-            border-top:20px solid var(--fader-color);
-            border-bottom:20px solid var(--fader-color);
-            -webkit-appearance: none;
-            height: 80px;
-            cursor: pointer;
-            background: #fff;
-            box-shadow: -350px 0 0 350px var(--fader-color), inset 0 0 0 80px var(--fader-thumb-color);
-            border-radius: 0;
-            transition: box-shadow 0.2s ease-in-out;
-            position: relative;
-            top: calc((var(--fader-width) - 80px) / 2);
-        }
-
-        .active-button {
-            margin:20px;
-            margin-top: 30px;
-            line-height:20px;
-            border: 1px solid #bbb;
-            box-shadow: 1px 1px 1px #bbb;
-            display:block;
-            padding: 5px;
-            cursor:pointer;
-            vertical-align: center;
-            text-align: center;
-            border-radius: 5px;
-        }
-        .active-button span {
-          pointer-events: none;
-        }
-        .active-button ha-icon {
-          pointer-events: none;
-        }
-        p.mixer-description {
-            margin: 16px;
-            margin-top: 0px;
-        }
-    `
-  }
 }
+
 customElements.define('custom-mixer-card', MixerCard)
