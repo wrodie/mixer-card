@@ -31,6 +31,13 @@ function generateHeader(cfg) {
   return html`${header}${desc}`
 }
 
+function getFaderStyle(faderColors, cfg, activeState) {
+  let style = `--fader-width: ${cfg.faderWidth}; --fader-height: ${cfg.faderHeight}; --fader-border-radius: ${cfg.borderRadius}; `
+  style += `--fader-color: ${activeState === 'on' ? faderColors.active : faderColors.inactive}; `
+  style += `--fader-thumb-color: ${faderColors.thumb}; --fader-track-color: ${faderColors.track}; --fader-track-inactive-color: ${faderColors.inactive};`
+  return style
+}
+
 function getFaderColor(faderRow, cfg) {
   return {
     track: faderRow.track_color || cfg.faderTrackColor,
@@ -149,9 +156,7 @@ class MixerCard extends LitElement {
       const inputClasses = `${activeState === 'off' ? 'fader-inactive' : 'fader-active'}${unavailable ? ' fader-unavailable' : ''}`
       const inputId = `fader_range_${faderRow.entity_id}`
 
-      let inputStyle = `--fader-width: ${cfg.faderWidth}; --fader-height: ${cfg.faderHeight}; --fader-border-radius: ${cfg.borderRadius}; `
-      inputStyle += `--fader-color: ${activeState === 'on' ? faderActiveColor : faderInactiveColor}; `
-      inputStyle += `--fader-thumb-color: ${faderThumbColor}; --fader-track-color: ${faderTrackColor}; --fader-track-inactive-color: ${faderInactiveColor};`
+      let inputStyle = getFaderStyle(faderColors, cfg, activeState)
 
       const inputValue = Math.round((faderValueRaw - minValue) / (maxValue - minValue) * 100)
 
