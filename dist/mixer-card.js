@@ -28,8 +28,22 @@ var t$2,r$3,a$2=function(e,t){return o$4(t).format(e)},o$4=function(e){return ne
 
 /* jshint esversion: 8 */
 class MixerCard extends s$3 {
+  get relativeFaderPointerEvents() {
+    return this._relativeFaderActive ? 'auto' : 'none';
+  }
   constructor() {
     super();
+    // For relative fader tracking
+    this._relativeFaderActive = false;
+    this._relativeFaderStartY = 0;
+    this._relativeFaderStartValue = 0;
+    this._relativeFaderMin = 0;
+    this._relativeFaderMax = 100;
+    this._relativeFaderStateObj = null;
+    this._relativeFaderInput = null;
+    this._relativeFaderSensitivity = 0.2; // percent per pixel
+    this._onRelativeFaderMove = this._onRelativeFaderMove.bind(this);
+    this._onRelativeFaderUp = this._onRelativeFaderUp.bind(this);
   }
   static get properties() {
     return {
@@ -43,15 +57,15 @@ class MixerCard extends s$3 {
     const faderWidth = this.config?.faderWidth || '150px';
     const faderHeight = this.config?.faderHeight || '400px';
     const faderThumbColor = this.config?.faderThumbColor || '#ddd';
-    this.faderTrackColor = this.config?.faderTrackColor || "#ddd";
-    this.faderActiveColor = this.config?.faderActiveColor || "#22ba00";
-    const faderInactiveColor = this.config?.faderInactiveColor || "#f00";
-    const faderTheme = this.config?.faderTheme || "modern";
+    this.faderTrackColor = this.config?.faderTrackColor || '#ddd';
+    this.faderActiveColor = this.config?.faderActiveColor || '#22ba00';
+    const faderInactiveColor = this.config?.faderInactiveColor || '#f00';
+    const faderTheme = this.config?.faderTheme || 'modern';
     const updateWhileMoving = this.config?.updateWhileMoving || false;
     const alwaysShowFaderValue = this.config?.alwaysShowFaderValue || false;
     const haCard = this.config?.haCard || true;
-    const description = this.config?.description || "";
-    const title = this.config?.title || "";
+    const description = this.config?.description || '';
+    const title = this.config?.title || '';
     const faderTemplates = [];
     this.faderColors = {};
     if (!this.config?.faders || !Array.isArray(this.config.faders)) {
@@ -113,14 +127,33 @@ class MixerCard extends s$3 {
       input_style += `--fader-color: ${activeState === 'on' ? fader_active_color : fader_inactive_color}; `;
       input_style += `--fader-thumb-color: ${fader_thumb_color}; --fader-track-color: ${fader_track_color}; --fader-track-inactive-color: ${fader_inactive_color};`;
       const input_value = Math.round((fader_value_raw - min_value) / (max_value - min_value) * 100);
-      let range_input = x`<input type="range" class="${input_classes}" id="${input_id}" style="${input_style}" .value="${input_value}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
-      if (updateWhileMoving) {
-        range_input = x`<input type="range" class="${input_classes}" id="${input_id}" style="${input_style}" .value="${input_value}" @input=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
+      let range_input;
+      if (this.config?.relativeFader) {
+        // Build style string for range input in relative fader mode (no pointer-events)
+        let rangeInputStyle;
+        if (faderTheme === 'physical') {
+          rangeInputStyle = `${input_style.replace(/;+\s*$/, '')}; width:var(--fader-height); height:5px;`;
+        } else {
+          rangeInputStyle = `${input_style.replace(/;+\s*$/, '')}; width:var(--fader-height); height:var(--fader-width);`;
+        }
+        range_input = x`
+    <input type="range"
+      class="${input_classes}"
+      id="${input_id}"
+      style="${rangeInputStyle}"
+      value="${input_value}"
+      @mousedown=${e => this._onRelativeFaderDown(e, stateObj, min_value, max_value)}
+      @touchstart=${e => this._onRelativeFaderDown(e, stateObj, min_value, max_value)}>
+  `;
+      } else if (updateWhileMoving) {
+        range_input = x`<input type="range" class="${input_classes}" id="${input_id}" style="${input_style}" value="${input_value}" @input=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
+      } else {
+        range_input = x`<input type="range" class="${input_classes}" id="${input_id}" style="${input_style}" .value="${input_value}" @change=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
       }
       faderTemplates.push(x`
             <div class = "fader" id = "fader_${fader_row.entity_id}">
-                <div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
-                    ${range_input}
+<div class="range-holder" style="--fader-height: ${faderHeight};--fader-width: ${faderWidth};">
+                     ${range_input}
                 </div>
                 <div class = "fader-name">${fader_name}</div>
               <div class = "fader-value">${activeState === 'on' || alwaysShowFaderValue ? fader_value : x`<br>`}</div>
@@ -145,6 +178,44 @@ class MixerCard extends s$3 {
       return card;
     }
     return x`<ha-card>${card} </ha-card>`;
+  }
+  _onRelativeFaderDown(e, stateObj, min, max) {
+    e.preventDefault();
+    // Support both mouse and touch
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    this._relativeFaderActive = true;
+    this.requestUpdate();
+    this._relativeFaderStartY = clientY;
+    this._relativeFaderStateObj = stateObj;
+    this._relativeFaderMin = min;
+    this._relativeFaderMax = max;
+    // Get input element
+    this._relativeFaderInput = e.target;
+    this._relativeFaderStartValue = Number(e.target.value);
+    window.addEventListener('mousemove', this._onRelativeFaderMove);
+    window.addEventListener('touchmove', this._onRelativeFaderMove);
+    window.addEventListener('mouseup', this._onRelativeFaderUp);
+    window.addEventListener('touchend', this._onRelativeFaderUp);
+  }
+  _onRelativeFaderMove(e) {
+    if (!this._relativeFaderActive) return;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const deltaY = this._relativeFaderStartY - clientY; // up is increase
+    let newValue = this._relativeFaderStartValue + deltaY * this._relativeFaderSensitivity;
+    newValue = Math.max(0, Math.min(100, newValue));
+    this._relativeFaderInput.value = newValue;
+    this._setFaderLevel(this._relativeFaderStateObj, newValue);
+  }
+  _onRelativeFaderUp(e) {
+    if (!this._relativeFaderActive) return;
+    this._relativeFaderActive = false;
+    this.requestUpdate();
+    window.removeEventListener('mousemove', this._onRelativeFaderMove);
+    window.removeEventListener('touchmove', this._onRelativeFaderMove);
+    window.removeEventListener('mouseup', this._onRelativeFaderUp);
+    window.removeEventListener('touchend', this._onRelativeFaderUp);
+    this._relativeFaderStateObj = null;
+    this._relativeFaderInput = null;
   }
   _renderActiveButton(active_entity, activeState, unavailable, fader_active_color, fader_inactive_color, icon) {
     return active_entity ? x`
