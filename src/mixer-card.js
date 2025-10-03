@@ -25,6 +25,12 @@ function getConfigDefaults(config) {
   }
 }
 
+function generateHeader(cfg) {
+  const header = cfg.title ? html`<h1 class='card-header'><div class='name'>${cfg.title}</div></div>` : ''
+  const desc = cfg.description ? html`<p class='mixer-description'>${cfg.description}</p>` : ''
+  return html`${header}${desc}`
+}
+
 function getFaderColor(faderRow, cfg) {
   return {
     track: faderRow.track_color || cfg.faderTrackColor,
@@ -185,11 +191,9 @@ class MixerCard extends LitElement {
       `)
     }
 
-    const headersTitle = title ? html`<h1 class='card-header'><div class='name'>${title}</div></div>` : ''
-    const headersDescription = description ? html`<p class='mixer-description'>${description}</p>` : ''
+    const headerSection = generateHeader(cfg.title, cfg.description)
     const card = html`
-      ${headersTitle}
-      ${headersDescription}
+      ${headerSection}
       <div>
         <div class='mixer-card'>
           <div class='fader-holder fader-theme-${cfg.faderTheme}'>
