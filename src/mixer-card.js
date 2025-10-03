@@ -7,7 +7,7 @@ import {
   computeDomain
 } from 'custom-card-helpers'
 
-function getConfigDefaults(config) {
+function getConfigDefaults (config) {
   return {
     borderRadius: config?.borderRadius || '12px',
     faderWidth: config?.faderWidth || '150px',
@@ -25,20 +25,20 @@ function getConfigDefaults(config) {
   }
 }
 
-function generateHeader(cfg) {
+function generateHeader (cfg) {
   const header = cfg.title ? html`<h1 class='card-header'><div class='name'>${cfg.title}</div></div>` : ''
   const desc = cfg.description ? html`<p class='mixer-description'>${cfg.description}</p>` : ''
   return html`${header}${desc}`
 }
 
-function getFaderStyle(faderColors, cfg, activeState) {
+function getFaderStyle (faderColors, cfg, activeState) {
   let style = `--fader-width: ${cfg.faderWidth}; --fader-height: ${cfg.faderHeight}; --fader-border-radius: ${cfg.borderRadius}; `
   style += `--fader-color: ${activeState === 'on' ? faderColors.active : faderColors.inactive}; `
   style += `--fader-thumb-color: ${faderColors.thumb}; --fader-track-color: ${faderColors.track}; --fader-track-inactive-color: ${faderColors.inactive};`
   return style
 }
 
-function getFaderColor(faderRow, cfg) {
+function getFaderColor (faderRow, cfg) {
   return {
     track: faderRow.track_color || cfg.faderTrackColor,
     active: faderRow.active_color || cfg.faderActiveColor,
@@ -47,11 +47,11 @@ function getFaderColor(faderRow, cfg) {
   }
 }
 
-function getFaderIcon(faderRow, stateObj, activeState) {
+function getFaderIcon (faderRow, stateObj, activeState) {
   return activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute'
 }
 
-function getFaderValue(faderRow, stateObj, hass) {
+function getFaderValue (faderRow, stateObj, hass) {
   const maxValue = (typeof faderRow.max === 'number') ? faderRow.max : stateObj.attributes.max || 1
   const minValue = (typeof faderRow.min === 'number') ? faderRow.min : stateObj.attributes.min || 0
   let rawValue = 0
@@ -75,12 +75,7 @@ function getFaderValue(faderRow, stateObj, hass) {
   return { displayValue, inputValue }
 }
 
-
-
-
 class MixerCard extends LitElement {
-  
-
   constructor () {
     super()
     // For relative fader tracking
@@ -138,7 +133,7 @@ class MixerCard extends LitElement {
     return html`<ha-card>${card}</ha-card>`
   }
 
-  renderFader(faderRow, stateObj, cfg) {
+  renderFader (faderRow, stateObj, cfg) {
     const unavailable = stateObj.state === 'unavailable'
     const domain = computeStateDomain(stateObj)
     const maxValue = (typeof faderRow.max === 'number') ? faderRow.max : stateObj.attributes.max || 1
@@ -148,16 +143,12 @@ class MixerCard extends LitElement {
     }
     const faderName = faderRow.name || this._entity_property(faderRow.entity_id, '-name')
     const invertActive = faderRow.invert_active || false
-    let faderValueRaw = 0
     let activeState = faderRow.active_entity_id ? this._entity_property(faderRow.active_entity_id, 'state') : 'on'
     if (invertActive) {
       activeState = activeState === 'on' ? 'off' : 'on'
     }
     if (domain === 'media_player') {
-      faderValueRaw = this._entity_property(faderRow.entity_id, '-volume') || 0
       activeState = this._entity_property(faderRow.entity_id, '-muted') ? 'off' : 'on'
-    } else {
-      faderValueRaw = stateObj.state
     }
     const icon = getFaderIcon(faderRow, stateObj, activeState)
     const { displayValue, inputValue } = getFaderValue(faderRow, stateObj, this.hass)
@@ -176,7 +167,7 @@ class MixerCard extends LitElement {
     const activeButton = this._renderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon)
     const inputClasses = `${activeState === 'off' ? 'fader-inactive' : 'fader-active'}${unavailable ? ' fader-unavailable' : ''}`
     const inputId = `fader_range_${faderRow.entity_id}`
-    let inputStyle = getFaderStyle(faderColors, cfg, activeState)
+    const inputStyle = getFaderStyle(faderColors, cfg, activeState)
     let rangeInput
     if (this.config?.relativeFader) {
       let rangeInputStyle
