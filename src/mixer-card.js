@@ -25,6 +25,27 @@ function getConfigDefaults(config) {
   }
 }
 
+function getFaderValue(faderRow, stateObj, hass, minValue, maxValue) {
+  let faderValueRaw = 0
+  const domain = computeStateDomain(stateObj)
+  if (domain === 'media_player') {
+    faderValueRaw = stateObj.attributes.volume_level || 0
+  } else {
+    faderValueRaw = stateObj.state
+  }
+  let faderValue = Math.round((faderValueRaw - minValue) / (maxValue - minValue) * 100) + '%'
+  if (faderRow.value_entity_id && Object.prototype.hasOwnProperty.call(hass.states, faderRow.value_entity_id)) {
+    faderValue = computeStateDisplay(hass.localize, hass.states[faderRow.value_entity_id], hass.language)
+  } else if (faderRow.value_attribute && Object.prototype.hasOwnProperty.call(stateObj.attributes, faderRow.value_attribute)) {
+    faderValue = stateObj.attributes[faderRow.value_attribute]
+  }
+  const suffix = faderRow.value_suffix || ''
+  if (suffix) {
+    faderValue += ` ${suffix}`
+  }
+  return faderValue
+}
+
 class MixerCard extends LitElement {
   get relativeFaderPointerEvents () {
     return this._relativeFaderActive ? 'auto' : 'none'
@@ -91,16 +112,7 @@ class MixerCard extends LitElement {
         faderValueRaw = stateObj.state
       }
       const icon = activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute'
-      let faderValue = Math.round((faderValueRaw - minValue) / (maxValue - minValue) * 100) + '%'
-      if (faderRow.value_entity_id && Object.prototype.hasOwnProperty.call(this.hass.states, faderRow.value_entity_id)) {
-        faderValue = computeStateDisplay(this.hass.localize, this.hass.states[faderRow.value_entity_id], this.hass.language)
-      } else if (faderRow.value_attribute && Object.prototype.hasOwnProperty.call(stateObj.attributes, faderRow.value_attribute)) {
-        faderValue = stateObj.attributes[faderRow.value_attribute]
-      }
-      const suffix = faderRow.value_suffix || ''
-      if (suffix) {
-        faderValue += ` ${suffix}`
-      }
+      let faderValue = getFaderValue(faderRow, stateObj, this.hass, minValue, maxValue)
       const activeEntity = faderRow.active_entity_id || (domain === 'media_player' ? faderRow.entity_id : '')
       const faderTrackColor = faderRow.track_color || cfg.faderTrackColor
       const faderActiveColor = faderRow.active_color || cfg.faderActiveColor
