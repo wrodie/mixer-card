@@ -7,6 +7,24 @@ import {
   computeDomain
 } from 'custom-card-helpers'
 
+function getConfigDefaults(config) {
+  return {
+    borderRadius: config?.borderRadius || '12px',
+    faderWidth: config?.faderWidth || '150px',
+    faderHeight: config?.faderHeight || '400px',
+    faderInactiveColor: config?.faderInactiveColor || '#f00',
+    faderThumbColor: config?.faderThumbColor || '#ddd',
+    faderTrackColor: config?.faderTrackColor || '#ddd',
+    faderActiveColor: config?.faderActiveColor || '#22ba00',
+    faderTheme: config?.faderTheme || 'modern',
+    updateWhileMoving: config?.updateWhileMoving || false,
+    alwaysShowFaderValue: config?.alwaysShowFaderValue || false,
+    haCard: config?.haCard !== false,
+    description: config?.description || '',
+    title: config?.title || ''
+  }
+}
+
 class MixerCard extends LitElement {
   get relativeFaderPointerEvents () {
     return this._relativeFaderActive ? 'auto' : 'none'
@@ -36,20 +54,7 @@ class MixerCard extends LitElement {
   }
 
   render () {
-    const borderRadius = this.config?.borderRadius || '12px'
-    const faderWidth = this.config?.faderWidth || '150px'
-    const faderHeight = this.config?.faderHeight || '400px'
-    const defaultFaderInactiveColor = this.config?.faderInactiveColor || '#f00'
-    const defaultFaderThumbColor = this.config?.faderThumbColor || '#ddd'
-
-    this.faderTrackColor = this.config?.faderTrackColor || '#ddd'
-    this.faderActiveColor = this.config?.faderActiveColor || '#22ba00'
-    const faderTheme = this.config?.faderTheme || 'modern'
-    const updateWhileMoving = this.config?.updateWhileMoving || false
-    const alwaysShowFaderValue = this.config?.alwaysShowFaderValue || false
-    const haCard = this.config?.haCard || true
-    const description = this.config?.description || ''
-    const title = this.config?.title || ''
+    const cfg = getConfigDefaults(this.config)
 
     const faderTemplates = []
     this.faderColors = {}
@@ -97,10 +102,10 @@ class MixerCard extends LitElement {
         faderValue += ` ${suffix}`
       }
       const activeEntity = faderRow.active_entity_id || (domain === 'media_player' ? faderRow.entity_id : '')
-      const faderTrackColor = faderRow.track_color || this.faderTrackColor
-      const faderActiveColor = faderRow.active_color || this.faderActiveColor
-      const faderInactiveColor = faderRow.inactive_color || defaultFaderInactiveColor
-      const faderThumbColor = faderRow.thumb_color || defaultFaderThumbColor
+      const faderTrackColor = faderRow.track_color || cfg.faderTrackColor
+      const faderActiveColor = faderRow.active_color || cfg.faderActiveColor
+      const faderInactiveColor = faderRow.inactive_color || cfg.faderInactiveColor
+      const faderThumbColor = faderRow.thumb_color || cfg.faderThumbColor
       this.faderColors[`fader_range_${faderRow.entity_id}`] = {
         track_color: faderTrackColor,
         active_color: faderActiveColor,
@@ -112,7 +117,7 @@ class MixerCard extends LitElement {
       const inputClasses = `${activeState === 'off' ? 'fader-inactive' : 'fader-active'}${unavailable ? ' fader-unavailable' : ''}`
       const inputId = `fader_range_${faderRow.entity_id}`
 
-      let inputStyle = `--fader-width: ${faderWidth}; --fader-height: ${faderHeight}; --fader-border-radius: ${borderRadius}; `
+      let inputStyle = `--fader-width: ${cfg.faderWidth}; --fader-height: ${cfg.faderHeight}; --fader-border-radius: ${cfg.borderRadius}; `
       inputStyle += `--fader-color: ${activeState === 'on' ? faderActiveColor : faderInactiveColor}; `
       inputStyle += `--fader-thumb-color: ${faderThumbColor}; --fader-track-color: ${faderTrackColor}; --fader-track-inactive-color: ${faderInactiveColor};`
 
@@ -122,7 +127,7 @@ class MixerCard extends LitElement {
       if (this.config?.relativeFader) {
         // Build style string for range input in relative fader mode (no pointer-events)
         let rangeInputStyle
-        if (faderTheme === 'physical') {
+        if (cfg.faderTheme === 'physical') {
           rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:5px;`
         } else {
           rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:var(--fader-width);`
@@ -144,7 +149,7 @@ class MixerCard extends LitElement {
 
       faderTemplates.push(html`
         <div class='fader' id='fader_${faderRow.entity_id}'>
-          <div class='range-holder' style='--fader-height: ${faderHeight};--fader-width: ${faderWidth};'>
+          <div class='range-holder' style='--fader-height: ${cfg.faderHeight};--fader-width: ${cfg.faderWidth};'>
             ${rangeInput}
           </div>
           <div class='fader-name'>${faderName}</div>
@@ -161,13 +166,13 @@ class MixerCard extends LitElement {
       ${headersDescription}
       <div>
         <div class='mixer-card'>
-          <div class='fader-holder fader-theme-${faderTheme}'>
+          <div class='fader-holder fader-theme-${cfg.faderTheme}'>
             ${faderTemplates}
           </div>
         </div>
       </div>
     `
-    if (!haCard) {
+    if (!cfg.haCard) {
       return card
     }
     return html`<ha-card>${card}</ha-card>`
