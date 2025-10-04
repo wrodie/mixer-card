@@ -1,6 +1,6 @@
 {
   "name": "mixer-card",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Lovelace card to use for Audio mixers",
   "keywords": [
     "home-assistant",
@@ -35,7 +35,7 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.6.0",
-    "eslint-plugin-vue": "^10.1.0",
+    "eslint-plugin-vue": "^10.5.0",
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -43,12 +43,13 @@
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^5.1.2",
     "rollup-plugin-typescript2": "^0.24.3",
-    "typescript": "^3.6.4"
+    "typescript": "^3.6.4",
+    "vue-eslint-parser": "^10.2.0"
   },
   "scripts": {
     "start": "rollup -c --watch",
     "build": "npm run lint && npm run rollup",
-    "lint": "eslint src/*.js",
+    "lint": "eslint --fix src/*.js",
     "rollup": "rollup -c"
   }
 }

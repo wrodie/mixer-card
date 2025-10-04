@@ -48,6 +48,7 @@ This configuration applies to all faders in the card
 | `faderInactiveColor`   | The color of the track when the channel is muted/not-active                                                       | `#f00`       |
 | `faderTheme`           | How should the fader's display. Options are `modern`/`physical`                                                   | `modern`     |
 | `updateWhileMoving`    | If set, the entity values will be updated while moving the fader. Off by default to prevent API request flooding. | `false`      |
+| `relativeFader`       | If true, clicking a fader sets focus and mouse movement adjusts the value relative to the starting point, rather than setting the value directly. | `false`      |
 | `alwaysShowFaderValue` | If set, the fader value will be displayed even when the fader is not active.                                      | `false`      |
 | `haCard`               | Should the card include a `<ha-card>` element? Boolean                                                            | `true`       |
 | `title`                | Add a title to the card                                                                                           |              |
@@ -84,6 +85,7 @@ This is the configuration for each individual fader
     faderActiveColor: '#22ba00'
     faderInactiveColor: '#F00'
     faderTheme: modern
+    relativeFader: true
     faders:
       - entity_id: number.9f3fea35f92bc3ab474f8f76ad071ab9_bus_11_fader
         name: test name
