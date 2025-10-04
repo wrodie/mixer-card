@@ -3,24 +3,96 @@
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const t=window,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,i=Symbol(),r=new WeakMap;class n{constructor(t,e,r){if(this._$cssResult$=!0,r!==i)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=e}get styleSheet(){let t=this.o;const i=this.t;if(e&&void 0===t){const e=void 0!==i&&1===i.length;e&&(t=r.get(i)),void 0===t&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),e&&r.set(i,t))}return t}toString(){return this.cssText}}const a=(i,r)=>{e?i.adoptedStyleSheets=r.map(t=>t instanceof CSSStyleSheet?t:t.styleSheet):r.forEach(e=>{const r=document.createElement("style"),n=t.litNonce;void 0!==n&&r.setAttribute("nonce",n),r.textContent=e.cssText,i.appendChild(r)})},s=e?t=>t:t=>t instanceof CSSStyleSheet?(t=>{let e="";for(const i of t.cssRules)e+=i.cssText;return(t=>new n("string"==typeof t?t:t+"",void 0,i))(e)})(t):t
+const t=window,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,s=Symbol(),n=new WeakMap;class o{constructor(t,e,n){if(this._$cssResult$=!0,n!==s)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=e;}get styleSheet(){let t=this.o;const s=this.t;if(e&&void 0===t){const e=void 0!==s&&1===s.length;e&&(t=n.get(s)),void 0===t&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),e&&n.set(s,t));}return t}toString(){return this.cssText}}const r=t=>new o("string"==typeof t?t:t+"",void 0,s),i=(t,...e)=>{const n=1===t.length?t[0]:e.reduce(((e,s,n)=>e+(t=>{if(!0===t._$cssResult$)return t.cssText;if("number"==typeof t)return t;throw Error("Value passed to 'css' function must be a 'css' function result: "+t+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(s)+t[n+1]),t[0]);return new o(n,t,s)},S=(s,n)=>{e?s.adoptedStyleSheets=n.map((t=>t instanceof CSSStyleSheet?t:t.styleSheet)):n.forEach((e=>{const n=document.createElement("style"),o=t.litNonce;void 0!==o&&n.setAttribute("nonce",o),n.textContent=e.cssText,s.appendChild(n);}));},c=e?t=>t:t=>t instanceof CSSStyleSheet?(t=>{let e="";for(const s of t.cssRules)e+=s.cssText;return r(e)})(t):t;
+
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */;var o;const l=window,d=l.trustedTypes,h=d?d.emptyScript:"",c=l.reactiveElementPolyfillSupport,u={toAttribute(t,e){switch(e){case Boolean:t=t?h:null;break;case Object:case Array:t=null==t?t:JSON.stringify(t)}return t},fromAttribute(t,e){let i=t;switch(e){case Boolean:i=null!==t;break;case Number:i=null===t?null:Number(t);break;case Object:case Array:try{i=JSON.parse(t)}catch(t){i=null}}return i}},p=(t,e)=>e!==t&&(e==e||t==t),v={attribute:!0,type:String,converter:u,reflect:!1,hasChanged:p},m="finalized";class f extends HTMLElement{constructor(){super(),this._$Ei=new Map,this.isUpdatePending=!1,this.hasUpdated=!1,this._$El=null,this._$Eu()}static addInitializer(t){var e;this.finalize(),(null!==(e=this.h)&&void 0!==e?e:this.h=[]).push(t)}static get observedAttributes(){this.finalize();const t=[];return this.elementProperties.forEach((e,i)=>{const r=this._$Ep(i,e);void 0!==r&&(this._$Ev.set(r,i),t.push(r))}),t}static createProperty(t,e=v){if(e.state&&(e.attribute=!1),this.finalize(),this.elementProperties.set(t,e),!e.noAccessor&&!this.prototype.hasOwnProperty(t)){const i="symbol"==typeof t?Symbol():"__"+t,r=this.getPropertyDescriptor(t,i,e);void 0!==r&&Object.defineProperty(this.prototype,t,r)}}static getPropertyDescriptor(t,e,i){return{get(){return this[e]},set(r){const n=this[t];this[e]=r,this.requestUpdate(t,n,i)},configurable:!0,enumerable:!0}}static getPropertyOptions(t){return this.elementProperties.get(t)||v}static finalize(){if(this.hasOwnProperty(m))return!1;this[m]=!0;const t=Object.getPrototypeOf(this);if(t.finalize(),void 0!==t.h&&(this.h=[...t.h]),this.elementProperties=new Map(t.elementProperties),this._$Ev=new Map,this.hasOwnProperty("properties")){const t=this.properties,e=[...Object.getOwnPropertyNames(t),...Object.getOwnPropertySymbols(t)];for(const i of e)this.createProperty(i,t[i])}return this.elementStyles=this.finalizeStyles(this.styles),!0}static finalizeStyles(t){const e=[];if(Array.isArray(t)){const i=new Set(t.flat(1/0).reverse());for(const t of i)e.unshift(s(t))}else void 0!==t&&e.push(s(t));return e}static _$Ep(t,e){const i=e.attribute;return!1===i?void 0:"string"==typeof i?i:"string"==typeof t?t.toLowerCase():void 0}_$Eu(){var t;this._$E_=new Promise(t=>this.enableUpdating=t),this._$AL=new Map,this._$Eg(),this.requestUpdate(),null===(t=this.constructor.h)||void 0===t||t.forEach(t=>t(this))}addController(t){var e,i;(null!==(e=this._$ES)&&void 0!==e?e:this._$ES=[]).push(t),void 0!==this.renderRoot&&this.isConnected&&(null===(i=t.hostConnected)||void 0===i||i.call(t))}removeController(t){var e;null===(e=this._$ES)||void 0===e||e.splice(this._$ES.indexOf(t)>>>0,1)}_$Eg(){this.constructor.elementProperties.forEach((t,e)=>{this.hasOwnProperty(e)&&(this._$Ei.set(e,this[e]),delete this[e])})}createRenderRoot(){var t;const e=null!==(t=this.shadowRoot)&&void 0!==t?t:this.attachShadow(this.constructor.shadowRootOptions);return a(e,this.constructor.elementStyles),e}connectedCallback(){var t;void 0===this.renderRoot&&(this.renderRoot=this.createRenderRoot()),this.enableUpdating(!0),null===(t=this._$ES)||void 0===t||t.forEach(t=>{var e;return null===(e=t.hostConnected)||void 0===e?void 0:e.call(t)})}enableUpdating(t){}disconnectedCallback(){var t;null===(t=this._$ES)||void 0===t||t.forEach(t=>{var e;return null===(e=t.hostDisconnected)||void 0===e?void 0:e.call(t)})}attributeChangedCallback(t,e,i){this._$AK(t,i)}_$EO(t,e,i=v){var r;const n=this.constructor._$Ep(t,i);if(void 0!==n&&!0===i.reflect){const a=(void 0!==(null===(r=i.converter)||void 0===r?void 0:r.toAttribute)?i.converter:u).toAttribute(e,i.type);this._$El=t,null==a?this.removeAttribute(n):this.setAttribute(n,a),this._$El=null}}_$AK(t,e){var i;const r=this.constructor,n=r._$Ev.get(t);if(void 0!==n&&this._$El!==n){const t=r.getPropertyOptions(n),a="function"==typeof t.converter?{fromAttribute:t.converter}:void 0!==(null===(i=t.converter)||void 0===i?void 0:i.fromAttribute)?t.converter:u;this._$El=n,this[n]=a.fromAttribute(e,t.type),this._$El=null}}requestUpdate(t,e,i){let r=!0;void 0!==t&&(((i=i||this.constructor.getPropertyOptions(t)).hasChanged||p)(this[t],e)?(this._$AL.has(t)||this._$AL.set(t,e),!0===i.reflect&&this._$El!==t&&(void 0===this._$EC&&(this._$EC=new Map),this._$EC.set(t,i))):r=!1),!this.isUpdatePending&&r&&(this._$E_=this._$Ej())}async _$Ej(){this.isUpdatePending=!0;try{await this._$E_}catch(t){Promise.reject(t)}const t=this.scheduleUpdate();return null!=t&&await t,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){var t;if(!this.isUpdatePending)return;this.hasUpdated,this._$Ei&&(this._$Ei.forEach((t,e)=>this[e]=t),this._$Ei=void 0);let e=!1;const i=this._$AL;try{e=this.shouldUpdate(i),e?(this.willUpdate(i),null===(t=this._$ES)||void 0===t||t.forEach(t=>{var e;return null===(e=t.hostUpdate)||void 0===e?void 0:e.call(t)}),this.update(i)):this._$Ek()}catch(t){throw e=!1,this._$Ek(),t}e&&this._$AE(i)}willUpdate(t){}_$AE(t){var e;null===(e=this._$ES)||void 0===e||e.forEach(t=>{var e;return null===(e=t.hostUpdated)||void 0===e?void 0:e.call(t)}),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(t)),this.updated(t)}_$Ek(){this._$AL=new Map,this.isUpdatePending=!1}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$E_}shouldUpdate(t){return!0}update(t){void 0!==this._$EC&&(this._$EC.forEach((t,e)=>this._$EO(e,this[e],t)),this._$EC=void 0),this._$Ek()}updated(t){}firstUpdated(t){}}
+ */var s$1;const e$1=window,r$1=e$1.trustedTypes,h=r$1?r$1.emptyScript:"",o$1=e$1.reactiveElementPolyfillSupport,n$1={toAttribute(t,i){switch(i){case Boolean:t=t?h:null;break;case Object:case Array:t=null==t?t:JSON.stringify(t);}return t},fromAttribute(t,i){let s=t;switch(i){case Boolean:s=null!==t;break;case Number:s=null===t?null:Number(t);break;case Object:case Array:try{s=JSON.parse(t);}catch(t){s=null;}}return s}},a=(t,i)=>i!==t&&(i==i||t==t),l={attribute:!0,type:String,converter:n$1,reflect:!1,hasChanged:a},d="finalized";class u extends HTMLElement{constructor(){super(),this._$Ei=new Map,this.isUpdatePending=!1,this.hasUpdated=!1,this._$El=null,this._$Eu();}static addInitializer(t){var i;this.finalize(),(null!==(i=this.h)&&void 0!==i?i:this.h=[]).push(t);}static get observedAttributes(){this.finalize();const t=[];return this.elementProperties.forEach(((i,s)=>{const e=this._$Ep(s,i);void 0!==e&&(this._$Ev.set(e,s),t.push(e));})),t}static createProperty(t,i=l){if(i.state&&(i.attribute=!1),this.finalize(),this.elementProperties.set(t,i),!i.noAccessor&&!this.prototype.hasOwnProperty(t)){const s="symbol"==typeof t?Symbol():"__"+t,e=this.getPropertyDescriptor(t,s,i);void 0!==e&&Object.defineProperty(this.prototype,t,e);}}static getPropertyDescriptor(t,i,s){return {get(){return this[i]},set(e){const r=this[t];this[i]=e,this.requestUpdate(t,r,s);},configurable:!0,enumerable:!0}}static getPropertyOptions(t){return this.elementProperties.get(t)||l}static finalize(){if(this.hasOwnProperty(d))return !1;this[d]=!0;const t=Object.getPrototypeOf(this);if(t.finalize(),void 0!==t.h&&(this.h=[...t.h]),this.elementProperties=new Map(t.elementProperties),this._$Ev=new Map,this.hasOwnProperty("properties")){const t=this.properties,i=[...Object.getOwnPropertyNames(t),...Object.getOwnPropertySymbols(t)];for(const s of i)this.createProperty(s,t[s]);}return this.elementStyles=this.finalizeStyles(this.styles),!0}static finalizeStyles(i){const s=[];if(Array.isArray(i)){const e=new Set(i.flat(1/0).reverse());for(const i of e)s.unshift(c(i));}else void 0!==i&&s.push(c(i));return s}static _$Ep(t,i){const s=i.attribute;return !1===s?void 0:"string"==typeof s?s:"string"==typeof t?t.toLowerCase():void 0}_$Eu(){var t;this._$E_=new Promise((t=>this.enableUpdating=t)),this._$AL=new Map,this._$Eg(),this.requestUpdate(),null===(t=this.constructor.h)||void 0===t||t.forEach((t=>t(this)));}addController(t){var i,s;(null!==(i=this._$ES)&&void 0!==i?i:this._$ES=[]).push(t),void 0!==this.renderRoot&&this.isConnected&&(null===(s=t.hostConnected)||void 0===s||s.call(t));}removeController(t){var i;null===(i=this._$ES)||void 0===i||i.splice(this._$ES.indexOf(t)>>>0,1);}_$Eg(){this.constructor.elementProperties.forEach(((t,i)=>{this.hasOwnProperty(i)&&(this._$Ei.set(i,this[i]),delete this[i]);}));}createRenderRoot(){var t;const s=null!==(t=this.shadowRoot)&&void 0!==t?t:this.attachShadow(this.constructor.shadowRootOptions);return S(s,this.constructor.elementStyles),s}connectedCallback(){var t;void 0===this.renderRoot&&(this.renderRoot=this.createRenderRoot()),this.enableUpdating(!0),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostConnected)||void 0===i?void 0:i.call(t)}));}enableUpdating(t){}disconnectedCallback(){var t;null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostDisconnected)||void 0===i?void 0:i.call(t)}));}attributeChangedCallback(t,i,s){this._$AK(t,s);}_$EO(t,i,s=l){var e;const r=this.constructor._$Ep(t,s);if(void 0!==r&&!0===s.reflect){const h=(void 0!==(null===(e=s.converter)||void 0===e?void 0:e.toAttribute)?s.converter:n$1).toAttribute(i,s.type);this._$El=t,null==h?this.removeAttribute(r):this.setAttribute(r,h),this._$El=null;}}_$AK(t,i){var s;const e=this.constructor,r=e._$Ev.get(t);if(void 0!==r&&this._$El!==r){const t=e.getPropertyOptions(r),h="function"==typeof t.converter?{fromAttribute:t.converter}:void 0!==(null===(s=t.converter)||void 0===s?void 0:s.fromAttribute)?t.converter:n$1;this._$El=r,this[r]=h.fromAttribute(i,t.type),this._$El=null;}}requestUpdate(t,i,s){let e=!0;void 0!==t&&(((s=s||this.constructor.getPropertyOptions(t)).hasChanged||a)(this[t],i)?(this._$AL.has(t)||this._$AL.set(t,i),!0===s.reflect&&this._$El!==t&&(void 0===this._$EC&&(this._$EC=new Map),this._$EC.set(t,s))):e=!1),!this.isUpdatePending&&e&&(this._$E_=this._$Ej());}async _$Ej(){this.isUpdatePending=!0;try{await this._$E_;}catch(t){Promise.reject(t);}const t=this.scheduleUpdate();return null!=t&&await t,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){var t;if(!this.isUpdatePending)return;this.hasUpdated,this._$Ei&&(this._$Ei.forEach(((t,i)=>this[i]=t)),this._$Ei=void 0);let i=!1;const s=this._$AL;try{i=this.shouldUpdate(s),i?(this.willUpdate(s),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostUpdate)||void 0===i?void 0:i.call(t)})),this.update(s)):this._$Ek();}catch(t){throw i=!1,this._$Ek(),t}i&&this._$AE(s);}willUpdate(t){}_$AE(t){var i;null===(i=this._$ES)||void 0===i||i.forEach((t=>{var i;return null===(i=t.hostUpdated)||void 0===i?void 0:i.call(t)})),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(t)),this.updated(t);}_$Ek(){this._$AL=new Map,this.isUpdatePending=!1;}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$E_}shouldUpdate(t){return !0}update(t){void 0!==this._$EC&&(this._$EC.forEach(((t,i)=>this._$EO(i,this[i],t))),this._$EC=void 0),this._$Ek();}updated(t){}firstUpdated(t){}}u[d]=!0,u.elementProperties=new Map,u.elementStyles=[],u.shadowRootOptions={mode:"open"},null==o$1||o$1({ReactiveElement:u}),(null!==(s$1=e$1.reactiveElementVersions)&&void 0!==s$1?s$1:e$1.reactiveElementVersions=[]).push("1.6.3");
+
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-var _;f[m]=!0,f.elementProperties=new Map,f.elementStyles=[],f.shadowRootOptions={mode:"open"},null==c||c({ReactiveElement:f}),(null!==(o=l.reactiveElementVersions)&&void 0!==o?o:l.reactiveElementVersions=[]).push("1.6.3");const g=window,$=g.trustedTypes,y=$?$.createPolicy("lit-html",{createHTML:t=>t}):void 0,b=`lit$${(Math.random()+"").slice(9)}$`,A="?"+b,w=`<${A}>`,x=document,S=()=>x.createComment(""),E=t=>null===t||"object"!=typeof t&&"function"!=typeof t,C=Array.isArray,k="[ \t\n\f\r]",F=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,T=/-->/g,U=/>/g,R=RegExp(`>|${k}(?:([^\\s"'>=/]+)(${k}*=${k}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),M=/'/g,N=/"/g,P=/^(?:script|style|textarea|title)$/i,O=(t=>(e,...i)=>({_$litType$:t,strings:e,values:i}))(1),H=Symbol.for("lit-noChange"),D=Symbol.for("lit-nothing"),I=new WeakMap,L=x.createTreeWalker(x,129,null,!1);function j(t,e){if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==y?y.createHTML(e):e}const V=(t,e)=>{const i=t.length-1,r=[];let n,a=2===e?"<svg>":"",s=F;for(let e=0;e<i;e++){const i=t[e];let o,l,d=-1,h=0;for(;h<i.length&&(s.lastIndex=h,l=s.exec(i),null!==l);)h=s.lastIndex,s===F?"!--"===l[1]?s=T:void 0!==l[1]?s=U:void 0!==l[2]?(P.test(l[2])&&(n=RegExp("</"+l[2],"g")),s=R):void 0!==l[3]&&(s=R):s===R?">"===l[0]?(s=null!=n?n:F,d=-1):void 0===l[1]?d=-2:(d=s.lastIndex-l[2].length,o=l[1],s=void 0===l[3]?R:'"'===l[3]?N:M):s===N||s===M?s=R:s===T||s===U?s=F:(s=R,n=void 0);const c=s===R&&t[e+1].startsWith("/>")?" ":"";a+=s===F?i+w:d>=0?(r.push(o),i.slice(0,d)+"$lit$"+i.slice(d)+b+c):i+b+(-2===d?(r.push(void 0),e):c)}return[j(t,a+(t[i]||"<?>")+(2===e?"</svg>":"")),r]};class z{constructor({strings:t,_$litType$:e},i){let r;this.parts=[];let n=0,a=0;const s=t.length-1,o=this.parts,[l,d]=V(t,e);if(this.el=z.createElement(l,i),L.currentNode=this.el.content,2===e){const t=this.el.content,e=t.firstChild;e.remove(),t.append(...e.childNodes)}for(;null!==(r=L.nextNode())&&o.length<s;){if(1===r.nodeType){if(r.hasAttributes()){const t=[];for(const e of r.getAttributeNames())if(e.endsWith("$lit$")||e.startsWith(b)){const i=d[a++];if(t.push(e),void 0!==i){const t=r.getAttribute(i.toLowerCase()+"$lit$").split(b),e=/([.?@])?(.*)/.exec(i);o.push({type:1,index:n,name:e[2],strings:t,ctor:"."===e[1]?J:"?"===e[1]?Z:"@"===e[1]?G:q})}else o.push({type:6,index:n})}for(const e of t)r.removeAttribute(e)}if(P.test(r.tagName)){const t=r.textContent.split(b),e=t.length-1;if(e>0){r.textContent=$?$.emptyScript:"";for(let i=0;i<e;i++)r.append(t[i],S()),L.nextNode(),o.push({type:2,index:++n});r.append(t[e],S())}}}else if(8===r.nodeType)if(r.data===A)o.push({type:2,index:n});else{let t=-1;for(;-1!==(t=r.data.indexOf(b,t+1));)o.push({type:7,index:n}),t+=b.length-1}n++}}static createElement(t,e){const i=x.createElement("template");return i.innerHTML=t,i}}function B(t,e,i=t,r){var n,a,s,o;if(e===H)return e;let l=void 0!==r?null===(n=i._$Co)||void 0===n?void 0:n[r]:i._$Cl;const d=E(e)?void 0:e._$litDirective$;return(null==l?void 0:l.constructor)!==d&&(null===(a=null==l?void 0:l._$AO)||void 0===a||a.call(l,!1),void 0===d?l=void 0:(l=new d(t),l._$AT(t,i,r)),void 0!==r?(null!==(s=(o=i)._$Co)&&void 0!==s?s:o._$Co=[])[r]=l:i._$Cl=l),void 0!==l&&(e=B(t,l._$AS(t,e.values),l,r)),e}class W{constructor(t,e){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=e}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){var e;const{el:{content:i},parts:r}=this._$AD,n=(null!==(e=null==t?void 0:t.creationScope)&&void 0!==e?e:x).importNode(i,!0);L.currentNode=n;let a=L.nextNode(),s=0,o=0,l=r[0];for(;void 0!==l;){if(s===l.index){let e;2===l.type?e=new Y(a,a.nextSibling,this,t):1===l.type?e=new l.ctor(a,l.name,l.strings,this,t):6===l.type&&(e=new Q(a,this,t)),this._$AV.push(e),l=r[++o]}s!==(null==l?void 0:l.index)&&(a=L.nextNode(),s++)}return L.currentNode=x,n}v(t){let e=0;for(const i of this._$AV)void 0!==i&&(void 0!==i.strings?(i._$AI(t,i,e),e+=i.strings.length-2):i._$AI(t[e])),e++}}class Y{constructor(t,e,i,r){var n;this.type=2,this._$AH=D,this._$AN=void 0,this._$AA=t,this._$AB=e,this._$AM=i,this.options=r,this._$Cp=null===(n=null==r?void 0:r.isConnected)||void 0===n||n}get _$AU(){var t,e;return null!==(e=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==e?e:this._$Cp}get parentNode(){let t=this._$AA.parentNode;const e=this._$AM;return void 0!==e&&11===(null==t?void 0:t.nodeType)&&(t=e.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,e=this){t=B(this,t,e),E(t)?t===D||null==t||""===t?(this._$AH!==D&&this._$AR(),this._$AH=D):t!==this._$AH&&t!==H&&this._(t):void 0!==t._$litType$?this.g(t):void 0!==t.nodeType?this.$(t):(t=>C(t)||"function"==typeof(null==t?void 0:t[Symbol.iterator]))(t)?this.T(t):this._(t)}k(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}$(t){this._$AH!==t&&(this._$AR(),this._$AH=this.k(t))}_(t){this._$AH!==D&&E(this._$AH)?this._$AA.nextSibling.data=t:this.$(x.createTextNode(t)),this._$AH=t}g(t){var e;const{values:i,_$litType$:r}=t,n="number"==typeof r?this._$AC(t):(void 0===r.el&&(r.el=z.createElement(j(r.h,r.h[0]),this.options)),r);if((null===(e=this._$AH)||void 0===e?void 0:e._$AD)===n)this._$AH.v(i);else{const t=new W(n,this),e=t.u(this.options);t.v(i),this.$(e),this._$AH=t}}_$AC(t){let e=I.get(t.strings);return void 0===e&&I.set(t.strings,e=new z(t)),e}T(t){C(this._$AH)||(this._$AH=[],this._$AR());const e=this._$AH;let i,r=0;for(const n of t)r===e.length?e.push(i=new Y(this.k(S()),this.k(S()),this,this.options)):i=e[r],i._$AI(n),r++;r<e.length&&(this._$AR(i&&i._$AB.nextSibling,r),e.length=r)}_$AR(t=this._$AA.nextSibling,e){var i;for(null===(i=this._$AP)||void 0===i||i.call(this,!1,!0,e);t&&t!==this._$AB;){const e=t.nextSibling;t.remove(),t=e}}setConnected(t){var e;void 0===this._$AM&&(this._$Cp=t,null===(e=this._$AP)||void 0===e||e.call(this,t))}}class q{constructor(t,e,i,r,n){this.type=1,this._$AH=D,this._$AN=void 0,this.element=t,this.name=e,this._$AM=r,this.options=n,i.length>2||""!==i[0]||""!==i[1]?(this._$AH=Array(i.length-1).fill(new String),this.strings=i):this._$AH=D}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,e=this,i,r){const n=this.strings;let a=!1;if(void 0===n)t=B(this,t,e,0),a=!E(t)||t!==this._$AH&&t!==H,a&&(this._$AH=t);else{const r=t;let s,o;for(t=n[0],s=0;s<n.length-1;s++)o=B(this,r[i+s],e,s),o===H&&(o=this._$AH[s]),a||(a=!E(o)||o!==this._$AH[s]),o===D?t=D:t!==D&&(t+=(null!=o?o:"")+n[s+1]),this._$AH[s]=o}a&&!r&&this.j(t)}j(t){t===D?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"")}}class J extends q{constructor(){super(...arguments),this.type=3}j(t){this.element[this.name]=t===D?void 0:t}}const K=$?$.emptyScript:"";class Z extends q{constructor(){super(...arguments),this.type=4}j(t){t&&t!==D?this.element.setAttribute(this.name,K):this.element.removeAttribute(this.name)}}class G extends q{constructor(t,e,i,r,n){super(t,e,i,r,n),this.type=5}_$AI(t,e=this){var i;if((t=null!==(i=B(this,t,e,0))&&void 0!==i?i:D)===H)return;const r=this._$AH,n=t===D&&r!==D||t.capture!==r.capture||t.once!==r.once||t.passive!==r.passive,a=t!==D&&(r===D||n);n&&this.element.removeEventListener(this.name,this,r),a&&this.element.addEventListener(this.name,this,t),this._$AH=t}handleEvent(t){var e,i;"function"==typeof this._$AH?this._$AH.call(null!==(i=null===(e=this.options)||void 0===e?void 0:e.host)&&void 0!==i?i:this.element,t):this._$AH.handleEvent(t)}}class Q{constructor(t,e,i){this.element=t,this.type=6,this._$AN=void 0,this._$AM=e,this.options=i}get _$AU(){return this._$AM._$AU}_$AI(t){B(this,t)}}const X=g.litHtmlPolyfillSupport;null==X||X(z,Y),(null!==(_=g.litHtmlVersions)&&void 0!==_?_:g.litHtmlVersions=[]).push("2.8.0");
+var t$1;const i$1=window,s$2=i$1.trustedTypes,e$2=s$2?s$2.createPolicy("lit-html",{createHTML:t=>t}):void 0,o$2="$lit$",n$2=`lit$${(Math.random()+"").slice(9)}$`,l$1="?"+n$2,h$1=`<${l$1}>`,r$2=document,u$1=()=>r$2.createComment(""),d$1=t=>null===t||"object"!=typeof t&&"function"!=typeof t,c$1=Array.isArray,v=t=>c$1(t)||"function"==typeof(null==t?void 0:t[Symbol.iterator]),a$1="[ \t\n\f\r]",f=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,_=/-->/g,m=/>/g,p=RegExp(`>|${a$1}(?:([^\\s"'>=/]+)(${a$1}*=${a$1}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),g=/'/g,$=/"/g,y=/^(?:script|style|textarea|title)$/i,w=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x=w(1),T=Symbol.for("lit-noChange"),A=Symbol.for("lit-nothing"),E=new WeakMap,C=r$2.createTreeWalker(r$2,129,null,!1);function P(t,i){if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==e$2?e$2.createHTML(i):i}const V=(t,i)=>{const s=t.length-1,e=[];let l,r=2===i?"<svg>":"",u=f;for(let i=0;i<s;i++){const s=t[i];let d,c,v=-1,a=0;for(;a<s.length&&(u.lastIndex=a,c=u.exec(s),null!==c);)a=u.lastIndex,u===f?"!--"===c[1]?u=_:void 0!==c[1]?u=m:void 0!==c[2]?(y.test(c[2])&&(l=RegExp("</"+c[2],"g")),u=p):void 0!==c[3]&&(u=p):u===p?">"===c[0]?(u=null!=l?l:f,v=-1):void 0===c[1]?v=-2:(v=u.lastIndex-c[2].length,d=c[1],u=void 0===c[3]?p:'"'===c[3]?$:g):u===$||u===g?u=p:u===_||u===m?u=f:(u=p,l=void 0);const w=u===p&&t[i+1].startsWith("/>")?" ":"";r+=u===f?s+h$1:v>=0?(e.push(d),s.slice(0,v)+o$2+s.slice(v)+n$2+w):s+n$2+(-2===v?(e.push(void 0),i):w);}return [P(t,r+(t[s]||"<?>")+(2===i?"</svg>":"")),e]};class N{constructor({strings:t,_$litType$:i},e){let h;this.parts=[];let r=0,d=0;const c=t.length-1,v=this.parts,[a,f]=V(t,i);if(this.el=N.createElement(a,e),C.currentNode=this.el.content,2===i){const t=this.el.content,i=t.firstChild;i.remove(),t.append(...i.childNodes);}for(;null!==(h=C.nextNode())&&v.length<c;){if(1===h.nodeType){if(h.hasAttributes()){const t=[];for(const i of h.getAttributeNames())if(i.endsWith(o$2)||i.startsWith(n$2)){const s=f[d++];if(t.push(i),void 0!==s){const t=h.getAttribute(s.toLowerCase()+o$2).split(n$2),i=/([.?@])?(.*)/.exec(s);v.push({type:1,index:r,name:i[2],strings:t,ctor:"."===i[1]?H:"?"===i[1]?L:"@"===i[1]?z:k});}else v.push({type:6,index:r});}for(const i of t)h.removeAttribute(i);}if(y.test(h.tagName)){const t=h.textContent.split(n$2),i=t.length-1;if(i>0){h.textContent=s$2?s$2.emptyScript:"";for(let s=0;s<i;s++)h.append(t[s],u$1()),C.nextNode(),v.push({type:2,index:++r});h.append(t[i],u$1());}}}else if(8===h.nodeType)if(h.data===l$1)v.push({type:2,index:r});else {let t=-1;for(;-1!==(t=h.data.indexOf(n$2,t+1));)v.push({type:7,index:r}),t+=n$2.length-1;}r++;}}static createElement(t,i){const s=r$2.createElement("template");return s.innerHTML=t,s}}function S$1(t,i,s=t,e){var o,n,l,h;if(i===T)return i;let r=void 0!==e?null===(o=s._$Co)||void 0===o?void 0:o[e]:s._$Cl;const u=d$1(i)?void 0:i._$litDirective$;return (null==r?void 0:r.constructor)!==u&&(null===(n=null==r?void 0:r._$AO)||void 0===n||n.call(r,!1),void 0===u?r=void 0:(r=new u(t),r._$AT(t,s,e)),void 0!==e?(null!==(l=(h=s)._$Co)&&void 0!==l?l:h._$Co=[])[e]=r:s._$Cl=r),void 0!==r&&(i=S$1(t,r._$AS(t,i.values),r,e)),i}class M{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){var i;const{el:{content:s},parts:e}=this._$AD,o=(null!==(i=null==t?void 0:t.creationScope)&&void 0!==i?i:r$2).importNode(s,!0);C.currentNode=o;let n=C.nextNode(),l=0,h=0,u=e[0];for(;void 0!==u;){if(l===u.index){let i;2===u.type?i=new R(n,n.nextSibling,this,t):1===u.type?i=new u.ctor(n,u.name,u.strings,this,t):6===u.type&&(i=new Z(n,this,t)),this._$AV.push(i),u=e[++h];}l!==(null==u?void 0:u.index)&&(n=C.nextNode(),l++);}return C.currentNode=r$2,o}v(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}}class R{constructor(t,i,s,e){var o;this.type=2,this._$AH=A,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cp=null===(o=null==e?void 0:e.isConnected)||void 0===o||o;}get _$AU(){var t,i;return null!==(i=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==i?i:this._$Cp}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===(null==t?void 0:t.nodeType)&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=S$1(this,t,i),d$1(t)?t===A||null==t||""===t?(this._$AH!==A&&this._$AR(),this._$AH=A):t!==this._$AH&&t!==T&&this._(t):void 0!==t._$litType$?this.g(t):void 0!==t.nodeType?this.$(t):v(t)?this.T(t):this._(t);}k(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}$(t){this._$AH!==t&&(this._$AR(),this._$AH=this.k(t));}_(t){this._$AH!==A&&d$1(this._$AH)?this._$AA.nextSibling.data=t:this.$(r$2.createTextNode(t)),this._$AH=t;}g(t){var i;const{values:s,_$litType$:e}=t,o="number"==typeof e?this._$AC(t):(void 0===e.el&&(e.el=N.createElement(P(e.h,e.h[0]),this.options)),e);if((null===(i=this._$AH)||void 0===i?void 0:i._$AD)===o)this._$AH.v(s);else {const t=new M(o,this),i=t.u(this.options);t.v(s),this.$(i),this._$AH=t;}}_$AC(t){let i=E.get(t.strings);return void 0===i&&E.set(t.strings,i=new N(t)),i}T(t){c$1(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const o of t)e===i.length?i.push(s=new R(this.k(u$1()),this.k(u$1()),this,this.options)):s=i[e],s._$AI(o),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){var s;for(null===(s=this._$AP)||void 0===s||s.call(this,!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){var i;void 0===this._$AM&&(this._$Cp=t,null===(i=this._$AP)||void 0===i||i.call(this,t));}}class k{constructor(t,i,s,e,o){this.type=1,this._$AH=A,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=o,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=A;}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,i=this,s,e){const o=this.strings;let n=!1;if(void 0===o)t=S$1(this,t,i,0),n=!d$1(t)||t!==this._$AH&&t!==T,n&&(this._$AH=t);else {const e=t;let l,h;for(t=o[0],l=0;l<o.length-1;l++)h=S$1(this,e[s+l],i,l),h===T&&(h=this._$AH[l]),n||(n=!d$1(h)||h!==this._$AH[l]),h===A?t=A:t!==A&&(t+=(null!=h?h:"")+o[l+1]),this._$AH[l]=h;}n&&!e&&this.j(t);}j(t){t===A?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"");}}class H extends k{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===A?void 0:t;}}const I=s$2?s$2.emptyScript:"";class L extends k{constructor(){super(...arguments),this.type=4;}j(t){t&&t!==A?this.element.setAttribute(this.name,I):this.element.removeAttribute(this.name);}}class z extends k{constructor(t,i,s,e,o){super(t,i,s,e,o),this.type=5;}_$AI(t,i=this){var s;if((t=null!==(s=S$1(this,t,i,0))&&void 0!==s?s:A)===T)return;const e=this._$AH,o=t===A&&e!==A||t.capture!==e.capture||t.once!==e.once||t.passive!==e.passive,n=t!==A&&(e===A||o);o&&this.element.removeEventListener(this.name,this,e),n&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){var i,s;"function"==typeof this._$AH?this._$AH.call(null!==(s=null===(i=this.options)||void 0===i?void 0:i.host)&&void 0!==s?s:this.element,t):this._$AH.handleEvent(t);}}class Z{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){S$1(this,t);}}const B=i$1.litHtmlPolyfillSupport;null==B||B(N,R),(null!==(t$1=i$1.litHtmlVersions)&&void 0!==t$1?t$1:i$1.litHtmlVersions=[]).push("2.8.0");const D=(t,i,s)=>{var e,o;const n=null!==(e=null==s?void 0:s.renderBefore)&&void 0!==e?e:i;let l=n._$litPart$;if(void 0===l){const t=null!==(o=null==s?void 0:s.renderBefore)&&void 0!==o?o:null;n._$litPart$=l=new R(i.insertBefore(u$1(),t),t,void 0,null!=s?s:{});}return l._$AI(t),l};
+
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */
-var tt,et;class it extends f{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const e=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=((t,e,i)=>{var r,n;const a=null!==(r=null==i?void 0:i.renderBefore)&&void 0!==r?r:e;let s=a._$litPart$;if(void 0===s){const t=null!==(n=null==i?void 0:i.renderBefore)&&void 0!==n?n:null;a._$litPart$=s=new Y(e.insertBefore(S(),t),t,void 0,null!=i?i:{})}return s._$AI(t),s})(e,this.renderRoot,this.renderOptions)}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!0)}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!1)}render(){return H}}it.finalized=!0,it._$litElement$=!0,null===(tt=globalThis.litElementHydrateSupport)||void 0===tt||tt.call(globalThis,{LitElement:it});const rt=globalThis.litElementPolyfillSupport;null==rt||rt({LitElement:it}),(null!==(et=globalThis.litElementVersions)&&void 0!==et?et:globalThis.litElementVersions=[]).push("3.3.3");var nt,at,st=function(t,e){return ot(e).format(t)},ot=function(t){return new Intl.DateTimeFormat(t.language,{year:"numeric",month:"long",day:"numeric"})};!function(t){t.language="language",t.system="system",t.comma_decimal="comma_decimal",t.decimal_comma="decimal_comma",t.space_comma="space_comma",t.none="none"}(nt||(nt={})),function(t){t.language="language",t.system="system",t.am_pm="12",t.twenty_four="24"}(at||(at={}));var lt=function(t){if(t.time_format===at.language||t.time_format===at.system){var e=t.time_format===at.language?t.language:void 0,i=(new Date).toLocaleString(e);return i.includes("AM")||i.includes("PM")}return t.time_format===at.am_pm},dt=function(t,e){return ht(e).format(t)},ht=function(t){return new Intl.DateTimeFormat(t.language,{year:"numeric",month:"long",day:"numeric",hour:lt(t)?"numeric":"2-digit",minute:"2-digit",hour12:lt(t)})},ct=function(t,e){return ut(e).format(t)},ut=function(t){return new Intl.DateTimeFormat(t.language,{hour:"numeric",minute:"2-digit",hour12:lt(t)})};function pt(){return(pt=Object.assign||function(t){for(var e=1;e<arguments.length;e++){var i=arguments[e];for(var r in i)Object.prototype.hasOwnProperty.call(i,r)&&(t[r]=i[r])}return t}).apply(this,arguments)}function vt(t){return t.substr(0,t.indexOf("."))}function mt(t){return vt(t.entity_id)}var ft=function(t,e,i){var r=e?function(t){switch(t.number_format){case nt.comma_decimal:return["en-US","en"];case nt.decimal_comma:return["de","es","it"];case nt.space_comma:return["fr","sv","cs"];case nt.system:return;default:return t.language}}(e):void 0;if(Number.isNaN=Number.isNaN||function t(e){return"number"==typeof e&&t(e)},(null==e?void 0:e.number_format)!==nt.none&&!Number.isNaN(Number(t))&&Intl)try{return new Intl.NumberFormat(r,_t(t,i)).format(Number(t))}catch(e){return console.error(e),new Intl.NumberFormat(void 0,_t(t,i)).format(Number(t))}return"string"==typeof t?t:function(t,e){return void 0===e&&(e=2),Math.round(t*Math.pow(10,e))/Math.pow(10,e)}(t,null==i?void 0:i.maximumFractionDigits).toString()+("currency"===(null==i?void 0:i.style)?" "+i.currency:"")},_t=function(t,e){var i=pt({maximumFractionDigits:2},e);if("string"!=typeof t)return i;if(!e||!e.minimumFractionDigits&&!e.maximumFractionDigits){var r=t.indexOf(".")>-1?t.split(".")[1].length:0;i.minimumFractionDigits=r,i.maximumFractionDigits=r}return i};function gt(t,e,i){const r="number"==typeof t.max?t.max:e.attributes.max||1,n="number"==typeof t.min?t.min:e.attributes.min||0;let a=0;a="media_player"===mt(e)?e.attributes.volume_level||0:e.state;const s=Math.round((a-n)/(r-n)*100);let o=s+"%";t.value_entity_id&&Object.prototype.hasOwnProperty.call(i.states,t.value_entity_id)?o=function(t,e,i,r){var n=void 0!==r?r:e.state;if("unknown"===n||"unavailable"===n)return t("state.default."+n);if(function(t){return!!t.attributes.unit_of_measurement||!!t.attributes.state_class}(e)){if("monetary"===e.attributes.device_class)try{return ft(n,i,{style:"currency",currency:e.attributes.unit_of_measurement})}catch(t){}return ft(n,i)+(e.attributes.unit_of_measurement?" "+e.attributes.unit_of_measurement:"")}var a=mt(e);if("input_datetime"===a){var s;if(void 0===r)return e.attributes.has_date&&e.attributes.has_time?(s=new Date(e.attributes.year,e.attributes.month-1,e.attributes.day,e.attributes.hour,e.attributes.minute),dt(s,i)):e.attributes.has_date?(s=new Date(e.attributes.year,e.attributes.month-1,e.attributes.day),st(s,i)):e.attributes.has_time?((s=new Date).setHours(e.attributes.hour,e.attributes.minute),ct(s,i)):e.state;try{var o=r.split(" ");if(2===o.length)return dt(new Date(o.join("T")),i);if(1===o.length){if(r.includes("-"))return st(new Date(r+"T00:00"),i);if(r.includes(":")){var l=new Date;return ct(new Date(l.toISOString().split("T")[0]+"T"+r),i)}}return r}catch(t){return r}}return"humidifier"===a&&"on"===n&&e.attributes.humidity?e.attributes.humidity+" %":"counter"===a||"number"===a||"input_number"===a?ft(n,i):e.attributes.device_class&&t("component."+a+".state."+e.attributes.device_class+"."+n)||t("component."+a+".state._."+n)||n}(i.localize,i.states[t.value_entity_id],i.language):t.value_attribute&&Object.prototype.hasOwnProperty.call(e.attributes,t.value_attribute)&&(o=e.attributes[t.value_attribute]);const l=t.value_suffix||"";return l&&(o+=" "+l),{displayValue:o,inputValue:s}}const $t=((t,...e)=>{const r=1===t.length?t[0]:e.reduce((e,i,r)=>e+(t=>{if(!0===t._$cssResult$)return t.cssText;if("number"==typeof t)return t;throw Error("Value passed to 'css' function must be a 'css' function result: "+t+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(i)+t[r+1],t[0]);return new n(r,t,i)})`
+ */var l$2,o$3;class s$3 extends u{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=D(i,this.renderRoot,this.renderOptions);}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!0);}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!1);}render(){return T}}s$3.finalized=!0,s$3._$litElement$=!0,null===(l$2=globalThis.litElementHydrateSupport)||void 0===l$2||l$2.call(globalThis,{LitElement:s$3});const n$3=globalThis.litElementPolyfillSupport;null==n$3||n$3({LitElement:s$3});(null!==(o$3=globalThis.litElementVersions)&&void 0!==o$3?o$3:globalThis.litElementVersions=[]).push("3.3.3");
+
+var t$2,r$3,a$2=function(e,t){return o$4(t).format(e)},o$4=function(e){return new Intl.DateTimeFormat(e.language,{year:"numeric",month:"long",day:"numeric"})};!function(e){e.language="language",e.system="system",e.comma_decimal="comma_decimal",e.decimal_comma="decimal_comma",e.space_comma="space_comma",e.none="none";}(t$2||(t$2={})),function(e){e.language="language",e.system="system",e.am_pm="12",e.twenty_four="24";}(r$3||(r$3={}));var b=function(e){if(e.time_format===r$3.language||e.time_format===r$3.system){var t=e.time_format===r$3.language?e.language:void 0,n=(new Date).toLocaleString(t);return n.includes("AM")||n.includes("PM")}return e.time_format===r$3.am_pm},v$1=function(e,t){return _$1(t).format(e)},_$1=function(e){return new Intl.DateTimeFormat(e.language,{year:"numeric",month:"long",day:"numeric",hour:b(e)?"numeric":"2-digit",minute:"2-digit",hour12:b(e)})},D$1=function(e,t){return S$2(t).format(e)},S$2=function(e){return new Intl.DateTimeFormat(e.language,{hour:"numeric",minute:"2-digit",hour12:b(e)})};function O(){return (O=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var n in r)Object.prototype.hasOwnProperty.call(r,n)&&(e[n]=r[n]);}return e}).apply(this,arguments)}function E$1(e){return e.substr(0,e.indexOf("."))}function L$1(e){return E$1(e.entity_id)}var P$1=function(e){return !!e.attributes.unit_of_measurement||!!e.attributes.state_class},U=function(e){switch(e.number_format){case t$2.comma_decimal:return ["en-US","en"];case t$2.decimal_comma:return ["de","es","it"];case t$2.space_comma:return ["fr","sv","cs"];case t$2.system:return;default:return e.language}},B$1=function(e,t){return void 0===t&&(t=2),Math.round(e*Math.pow(10,t))/Math.pow(10,t)},H$1=function(e,r,n){var i=r?U(r):void 0;if(Number.isNaN=Number.isNaN||function e(t){return "number"==typeof t&&e(t)},(null==r?void 0:r.number_format)!==t$2.none&&!Number.isNaN(Number(e))&&Intl)try{return new Intl.NumberFormat(i,V$1(e,n)).format(Number(e))}catch(t){return console.error(t),new Intl.NumberFormat(void 0,V$1(e,n)).format(Number(e))}return "string"==typeof e?e:B$1(e,null==n?void 0:n.maximumFractionDigits).toString()+("currency"===(null==n?void 0:n.style)?" "+n.currency:"")},V$1=function(e,t){var r=O({maximumFractionDigits:2},t);if("string"!=typeof e)return r;if(!t||!t.minimumFractionDigits&&!t.maximumFractionDigits){var n=e.indexOf(".")>-1?e.split(".")[1].length:0;r.minimumFractionDigits=n,r.maximumFractionDigits=n;}return r},W=function(e,t,r,n){var i=void 0!==n?n:t.state;if("unknown"===i||"unavailable"===i)return e("state.default."+i);if(P$1(t)){if("monetary"===t.attributes.device_class)try{return H$1(i,r,{style:"currency",currency:t.attributes.unit_of_measurement})}catch(e){}return H$1(i,r)+(t.attributes.unit_of_measurement?" "+t.attributes.unit_of_measurement:"")}var o=L$1(t);if("input_datetime"===o){var u;if(void 0===n)return t.attributes.has_date&&t.attributes.has_time?(u=new Date(t.attributes.year,t.attributes.month-1,t.attributes.day,t.attributes.hour,t.attributes.minute),v$1(u,r)):t.attributes.has_date?(u=new Date(t.attributes.year,t.attributes.month-1,t.attributes.day),a$2(u,r)):t.attributes.has_time?((u=new Date).setHours(t.attributes.hour,t.attributes.minute),D$1(u,r)):t.state;try{var c=n.split(" ");if(2===c.length)return v$1(new Date(c.join("T")),r);if(1===c.length){if(n.includes("-"))return a$2(new Date(n+"T00:00"),r);if(n.includes(":")){var m=new Date;return D$1(new Date(m.toISOString().split("T")[0]+"T"+n),r)}}return n}catch(e){return n}}return "humidifier"===o&&"on"===i&&t.attributes.humidity?t.attributes.humidity+" %":"counter"===o||"number"===o||"input_number"===o?H$1(i,r):t.attributes.device_class&&e("component."+o+".state."+t.attributes.device_class+"."+i)||e("component."+o+".state._."+i)||i};
+
+function getConfigDefaults(config) {
+  return {
+    borderRadius: config && config.borderRadius ? config.borderRadius : '12px',
+    faderWidth: config && config.faderWidth ? config.faderWidth : '150px',
+    faderHeight: config && config.faderHeight ? config.faderHeight : '400px',
+    faderInactiveColor: config && config.faderInactiveColor ? config.faderInactiveColor : '#f00',
+    faderThumbColor: config && config.faderThumbColor ? config.faderThumbColor : '#ddd',
+    faderTrackColor: config && config.faderTrackColor ? config.faderTrackColor : '#ddd',
+    faderActiveColor: config && config.faderActiveColor ? config.faderActiveColor : '#22ba00',
+    faderTheme: config && config.faderTheme ? config.faderTheme : 'modern',
+    updateWhileMoving: config && config.updateWhileMoving ? config.updateWhileMoving : false,
+    alwaysShowFaderValue: config && config.alwaysShowFaderValue ? config.alwaysShowFaderValue : false,
+    haCard: config && config.haCard !== undefined ? config.haCard : true,
+    description: config && config.description ? config.description : '',
+    title: config && config.title ? config.title : ''
+  };
+}
+function generateHeader(cfg) {
+  const header = cfg.title ? x`<h1 class='card-header'><div class='name'>${cfg.title}</div></div>` : '';
+  const desc = cfg.description ? x`<p class='mixer-description'>${cfg.description}</p>` : '';
+  return x`${header}${desc}`;
+}
+function getFaderStyle(faderColors, cfg, activeState) {
+  let style = `--fader-width: ${cfg.faderWidth}; --fader-height: ${cfg.faderHeight}; --fader-border-radius: ${cfg.borderRadius}; `;
+  style += `--fader-color: ${activeState === 'on' ? faderColors.active : faderColors.inactive}; `;
+  style += `--fader-thumb-color: ${faderColors.thumb}; --fader-track-color: ${faderColors.track}; --fader-track-inactive-color: ${faderColors.inactive};`;
+  return style;
+}
+function getFaderColor(faderRow, cfg) {
+  return {
+    track: faderRow.track_color || cfg.faderTrackColor,
+    active: faderRow.active_color || cfg.faderActiveColor,
+    inactive: faderRow.inactive_color || cfg.faderInactiveColor,
+    thumb: faderRow.thumb_color || cfg.faderThumbColor
+  };
+}
+function getFaderIcon(faderRow, stateObj, activeState) {
+  return activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute';
+}
+function getFaderValue(faderRow, stateObj, hass) {
+  const maxValue = typeof faderRow.max === 'number' ? faderRow.max : stateObj.attributes.max || 1;
+  const minValue = typeof faderRow.min === 'number' ? faderRow.min : stateObj.attributes.min || 0;
+  let rawValue = 0;
+  const domain = L$1(stateObj);
+  if (domain === 'media_player') {
+    rawValue = stateObj.attributes.volume_level || 0;
+  } else {
+    rawValue = stateObj.state;
+  }
+  const inputValue = Math.round((rawValue - minValue) / (maxValue - minValue) * 100);
+  let displayValue = inputValue + '%';
+  if (faderRow.value_entity_id && Object.prototype.hasOwnProperty.call(hass.states, faderRow.value_entity_id)) {
+    displayValue = W(hass.localize, hass.states[faderRow.value_entity_id], hass.language);
+  } else if (faderRow.value_attribute && Object.prototype.hasOwnProperty.call(stateObj.attributes, faderRow.value_attribute)) {
+    displayValue = stateObj.attributes[faderRow.value_attribute];
+  }
+  const suffix = faderRow.value_suffix || '';
+  if (suffix) {
+    displayValue += ` ${suffix}`;
+  }
+  return {
+    displayValue,
+    inputValue
+  };
+}
+
+const mixerCardStyles = i`
     .fader-holder {
         margin: 20px;
     }
@@ -161,39 +233,268 @@ var tt,et;class it extends f{constructor(){super(...arguments),this.renderOption
         margin: 16px;
         margin-top: 0px;
     }
-`;customElements.define("custom-mixer-card",class extends it{constructor(){super(),this._relativeFaderActive=!1,this._relativeFaderStartY=0,this._relativeFaderStartValue=0,this._relativeFaderMin=0,this._relativeFaderMax=100,this._relativeFaderStateObj=null,this._relativeFaderInput=null,this._relativeFaderSensitivity=.2,this._onRelativeFaderMove=this._onRelativeFaderMove.bind(this),this._onRelativeFaderUp=this._onRelativeFaderUp.bind(this)}static get properties(){return{hass:{},config:{},active:{}}}static get styles(){return $t}render(){const t={borderRadius:(e=this.config)&&e.borderRadius?e.borderRadius:"12px",faderWidth:e&&e.faderWidth?e.faderWidth:"150px",faderHeight:e&&e.faderHeight?e.faderHeight:"400px",faderInactiveColor:e&&e.faderInactiveColor?e.faderInactiveColor:"#f00",faderThumbColor:e&&e.faderThumbColor?e.faderThumbColor:"#ddd",faderTrackColor:e&&e.faderTrackColor?e.faderTrackColor:"#ddd",faderActiveColor:e&&e.faderActiveColor?e.faderActiveColor:"#22ba00",faderTheme:e&&e.faderTheme?e.faderTheme:"modern",updateWhileMoving:!(!e||!e.updateWhileMoving)&&e.updateWhileMoving,alwaysShowFaderValue:!(!e||!e.alwaysShowFaderValue)&&e.alwaysShowFaderValue,haCard:!e||void 0===e.haCard||e.haCard,description:e&&e.description?e.description:"",title:e&&e.title?e.title:""};var e;const i=[];if(this.faderColors={},!this.config||!this.config.faders||!Array.isArray(this.config.faders))throw new Error('Invalid configuration: "faders" must be an array.');for(let e=0;e<this.config.faders.length;e++){const r=this.config.faders[e],n=this.hass.states[r.entity_id];n?i.push(this.renderFader(r,n,t)):console.warn(`Entity ${r.entity_id} not found in Home Assistant.`)}const r=function(t){const e=t.title?O`<h1 class='card-header'><div class='name'>${t.title}</div></div>`:"",i=t.description?O`<p class='mixer-description'>${t.description}</p>`:"";return O`${e}${i}`}(t),n=O`
-      ${r}
+`;
+
+/* jshint esversion: 8 */
+class MixerCard extends s$3 {
+  constructor() {
+    super();
+    // For relative fader tracking
+    this._relativeFaderActive = false;
+    this._relativeFaderStartY = 0;
+    this._relativeFaderStartValue = 0;
+    this._relativeFaderMin = 0;
+    this._relativeFaderMax = 100;
+    this._relativeFaderStateObj = null;
+    this._relativeFaderInput = null;
+    this._relativeFaderSensitivity = 0.2; // percent per pixel
+    this._onRelativeFaderMove = this._onRelativeFaderMove.bind(this);
+    this._onRelativeFaderUp = this._onRelativeFaderUp.bind(this);
+  }
+  static get properties() {
+    return {
+      hass: {},
+      config: {},
+      active: {}
+    };
+  }
+  static get styles() {
+    return mixerCardStyles;
+  }
+  render() {
+    const cfg = getConfigDefaults(this.config);
+    const faderTemplates = [];
+    this.faderColors = {};
+    if (!this.config || !this.config.faders || !Array.isArray(this.config.faders)) {
+      throw new Error('Invalid configuration: "faders" must be an array.');
+    }
+    for (let faderIndex = 0; faderIndex < this.config.faders.length; faderIndex++) {
+      const faderRow = this.config.faders[faderIndex];
+      const stateObj = this.hass.states[faderRow.entity_id];
+      if (!stateObj) {
+        console.warn(`Entity ${faderRow.entity_id} not found in Home Assistant.`);
+        continue;
+      }
+      faderTemplates.push(this.renderFader(faderRow, stateObj, cfg));
+    }
+    const headerSection = generateHeader(cfg);
+    const card = x`
+      ${headerSection}
       <div>
         <div class='mixer-card'>
-          <div class='fader-holder fader-theme-${t.faderTheme}'>
-            ${i}
+          <div class='fader-holder fader-theme-${cfg.faderTheme}'>
+            ${faderTemplates}
           </div>
         </div>
       </div>
-    `;return t.haCard?O`<ha-card>${n}</ha-card>`:n}renderFader(t,e,i){const r="unavailable"===e.state,n=mt(e),a="number"==typeof t.max?t.max:e.attributes.max||1,s="number"==typeof t.min?t.min:e.attributes.min||0;if(!["number","media_player","input_number"].includes(n))return null;const o=t.name||this._entity_property(t.entity_id,"-name"),l=t.invert_active||!1;let d=t.active_entity_id?this._entity_property(t.active_entity_id,"state"):"on";l&&(d="on"===d?"off":"on"),"media_player"===n&&(d=this._entity_property(t.entity_id,"-muted")?"off":"on");const h=function(t,e,i){return"on"===i?"mdi:volume-high":"mdi:volume-mute"}(0,0,d),{displayValue:c,inputValue:u}=gt(t,e,this.hass),p=t.active_entity_id||("media_player"===n?t.entity_id:""),v=function(t,e){return{track:t.track_color||e.faderTrackColor,active:t.active_color||e.faderActiveColor,inactive:t.inactive_color||e.faderInactiveColor,thumb:t.thumb_color||e.faderThumbColor}}(t,i),m=v.track,f=v.active,_=v.inactive,g=v.thumb;this.faderColors["fader_range_"+t.entity_id]={track_color:m,active_color:f,inactive_color:_,thumb_color:g};const $=this._renderActiveButton(p,d,r,f,_,h),y=`${"off"===d?"fader-inactive":"fader-active"}${r?" fader-unavailable":""}`,b="fader_range_"+t.entity_id,A=function(t,e,i){let r=`--fader-width: ${e.faderWidth}; --fader-height: ${e.faderHeight}; --fader-border-radius: ${e.borderRadius}; `;return r+=`--fader-color: ${"on"===i?t.active:t.inactive}; `,r+=`--fader-thumb-color: ${t.thumb}; --fader-track-color: ${t.track}; --fader-track-inactive-color: ${t.inactive};`,r}(v,i,d);let w;if(this.config&&this.config.relativeFader){let t;t="physical"===i.faderTheme?A.replace(/;+\s*$/,"")+"; width:var(--fader-height); height:5px;":A.replace(/;+\s*$/,"")+"; width:var(--fader-height); height:var(--fader-width);",w=O`
+    `;
+    if (!cfg.haCard) {
+      return card;
+    }
+    return x`<ha-card>${card}</ha-card>`;
+  }
+  renderFader(faderRow, stateObj, cfg) {
+    const unavailable = stateObj.state === 'unavailable';
+    const domain = L$1(stateObj);
+    const maxValue = typeof faderRow.max === 'number' ? faderRow.max : stateObj.attributes.max || 1;
+    const minValue = typeof faderRow.min === 'number' ? faderRow.min : stateObj.attributes.min || 0;
+    if (!['number', 'media_player', 'input_number'].includes(domain)) {
+      return null;
+    }
+    const faderName = faderRow.name || this._entity_property(faderRow.entity_id, '-name');
+    const invertActive = faderRow.invert_active || false;
+    let activeState = faderRow.active_entity_id ? this._entity_property(faderRow.active_entity_id, 'state') : 'on';
+    if (invertActive) {
+      activeState = activeState === 'on' ? 'off' : 'on';
+    }
+    if (domain === 'media_player') {
+      activeState = this._entity_property(faderRow.entity_id, '-muted') ? 'off' : 'on';
+    }
+    const icon = getFaderIcon(faderRow, stateObj, activeState);
+    const {
+      displayValue,
+      inputValue
+    } = getFaderValue(faderRow, stateObj, this.hass);
+    const activeEntity = faderRow.active_entity_id || (domain === 'media_player' ? faderRow.entity_id : '');
+    const faderColors = getFaderColor(faderRow, cfg);
+    const faderTrackColor = faderColors.track;
+    const faderActiveColor = faderColors.active;
+    const faderInactiveColor = faderColors.inactive;
+    const faderThumbColor = faderColors.thumb;
+    this.faderColors[`fader_range_${faderRow.entity_id}`] = {
+      track_color: faderTrackColor,
+      active_color: faderActiveColor,
+      inactive_color: faderInactiveColor,
+      thumb_color: faderThumbColor
+    };
+    const activeButton = this._renderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon);
+    const inputClasses = `${activeState === 'off' ? 'fader-inactive' : 'fader-active'}${unavailable ? ' fader-unavailable' : ''}`;
+    const inputId = `fader_range_${faderRow.entity_id}`;
+    const inputStyle = getFaderStyle(faderColors, cfg, activeState);
+    let rangeInput;
+    if (this.config && this.config.relativeFader) {
+      let rangeInputStyle;
+      if (cfg.faderTheme === 'physical') {
+        rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:5px;`;
+      } else {
+        rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:var(--fader-width);`;
+      }
+      rangeInput = x`
         <input type='range'
-          class='${y}'
-          id='${b}'
-          style='${t}'
-          value='${u}'
-          @mousedown=${t=>this._onRelativeFaderDown(t,e,s,a)}
-          @touchstart=${t=>this._onRelativeFaderDown(t,e,s,a)}>
-      `}else w=i.updateWhileMoving?O`<input type='range' class='${y}' id='${b}' style='${A}' value='${u}' @input=${t=>this._setFaderLevel(e,t.target.value)}>`:O`<input type='range' class='${y}' id='${b}' style='${A}' .value='${u}' @change=${t=>this._setFaderLevel(e,t.target.value)}>`;return O`
-      <div class='fader' id='fader_${t.entity_id}'>
-        <div class='range-holder' style='--fader-height: ${i.faderHeight};--fader-width: ${i.faderWidth};'>
-          ${w}
+          class='${inputClasses}'
+          id='${inputId}'
+          style='${rangeInputStyle}'
+          value='${inputValue}'
+          @mousedown=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}
+          @touchstart=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}>
+      `;
+    } else if (cfg.updateWhileMoving) {
+      rangeInput = x`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' value='${inputValue}' @input=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
+    } else {
+      rangeInput = x`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' .value='${inputValue}' @change=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
+    }
+    return x`
+      <div class='fader' id='fader_${faderRow.entity_id}'>
+        <div class='range-holder' style='--fader-height: ${cfg.faderHeight};--fader-width: ${cfg.faderWidth};'>
+          ${rangeInput}
         </div>
-        <div class='fader-name'>${o}</div>
-        <div class='fader-value'>${"on"===d||i.alwaysShowFaderValue?c:O`<br>`}</div>
-        <div class='active-button-holder ${r?"button-disabled":""}'>${$}</div>
+        <div class='fader-name'>${faderName}</div>
+        <div class='fader-value'>${activeState === 'on' || cfg.alwaysShowFaderValue ? displayValue : x`<br>`}</div>
+        <div class='active-button-holder ${unavailable ? 'button-disabled' : ''}'>${activeButton}</div>
       </div>
-    `}get relativeFaderPointerEvents(){return this._relativeFaderActive?"auto":"none"}_onRelativeFaderDown(t,e,i,r){t.preventDefault();const n=t.touches?t.touches[0].clientY:t.clientY;this._relativeFaderActive=!0,this.requestUpdate(),this._relativeFaderStartY=n,this._relativeFaderStateObj=e,this._relativeFaderMin=i,this._relativeFaderMax=r,this._relativeFaderInput=t.target,this._relativeFaderStartValue=Number(t.target.value),window.addEventListener("mousemove",this._onRelativeFaderMove),window.addEventListener("touchmove",this._onRelativeFaderMove),window.addEventListener("mouseup",this._onRelativeFaderUp),window.addEventListener("touchend",this._onRelativeFaderUp)}_onRelativeFaderMove(t){if(!this._relativeFaderActive)return;const e=t.touches?t.touches[0].clientY:t.clientY,i=this._relativeFaderStartY-e;let r=this._relativeFaderStartValue+i*this._relativeFaderSensitivity;r=Math.max(0,Math.min(100,r)),this._relativeFaderInput.value=r,this._setFaderLevel(this._relativeFaderStateObj,r)}_onRelativeFaderUp(t){this._relativeFaderActive&&(this._relativeFaderActive=!1,this.requestUpdate(),window.removeEventListener("mousemove",this._onRelativeFaderMove),window.removeEventListener("touchmove",this._onRelativeFaderMove),window.removeEventListener("mouseup",this._onRelativeFaderUp),window.removeEventListener("touchend",this._onRelativeFaderUp),this._relativeFaderStateObj=null,this._relativeFaderInput=null)}_renderActiveButton(t,e,i,r,n,a){return t?O`
-          <div class="active-button" ${i?"disabled":""}
-               @click="${t=>this._toggleActive(t)}"
-               data-entity="${t}"
-               data-current-state="${e}">
-            <span class="color" style="color:${"on"===e?r:n};">
-              <ha-icon icon="${a}" />
+    `;
+  }
+  get relativeFaderPointerEvents() {
+    return this._relativeFaderActive ? 'auto' : 'none';
+  }
+  _onRelativeFaderDown(e, stateObj, min, max) {
+    e.preventDefault();
+    // Support both mouse and touch
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    this._relativeFaderActive = true;
+    this.requestUpdate();
+    this._relativeFaderStartY = clientY;
+    this._relativeFaderStateObj = stateObj;
+    this._relativeFaderMin = min;
+    this._relativeFaderMax = max;
+    // Get input element
+    this._relativeFaderInput = e.target;
+    this._relativeFaderStartValue = Number(e.target.value);
+    window.addEventListener('mousemove', this._onRelativeFaderMove);
+    window.addEventListener('touchmove', this._onRelativeFaderMove);
+    window.addEventListener('mouseup', this._onRelativeFaderUp);
+    window.addEventListener('touchend', this._onRelativeFaderUp);
+  }
+  _onRelativeFaderMove(e) {
+    if (!this._relativeFaderActive) return;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const deltaY = this._relativeFaderStartY - clientY; // up is increase
+    let newValue = this._relativeFaderStartValue + deltaY * this._relativeFaderSensitivity;
+    newValue = Math.max(0, Math.min(100, newValue));
+    this._relativeFaderInput.value = newValue;
+    this._setFaderLevel(this._relativeFaderStateObj, newValue);
+  }
+  _onRelativeFaderUp(e) {
+    if (!this._relativeFaderActive) return;
+    this._relativeFaderActive = false;
+    this.requestUpdate();
+    window.removeEventListener('mousemove', this._onRelativeFaderMove);
+    window.removeEventListener('touchmove', this._onRelativeFaderMove);
+    window.removeEventListener('mouseup', this._onRelativeFaderUp);
+    window.removeEventListener('touchend', this._onRelativeFaderUp);
+    this._relativeFaderStateObj = null;
+    this._relativeFaderInput = null;
+  }
+  _renderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon) {
+    return activeEntity ? x`
+          <div class="active-button" ${unavailable ? 'disabled' : ''}
+               @click="${e => this._toggleActive(e)}"
+               data-entity="${activeEntity}"
+               data-current-state="${activeState}">
+            <span class="color" style="color:${activeState === 'on' ? faderActiveColor : faderInactiveColor};">
+              <ha-icon icon="${icon}" />
             </span>
           </div>
-        `:O`&nbsp;`}_entity_property(t,e){const i=this.hass.states[t];if(!i)return"";switch(e){case"-name":return i.attributes.friendly_name;case"-volume":return i.attributes.volume_level;case"-muted":return i.attributes.is_volume_muted;default:return i[e]}}_setFaderLevel(t,e){const i=mt(t),r=this.config&&this.config.faders?this.config.faders.find(e=>e.entity_id===t.entity_id):void 0,n=r&&"number"==typeof r.max?r.max:t.attributes.max||1,a=r&&"number"==typeof r.min?r.min:t.attributes.min||0;"media_player"===i?this.hass.callService("media_player","volume_set",{entity_id:t.entity_id,volume_level:e/100*(n-a)+a}):this.hass.callService(i,"set_value",{entity_id:t.entity_id,value:e/100*(n-a)+a})}_previewLevel(t,e){const i=this.shadowRoot.getElementById(t),r=this.faderColors[t];i&&r&&!i.className.includes("fader-inactive")&&(i.style.background=`linear-gradient(to right, ${r.active_color} ${e}%, ${r.track_color} ${e}%)`)}_toggleActive(t){const{entity:e,currentState:i}=t.target.dataset;if(!e)return;const r=vt(e),n={entity_id:e};let a="";"media_player"===r?(n.is_volume_muted="on"===i,a="volume_mute"):a="toggle",this.hass.callService(r,a,n),this.update_track_color()}async update_track_color(){const t=this.shadowRoot.querySelectorAll('.fader input[type="range"]');await Promise.all(Array.from(t).map(t=>t.updateComplete)),Array.from(t).map(t=>this._previewLevel(t.id,t.value))}async firstUpdated(){await this.update_track_color()}async updated(){await this.update_track_color()}setConfig(t){if(!t||!t.faders||!Array.isArray(t.faders))throw new Error('Invalid configuration: "faders" must be an array.');this.config=t}getCardSize(){return this.config.entities.length+1}});
+        ` : x`&nbsp;`;
+  }
+  _entity_property(entity, property) {
+    const state = this.hass.states[entity];
+    if (!state) return '';
+    switch (property) {
+      case '-name':
+        return state.attributes.friendly_name;
+      case '-volume':
+        return state.attributes.volume_level;
+      case '-muted':
+        return state.attributes.is_volume_muted;
+      default:
+        return state[property];
+    }
+  }
+  _setFaderLevel(state, value) {
+    const domain = L$1(state);
+    const faderRow = this.config && this.config.faders ? this.config.faders.find(f => f.entity_id === state.entity_id) : undefined;
+    const maxValue = faderRow && typeof faderRow.max === 'number' ? faderRow.max : state.attributes.max || 1;
+    const minValue = faderRow && typeof faderRow.min === 'number' ? faderRow.min : state.attributes.min || 0;
+    if (domain === 'media_player') {
+      this.hass.callService('media_player', 'volume_set', {
+        entity_id: state.entity_id,
+        volume_level: value / 100 * (maxValue - minValue) + minValue
+      });
+    } else {
+      // Support per-fader max value from config if present
+      this.hass.callService(domain, 'set_value', {
+        entity_id: state.entity_id,
+        value: value / 100 * (maxValue - minValue) + minValue
+      });
+    }
+  }
+  _previewLevel(entityId, value) {
+    const el = this.shadowRoot.getElementById(entityId);
+    const colors = this.faderColors[entityId];
+    if (el && colors && !el.className.includes('fader-inactive')) {
+      el.style.background = `linear-gradient(to right, ${colors.active_color} ${value}%, ${colors.track_color} ${value}%)`;
+    }
+  }
+  _toggleActive(e) {
+    const {
+      entity,
+      currentState
+    } = e.target.dataset;
+    if (!entity) return;
+    const domain = E$1(entity);
+    const serviceData = {
+      entity_id: entity
+    };
+    let service = '';
+    if (domain === 'media_player') {
+      serviceData.is_volume_muted = currentState === 'on';
+      service = 'volume_mute';
+    } else {
+      service = 'toggle';
+    }
+    this.hass.callService(domain, service, serviceData);
+    this.update_track_color();
+  }
+  async update_track_color() {
+    const children = this.shadowRoot.querySelectorAll('.fader input[type="range"]');
+    await Promise.all(Array.from(children).map(c => c.updateComplete));
+    Array.from(children).map(c => this._previewLevel(c.id, c.value));
+  }
+  async firstUpdated() {
+    await this.update_track_color();
+  }
+  async updated() {
+    await this.update_track_color();
+  }
+  setConfig(config) {
+    if (!config || !config.faders || !Array.isArray(config.faders)) {
+      throw new Error('Invalid configuration: "faders" must be an array.');
+    }
+    this.config = config;
+  }
+  getCardSize() {
+    return this.config.entities.length + 1;
+  }
+}
+customElements.define('custom-mixer-card', MixerCard);
