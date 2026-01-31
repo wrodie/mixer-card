@@ -108,7 +108,8 @@ class MixerCard extends LitElement {
       inactive_color: faderInactiveColor,
       thumb_color: faderThumbColor
     }
-    const activeButton = this._renderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon)
+    const showActiveButton = (typeof faderRow.showActiveButton === 'boolean') ? faderRow.showActiveButton : cfg.showActiveButton
+    const activeButton = showActiveButton ? this._renderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon) : html`&nbsp;`
     const inputClasses = `${activeState === 'off' ? 'fader-inactive' : 'fader-active'}${unavailable ? ' fader-unavailable' : ''}`
     const inputId = `fader_range_${faderRow.entity_id}`
     const inputStyle = getFaderStyle(faderColors, cfg, activeState)

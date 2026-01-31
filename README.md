@@ -50,6 +50,7 @@ This configuration applies to all faders in the card
 | `updateWhileMoving`    | If set, the entity values will be updated while moving the fader. Off by default to prevent API request flooding. | `false`      |
 | `relativeFader`       | If true, clicking a fader sets focus and mouse movement adjusts the value relative to the starting point, rather than setting the value directly. | `false`      |
 | `alwaysShowFaderValue` | If set, the fader value will be displayed even when the fader is not active.                                      | `false`      |
+| `showActiveButton`     | Show the Active/Mute button by default. Set to `false` to hide the button for all faders (can be overridden per fader). | `true`       |
 | `haCard`               | Should the card include a `<ha-card>` element? Boolean                                                            | `true`       |
 | `title`                | Add a title to the card                                                                                           |              |
 | `description`          | Add a description to the card                                                                                     |              |
@@ -67,6 +68,7 @@ This is the configuration for each individual fader
 | `value_attribute`  | The name of an `attribute` of the entity that contains the current value of the fader.  If `value_entity_id` or `value_attribute` are not present the value of the fader will be represented as a percentage (%) of the fader.  | Optional     |
 | `value_suffix`     | This string will be appended to the fader value, eg 'dB'  | Optional     |
 | `invert_active`    | If set to true, then the active state of the fader is inverted.  | Optional     |
+| `showActiveButton` | Set to `false` to hide the active/mute button for this fader. Overrides the global `showActiveButton` setting. | Optional     |
 | `thumb_color`      | Locally overrides the faderThumbColor    | Optional     |
 | `track_color`      | Locally overrides the faderTrackColor  | Optional     |
 | `active_color`     | Locally overrides the faderActiveColor  | Optional     |
