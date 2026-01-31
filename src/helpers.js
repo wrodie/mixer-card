@@ -13,6 +13,7 @@ export function getConfigDefaults (config) {
     faderTheme: config && config.faderTheme ? config.faderTheme : 'modern',
     updateWhileMoving: config && config.updateWhileMoving ? config.updateWhileMoving : false,
     alwaysShowFaderValue: config && config.alwaysShowFaderValue ? config.alwaysShowFaderValue : false,
+    showActiveButton: config && config.showActiveButton !== undefined ? config.showActiveButton : true,
     haCard: config && config.haCard !== undefined ? config.haCard : true,
     description: config && config.description ? config.description : '',
     title: config && config.title ? config.title : ''
