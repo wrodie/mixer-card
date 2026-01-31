@@ -88,11 +88,11 @@ class MixerCard extends LitElement {
     const faderName = faderRow.name || this._entity_property(faderRow.entity_id, '-name')
     const invertActive = faderRow.invert_active || false
     let activeState = faderRow.active_entity_id ? this._entity_property(faderRow.active_entity_id, 'state') : 'on'
-    if (invertActive) {
-      activeState = activeState === 'on' ? 'off' : 'on'
-    }
     if (domain === 'media_player') {
       activeState = this._entity_property(faderRow.entity_id, '-muted') ? 'off' : 'on'
+    }
+    if (invertActive) {
+      activeState = activeState === 'on' ? 'off' : 'on'
     }
     const icon = getFaderIcon(faderRow, stateObj, activeState)
     const { displayValue, inputValue } = getFaderValue(faderRow, stateObj, this.hass)
@@ -250,7 +250,11 @@ class MixerCard extends LitElement {
   }
 
   _toggleActive (e) {
-    const { entity, currentState } = e.target.dataset
+    // Prefer currentTarget (the button) but fall back to finding the button from the click target
+    const el = (e && e.currentTarget) ? e.currentTarget : (e && e.target && e.target.closest ? e.target.closest('.active-button') : (e && e.target))
+    const dataset = el ? el.dataset : {}
+    const { entity } = dataset || {}
+
     if (!entity) return
 
     const domain = computeDomain(entity)
@@ -258,7 +262,9 @@ class MixerCard extends LitElement {
     let service = ''
 
     if (domain === 'media_player') {
-      serviceData.is_volume_muted = currentState === 'on'
+      // Use actual entity muted state, not the displayed (possibly inverted) state
+      const isMuted = !!this._entity_property(entity, '-muted')
+      serviceData.is_volume_muted = !isMuted
       service = 'volume_mute'
     } else {
       service = 'toggle'
