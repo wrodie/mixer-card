@@ -1,9 +1,14 @@
 import { css } from 'lit'
 
 export const mixerCardStyles = css`
-    .fader-holder {
-        margin: 20px;
+    :host {
+        display: block;
+        width: max-content;
+        min-width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
+
     h4 {
         color: #00F;
         display: block;
@@ -18,8 +23,15 @@ export const mixerCardStyles = css`
       content: attr(data-value);
       padding-left: 1px;
     }
+    .mixer-card {
+        margin: 20px;
+    }
     .fader-holder {
       display: flex;
+      
+      width: 100%;
+      overflow-x: auto; /* Enables the scrollbar */
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */      
     }
     .fader {
         padding: 6px 10px;

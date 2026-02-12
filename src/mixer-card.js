@@ -74,7 +74,7 @@ class MixerCard extends LitElement {
     if (!cfg.haCard) {
       return card
     }
-    return html`<ha-card>${card}</ha-card>`
+    return html`<ha-card class="mixer-card-ha-card">${card}</ha-card>`
   }
 
   renderFader (faderRow, stateObj, cfg) {
@@ -297,7 +297,21 @@ class MixerCard extends LitElement {
   }
 
   getCardSize () {
-    return this.config.entities.length + 1
+    return this.config.faders.length + 1
+  }
+
+  getGridOptions () {
+    const faderCount = (this.config.faders && this.config.faders.length) ? this.config.faders.length : 1
+    const faderWidth = parseInt((this.config.faderWidth || '150').replace('px', ''))
+
+    const totalFaderWidth = faderCount * (faderWidth + 20) // Add 20px per fader for spacing
+    const columnsNeeded = Math.max(2, Math.min(48, Math.ceil(totalFaderWidth / 30)))
+
+    return {
+      columns: columnsNeeded,
+      min_columns: 1,
+      max_columns: 48
+    }
   }
 }
 
