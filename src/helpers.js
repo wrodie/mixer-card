@@ -16,7 +16,8 @@ export function getConfigDefaults (config) {
     showActiveButton: config && config.showActiveButton !== undefined ? config.showActiveButton : true,
     haCard: config && config.haCard !== undefined ? config.haCard : true,
     description: config && config.description ? config.description : '',
-    title: config && config.title ? config.title : ''
+    title: config && config.title ? config.title : '',
+    orientation: config && config.orientation ? config.orientation : 'vertical'
   }
 }
 

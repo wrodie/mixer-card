@@ -20,12 +20,7 @@ class MixerCard extends LitElement {
     super()
     // For relative fader tracking
     this._relativeFaderActive = false
-    this._relativeFaderStartY = 0
-    this._relativeFaderStartValue = 0
-    this._relativeFaderMin = 0
-    this._relativeFaderMax = 100
-    this._relativeFaderStateObj = null
-    this._relativeFaderInput = null
+    this._relativeFaderStates = {} // Stores state for each active relative fader, keyed by entity_id
     this._relativeFaderSensitivity = 0.2 // percent per pixel
     this._onRelativeFaderMove = this._onRelativeFaderMove.bind(this)
     this._onRelativeFaderUp = this._onRelativeFaderUp.bind(this)
@@ -55,7 +50,7 @@ class MixerCard extends LitElement {
       const faderRow = this.config.faders[faderIndex]
       const stateObj = this.hass.states[faderRow.entity_id]
       if (!stateObj) {
-        console.warn(`Entity ${faderRow.entity_id} not found in Home Assistant.`)
+        // console.warn(`Entity ${faderRow.entity_id} not found in Home Assistant.`)
         continue
       }
       faderTemplates.push(this.renderFader(faderRow, stateObj, cfg))
@@ -64,8 +59,8 @@ class MixerCard extends LitElement {
     const card = html`
       ${headerSection}
       <div>
-        <div class='mixer-card'>
-          <div class='fader-holder fader-theme-${cfg.faderTheme}'>
+        <div class='mixer-card fader-orientation-${cfg.orientation}'>
+          <div class='fader-holder fader-theme-${cfg.faderTheme}'>          
             ${faderTemplates}
           </div>
         </div>
@@ -155,6 +150,7 @@ class MixerCard extends LitElement {
     e.preventDefault()
     // Support both mouse and touch
     const clientY = e.touches ? e.touches[0].clientY : e.clientY
+    console.warn(`Starting relative fader: clientY=${clientY}, state=${stateObj.entity_id}, min=${min}, max=${max}`)
     this._relativeFaderActive = true
     this.requestUpdate()
     this._relativeFaderStartY = clientY
@@ -174,6 +170,7 @@ class MixerCard extends LitElement {
     if (!this._relativeFaderActive) return
     const clientY = e.touches ? e.touches[0].clientY : e.clientY
     const deltaY = this._relativeFaderStartY - clientY // up is increase
+    console.warn(`deltaY: ${deltaY}, startValue: ${this._relativeFaderStartValue}`)
     let newValue = this._relativeFaderStartValue + deltaY * this._relativeFaderSensitivity
     newValue = Math.max(0, Math.min(100, newValue))
     this._relativeFaderInput.value = newValue
@@ -183,6 +180,7 @@ class MixerCard extends LitElement {
   _onRelativeFaderUp (e) {
     if (!this._relativeFaderActive) return
     this._relativeFaderActive = false
+    this._relativeFaderStates = {} // Stores state for each active relative fader, keyed by entity_id
     this.requestUpdate()
     window.removeEventListener('mousemove', this._onRelativeFaderMove)
     window.removeEventListener('touchmove', this._onRelativeFaderMove)
