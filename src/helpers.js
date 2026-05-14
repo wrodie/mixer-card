@@ -16,7 +16,8 @@ export function getConfigDefaults (config) {
     showActiveButton: config && config.showActiveButton !== undefined ? config.showActiveButton : true,
     haCard: config && config.haCard !== undefined ? config.haCard : true,
     description: config && config.description ? config.description : '',
-    title: config && config.title ? config.title : ''
+    title: config && config.title ? config.title : '',
+    faderKnobImage: config && config.faderKnobImage ? config.faderKnobImage : ''
   }
 }
 
@@ -30,6 +31,9 @@ export function getFaderStyle (faderColors, cfg, activeState) {
   let style = `--fader-width: ${cfg.faderWidth}; --fader-height: ${cfg.faderHeight}; --fader-border-radius: ${cfg.borderRadius}; `
   style += `--fader-color: ${activeState === 'on' ? faderColors.active : faderColors.inactive}; `
   style += `--fader-thumb-color: ${faderColors.thumb}; --fader-track-color: ${faderColors.track}; --fader-track-inactive-color: ${faderColors.inactive};`
+  if (cfg.faderKnobImage) {
+    style += ` --fader-knob-image: url("${cfg.faderKnobImage}");`
+  }
   return style
 }
 

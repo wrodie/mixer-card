@@ -54,6 +54,8 @@ This configuration applies to all faders in the card
 | `haCard`               | Should the card include a `<ha-card>` element? Boolean                                                            | `true`       |
 | `title`                | Add a title to the card                                                                                           |              |
 | `description`          | Add a description to the card                                                                                     |              |
+| `faderKnobImage`       | Provide a url of an image to use as the fader knob for the physical theme. Image must be an SVG capable of being scaled to 40x85.                  |              |
+
 
 
 ### Fader Card Configuration

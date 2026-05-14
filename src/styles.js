@@ -91,7 +91,7 @@ export const mixerCardStyles = css`
         width:85px;
         cursor: pointer;
         transition: box-shadow 0.2s ease-in-out;
-        background-image: url("/hacsfiles/mixer-card/fader.svg");
+        background-image: var(--fader-knob-image, url("/hacsfiles/mixer-card/fader.svg"));
         background-size: cover;
         border-radius: 7px;
     }
