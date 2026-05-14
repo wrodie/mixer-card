@@ -14,7 +14,7 @@ A Lovelace Audio Mixer card for Home Assistant. Includes the ability to change v
 
 ## Description
 
-This card provides a series of vertical 'faders', each reflecting a 'channel' that allows you to control the audio volume of a number of audio sources.
+This card provides a series of vertical (also horizontal) 'faders', each reflecting a 'channel' that allows you to control the audio volume of a number of audio sources.
 
 Each fader has three elements
  - A Fader - giving the current set volume for the channel
@@ -40,8 +40,8 @@ This configuration applies to all faders in the card
 |------------------------|-------------------------------------------------------------------------------------------------------------------|--------------|
 | `faders`               | An array of faders - See *Fader Card Configuration*                                                               | **Required** |
 | `borderRadius`         | The border radius for the individual faders                                                                       | `12px`       |
-| `faderWidth`           | The width of each individual fader                                                                                | `150px`      |
-| `faderHeight`          | The height of each individual fader                                                                               | `400px`      |
+| `faderWidth`           | The width of each individual fader. (The short side - in horizontal orientation - the height)                     | `150px`      |
+| `faderHeight`          | The height of each individual fader. (The long side - in horizontal orientation - the width)                      | `400px`      |
 | `faderThumbColor`      | The color of the 'thumb' element of the fader (only valid for modern theme)                                       | `#ddd`       |
 | `faderTrackColor`      | The color of the fader track                                                                                      | `#ddd`       |
 | `faderActiveColor`     | The color of the active portion of the track when above 0                                                         | `#22ba00`    |
@@ -54,7 +54,12 @@ This configuration applies to all faders in the card
 | `haCard`               | Should the card include a `<ha-card>` element? Boolean                                                            | `true`       |
 | `title`                | Add a title to the card                                                                                           |              |
 | `description`          | Add a description to the card                                                                                     |              |
+| `orientation`          | Which orientation to show the fader in? Options are `vertical`/`horizontal`                                       | `vertical`   |
 
+
+>  ***Note on Horizontal Faders***
+>
+>  The horizontal fader implementation is new and the layout will probably change with time.  However if you are just wanting 'horizontal' volume controls, you may be better served with other Home Assistant Cards such as the Mushroom Cards.
 
 ### Fader Card Configuration
 This is the configuration for each individual fader
