@@ -20,12 +20,7 @@ class MixerCard extends LitElement {
     super()
     // For relative fader tracking
     this._relativeFaderActive = false
-    this._relativeFaderStartY = 0
-    this._relativeFaderStartValue = 0
-    this._relativeFaderMin = 0
-    this._relativeFaderMax = 100
-    this._relativeFaderStateObj = null
-    this._relativeFaderInput = null
+    this._relativeFaderStates = {} // Stores state for each active relative fader, keyed by entity_id
     this._relativeFaderSensitivity = 0.2 // percent per pixel
     this._onRelativeFaderMove = this._onRelativeFaderMove.bind(this)
     this._onRelativeFaderUp = this._onRelativeFaderUp.bind(this)
@@ -64,8 +59,8 @@ class MixerCard extends LitElement {
     const card = html`
       ${headerSection}
       <div>
-        <div class='mixer-card'>
-          <div class='fader-holder fader-theme-${cfg.faderTheme}'>
+        <div class='mixer-card fader-orientation-${cfg.orientation}'>
+          <div class='fader-holder fader-theme-${cfg.faderTheme}'>          
             ${faderTemplates}
           </div>
         </div>
@@ -183,6 +178,7 @@ class MixerCard extends LitElement {
   _onRelativeFaderUp (e) {
     if (!this._relativeFaderActive) return
     this._relativeFaderActive = false
+    this._relativeFaderStates = {} // Stores state for each active relative fader, keyed by entity_id
     this.requestUpdate()
     window.removeEventListener('mousemove', this._onRelativeFaderMove)
     window.removeEventListener('touchmove', this._onRelativeFaderMove)

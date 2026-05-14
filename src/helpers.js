@@ -17,7 +17,8 @@ export function getConfigDefaults (config) {
     haCard: config && config.haCard !== undefined ? config.haCard : true,
     description: config && config.description ? config.description : '',
     title: config && config.title ? config.title : '',
-    faderKnobImage: config && config.faderKnobImage ? config.faderKnobImage : ''
+    faderKnobImage: config && config.faderKnobImage ? config.faderKnobImage : '',
+    orientation: config && config.orientation ? config.orientation : 'vertical'
   }
 }
 

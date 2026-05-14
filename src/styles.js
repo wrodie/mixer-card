@@ -28,53 +28,149 @@ export const mixerCardStyles = css`
     }
     .fader-holder {
       display: flex;
-      
       width: 100%;
       overflow-x: auto; /* Enables the scrollbar */
       -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */      
     }
-    .fader {
-        padding: 6px 10px;
+
+
+    .active-button span {
+      pointer-events: none;
     }
-    .fader-value {
-        margin-top: 10px;
-        text-align: center;
+    .active-button ha-icon {
+      pointer-events: none;
     }
-    .fader-name {
-        margin-top: 30px;
-        text-align: center;
-        display: block;
-        font-weight: 300;
-        text-align: center;
-        font-size:14px;
-        text-transform: capitalize;
+    p.mixer-description {
+        margin: 16px;
+        margin-top: 0px;
     }
-    .range-holder {
-        height: var(--fader-height);
-        width: var(--fader-width);
-        position:relative;
-        display: block;
-        margin-right: auto;
-        margin-left: auto;
+    .fader-unavailable, .button-disabled {
+        opacity: 20%;
+        pointer-events: none;
     }
-    .range-holder input[type="range"] {
-        margin: 0;
-        outline: 0;
-        border: 0;
-        -webkit-transform:rotate(270deg);
-        -moz-transform:rotate(270deg);
-        -o-transform:rotate(270deg);
-        -ms-transform:rotate(270deg);
-        transform:rotate(270deg);
-        position: absolute;
-        top: calc(50% - (var(--fader-width) / 2));
-        right: calc(50% - (var(--fader-height) / 2));
-        background-color: var(--fader-track-color);
-        transition: box-shadow 0.2s ease-in-out;
-        -webkit-appearance: none;
-        appearance: none;
-        border-radius: var(--fader-border-radius, 12px);
+
+    /* Orientation  - Vertical */
+    .fader-orientation-vertical {
+
+        & .fader {
+            padding: 6px 10px;
+        }
+        & .fader-value {
+            margin-top: 10px;
+            text-align: center;
+        }
+        & .fader-name {
+            margin-top: 30px;
+            text-align: center;
+            display: block;
+            font-weight: 300;
+            text-align: center;
+            font-size:14px;
+            text-transform: capitalize;
+        }
+
+        & .active-button {
+            margin:20px;
+            margin-top: 30px;
+            line-height:20px;
+            border: 1px solid #bbb;
+            box-shadow: 1px 1px 1px #bbb;
+            display:block;
+            padding: 5px;
+            cursor:pointer;
+            vertical-align: center;
+            text-align: center;
+            border-radius: 5px;
+        }
+        & .range-holder {
+            height: var(--fader-height);
+            width: var(--fader-width);
+            position:relative;
+            display: block;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        
+        & .range-holder input[type="range"] {
+            margin: 0;
+            outline: 0;
+            border: 0;
+            -webkit-transform:rotate(270deg);
+            -moz-transform:rotate(270deg);
+            -o-transform:rotate(270deg);
+            -ms-transform:rotate(270deg);
+            transform:rotate(270deg);
+            position: absolute;
+            top: calc(50% - (var(--fader-width) / 2));
+            right: calc(50% - (var(--fader-height) / 2));
+            background-color: var(--fader-track-color);
+            transition: box-shadow 0.2s ease-in-out;
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: var(--fader-border-radius, 12px);
+        }
     }
+
+    /* Orientation  - Horizontal */
+    .fader-orientation-horizontal {
+
+        & .fader-holder {
+            display: block;   
+        }
+        & .fader {
+            padding: 0px;
+            margin-bottom: 10px;
+        }
+        & .fader-value {
+            text-align: center;
+            display:inline-block;
+        }
+        & .fader-name {
+            display:inline-block;
+            text-align: center;
+            font-weight: 300;
+            text-align: center;
+            font-size:14px;
+            text-transform: capitalize;
+        } 
+        & .active-button-holder {
+            display:inline-block;
+        }
+        & .active-button {
+            line-height:20px;
+            border: 1px solid #bbb;
+            box-shadow: 1px 1px 1px #bbb;
+            display: inline-block;
+            padding: 5px;
+            cursor:pointer;
+            vertical-align: center;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        & .range-holder {
+            height: var(--fader-width);
+            width: var(--fader-height);
+            position:relative;
+            display: block;
+            margin-bottom: 10px;
+        }
+    
+        & .range-holder input[type="range"] {
+            margin: 0;
+            outline: 0;
+            border: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: var(--fader-track-color);
+            transition: box-shadow 0.2s ease-in-out;
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: var(--fader-border-radius, 12px);
+        }
+    }
+
     /* Theme Physical */
     .fader-theme-physical .range-holder input[type="range"] {
         top: 50%;
@@ -95,10 +191,7 @@ export const mixerCardStyles = css`
         background-size: cover;
         border-radius: 7px;
     }
-    .fader-unavailable, .button-disabled {
-        opacity: 20%;
-        pointer-events: none;
-    }
+
     /* Theme Modern */
     .fader-theme-modern .range-holder input[type="range"] {
         width: var(--fader-height);
@@ -130,27 +223,5 @@ export const mixerCardStyles = css`
         position: relative;
         top: calc((var(--fader-width) - 80px) / 2);
     }
-    .active-button {
-        margin:20px;
-        margin-top: 30px;
-        line-height:20px;
-        border: 1px solid #bbb;
-        box-shadow: 1px 1px 1px #bbb;
-        display:block;
-        padding: 5px;
-        cursor:pointer;
-        vertical-align: center;
-        text-align: center;
-        border-radius: 5px;
-    }
-    .active-button span {
-      pointer-events: none;
-    }
-    .active-button ha-icon {
-      pointer-events: none;
-    }
-    p.mixer-description {
-        margin: 16px;
-        margin-top: 0px;
-    }
+
 `
