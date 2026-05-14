@@ -121,12 +121,12 @@ class MixerCard extends LitElement {
           class='${inputClasses}'
           id='${inputId}'
           style='${rangeInputStyle}'
-          value='${inputValue}'
+          .value='${inputValue}'
           @mousedown=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}
           @touchstart=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}>
       `
     } else if (cfg.updateWhileMoving) {
-      rangeInput = html`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' value='${inputValue}' @input=${e => this._setFaderLevel(stateObj, e.target.value)}>`
+      rangeInput = html`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' .value='${inputValue}' @input=${e => this._setFaderLevel(stateObj, e.target.value)}>`
     } else {
       rangeInput = html`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' .value='${inputValue}' @change=${e => this._setFaderLevel(stateObj, e.target.value)}>`
     }
