@@ -115,26 +115,38 @@ export const mixerCardStyles = css`
     .fader-orientation-horizontal {
 
         & .fader-holder {
-            display: block;   
+            display: contents;
         }
         & .fader {
-            padding: 0px;
-            margin-bottom: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0;
+            margin-bottom: 0px;
+            gap: 15px;
+        }
+        & .fader-holder,
+        & .fader-data {
+            display: contents;
         }
         & .fader-value {
             text-align: center;
             display:inline-block;
+            order: 3;
+            min-width: 50px;
         }
         & .fader-name {
             display:inline-block;
             text-align: center;
             font-weight: 300;
-            text-align: center;
+            text-align: left;
             font-size:14px;
             text-transform: capitalize;
+            order: 4;
         } 
         & .active-button-holder {
             display:inline-block;
+            order: 1;
         }
         & .active-button {
             line-height:20px;
@@ -149,26 +161,31 @@ export const mixerCardStyles = css`
         }
 
         & .range-holder {
+            order: 2;
             height: var(--fader-width);
             width: var(--fader-height);
             position:relative;
-            display: block;
-            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            margin: 0;
         }
     
         & .range-holder input[type="range"] {
             margin: 0;
             outline: 0;
             border: 0;
+            top: 50%;
             position: absolute;
-            top: 0;
+            transform: translateY(-50%);
             left: 0;
+            height: var(--fader-width);
             background-color: var(--fader-track-color);
             transition: box-shadow 0.2s ease-in-out;
             -webkit-appearance: none;
             appearance: none;
             border-radius: var(--fader-border-radius, 12px);
         }
+
     }
 
     /* Theme Physical */

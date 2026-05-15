@@ -135,9 +135,11 @@ class MixerCard extends LitElement {
         <div class='range-holder' style='--fader-height: ${cfg.faderHeight};--fader-width: ${cfg.faderWidth};'>
           ${rangeInput}
         </div>
-        <div class='fader-name'>${faderName}</div>
-        <div class='fader-value'>${(activeState === 'on') || cfg.alwaysShowFaderValue ? displayValue : html`<br>`}</div>
-        <div class='active-button-holder ${unavailable ? 'button-disabled' : ''}'>${activeButton}</div>
+        <div class='fader-data'>
+          <div class='fader-name'>${faderName}</div>
+          <div class='fader-value'>${(activeState === 'on') || cfg.alwaysShowFaderValue ? displayValue : html`<br>`}</div>
+          <div class='active-button-holder ${unavailable ? 'button-disabled' : ''}'>${activeButton}</div>
+        </div>
       </div>
     `
   }
