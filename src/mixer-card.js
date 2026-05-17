@@ -300,9 +300,16 @@ class MixerCard extends LitElement {
 
   getGridOptions () {
     const faderCount = (this.config.faders && this.config.faders.length) ? this.config.faders.length : 1
-    const faderWidth = parseInt((this.config.faderWidth || '150').replace('px', ''))
+    const isHorizontal = this.config.orientation === 'horizontal'
+    const rawSize = isHorizontal
+      ? (this.config.faderHeight || '150')
+      : (this.config.faderWidth || '150')
+    let faderSize = parseInt(rawSize.toString().replace('px', ''))
+    if (isHorizontal) {
+      faderSize = faderSize + 80 // Add extra width for horizontal layout to account for name/value display
+    }
+    const totalFaderWidth = faderCount * (faderSize + 20) // Add 20px per fader for spacing
 
-    const totalFaderWidth = faderCount * (faderWidth + 20) // Add 20px per fader for spacing
     const columnsNeeded = Math.max(2, Math.min(48, Math.ceil(totalFaderWidth / 30)))
 
     return {
