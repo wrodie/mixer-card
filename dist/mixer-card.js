@@ -520,18 +520,6 @@ class MixerCard extends s$3 {
           </div>
         ` : x`&nbsp;`;
   }
-  ArenderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon) {
-    return activeEntity ? x`
-          <div class="active-button" ${unavailable ? 'disabled' : ''}
-               @click="${e => this._toggleActive(e)}"
-               data-entity="${activeEntity}"
-               data-current-state="${activeState}">
-            <span class="color" style="color:${activeState === 'on' ? faderActiveColor : faderInactiveColor};">
-              <ha-icon .icon="${icon}" />
-            </span>
-          </div>
-        ` : x`&nbsp;`;
-  }
   _entity_property(entity, property) {
     const state = this.hass.states[entity];
     if (!state) return '';
