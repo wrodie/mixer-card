@@ -1,6 +1,6 @@
 {
   "name": "mixer-card",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "description": "Lovelace card to use for Audio mixers",
   "keywords": [
     "home-assistant",

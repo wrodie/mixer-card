@@ -193,12 +193,30 @@ class MixerCard extends LitElement {
   _renderActiveButton (activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon) {
     return activeEntity
       ? html`
+          <div 
+              .key="${activeEntity}_${activeState}"
+              class="active-button" 
+              ?disabled="${unavailable}"
+              @click="${e => this._toggleActive(e)}"
+              data-entity="${activeEntity}"
+              data-current-state="${activeState}">
+            <span class="color" style="color:${activeState === 'on' ? faderActiveColor : faderInactiveColor};">
+              <ha-icon .icon="${icon}"></ha-icon>
+            </span>
+          </div>
+        `
+      : html`&nbsp;`
+  }
+
+  ArenderActiveButton (activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon) {
+    return activeEntity
+      ? html`
           <div class="active-button" ${unavailable ? 'disabled' : ''}
                @click="${e => this._toggleActive(e)}"
                data-entity="${activeEntity}"
                data-current-state="${activeState}">
             <span class="color" style="color:${activeState === 'on' ? faderActiveColor : faderInactiveColor};">
-              <ha-icon icon="${icon}" />
+              <ha-icon .icon="${icon}" />
             </span>
           </div>
         `
