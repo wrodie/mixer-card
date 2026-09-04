@@ -11,7 +11,8 @@ import {
   getFaderStyle,
   getFaderColor,
   getFaderIcon,
-  getFaderValue
+  getFaderValue,
+  renderDbScale
 } from './helpers.js'
 import { mixerCardStyles } from './styles.js'
 
@@ -130,14 +131,39 @@ class MixerCard extends LitElement {
     } else {
       rangeInput = html`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' .value='${inputValue}' @change=${e => this._setFaderLevel(stateObj, e.target.value)}>`
     }
+    const rangeHolderSizeVars = `${cfg.faderHeight ? `--fader-height: ${cfg.faderHeight};` : ''}${cfg.faderWidth ? `--fader-width: ${cfg.faderWidth};` : ''}`
+    const valueTemplate = ((activeState === 'on') || cfg.alwaysShowFaderValue) ? displayValue : html`<br>`
+    // X32-style layout (the 'physical' theme's whole point is to resemble
+    // a real Behringer console channel strip): value readout above the
+    // fader and a printed dB scale beside it, rather than the modern
+    // theme's HA-native value-below-the-slider layout. Kept out of
+    // horizontal orientation — real X32 hardware has no horizontal
+    // faders, and horizontal's DOM already leans on fragile flex `order`
+    // tricks (see styles.js) that a new wrapper element would break.
+    const isX32Style = cfg.faderTheme === 'physical' && cfg.orientation !== 'horizontal'
+    const showDbScale = (typeof faderRow.showDbScale === 'boolean') ? faderRow.showDbScale : cfg.showDbScale
+    const showScale = isX32Style && showDbScale
+    const rangeSection = showScale
+      ? html`
+          <div class='range-holder-wrap'>
+            ${renderDbScale()}
+            <div class='range-holder' style='${rangeHolderSizeVars}'>
+              ${rangeInput}
+            </div>
+          </div>
+        `
+      : html`
+          <div class='range-holder' style='${rangeHolderSizeVars}'>
+            ${rangeInput}
+          </div>
+        `
     return html`
-      <div class='fader' id='fader_${faderRow.entity_id}'>
-        <div class='range-holder' style='--fader-height: ${cfg.faderHeight};--fader-width: ${cfg.faderWidth};'>
-          ${rangeInput}
-        </div>
+      <div class='fader ${showScale ? 'has-db-scale' : ''}' id='fader_${faderRow.entity_id}'>
+        ${isX32Style ? html`<div class='fader-value fader-value-top'>${valueTemplate}</div>` : ''}
+        ${rangeSection}
         <div class='fader-data'>
           <div class='fader-name'>${faderName}</div>
-          <div class='fader-value'>${(activeState === 'on') || cfg.alwaysShowFaderValue ? displayValue : html`<br>`}</div>
+          ${!isX32Style ? html`<div class='fader-value'>${valueTemplate}</div>` : ''}
           <div class='active-button-holder ${unavailable ? 'button-disabled' : ''}'>${activeButton}</div>
         </div>
       </div>
@@ -288,10 +314,57 @@ class MixerCard extends LitElement {
 
   async firstUpdated () {
     await this.update_track_color()
+    this._setupFaderWidthObserver()
   }
 
   async updated () {
     await this.update_track_color()
+    this._recomputeFaderWidth()
+  }
+
+  disconnectedCallback () {
+    super.disconnectedCallback()
+    if (this._faderWidthObserver) {
+      this._faderWidthObserver.disconnect()
+      this._faderWidthObserver = null
+    }
+  }
+
+  _setupFaderWidthObserver () {
+    const holder = this.shadowRoot.querySelector('.fader-holder')
+    if (!holder) return
+    this._faderWidthObserver = new ResizeObserver(() => this._recomputeFaderWidth())
+    this._faderWidthObserver.observe(holder)
+    this._recomputeFaderWidth()
+  }
+
+  // Fluid mode (--fader-width unset in config) picks a fixed thumb-thickness
+  // default, which is wrong for ANY specific card width — too cramped on a
+  // wide card (wasted space either side), too wide on a narrow one. Rather
+  // than guess a better constant, measure the actual space this card was
+  // given and size the thumb thickness to fill it (only for vertical
+  // orientation — horizontal's range-holder already fills its row via
+  // flex, see styles.js). Every downstream calc() (knob size, dB-scale tick
+  // positions) already reads --fader-width as a variable, so recomputing it
+  // here is enough to keep them all correct with no further changes.
+  _recomputeFaderWidth () {
+    const cfg = getConfigDefaults(this.config)
+    if (cfg.faderWidth || cfg.orientation === 'horizontal') return
+    const holder = this.shadowRoot.querySelector('.fader-holder')
+    if (!holder) return
+    const faderCount = (this.config.faders && this.config.faders.length) ? this.config.faders.length : 1
+    // Per-fader showDbScale overrides can't be reflected here (--fader-width
+    // is one shared value for the whole card), so this uses only the
+    // card-level default — a fader that overrides it away from that default
+    // will be very slightly mis-sized, an acceptable edge case.
+    const showScale = cfg.faderTheme === 'physical' && cfg.showDbScale
+    const gap = 8 // .fader-holder's gap
+    const perFaderChrome = 20 + (showScale ? 26 : 0) // .fader padding (10px * 2), plus the dB scale's own width+gap for physical theme
+    const availableWidth = holder.clientWidth
+    const perFaderTotal = (availableWidth - gap * (faderCount - 1)) / faderCount
+    const thickness = Math.floor(perFaderTotal - perFaderChrome)
+    const clamped = Math.max(44, Math.min(150, thickness))
+    this.style.setProperty('--fader-width', `${clamped}px`)
   }
 
   setConfig (config) {
@@ -302,16 +375,40 @@ class MixerCard extends LitElement {
   }
 
   getCardSize () {
-    return this.config.faders.length + 1
+    const cfg = getConfigDefaults(this.config)
+    const faderCount = (this.config.faders && this.config.faders.length) ? this.config.faders.length : 1
+    if (cfg.orientation === 'horizontal') {
+      // Horizontal faders stack one per row, so height scales with count.
+      return faderCount + 1
+    }
+    // Vertical faders sit side-by-side in a single row, so height tracks
+    // the fader length, not how many there are. In fluid mode (no explicit
+    // faderHeight) there's no literal pixel value to read, so fall back to
+    // a size matching the fixed --fader-height default in styles.js.
+    const lengthPx = parseInt((cfg.faderHeight || '').toString().replace('px', ''), 10)
+    const rows = Number.isFinite(lengthPx) && lengthPx > 0 ? Math.ceil(lengthPx / 50) : 5
+    return rows + 1
   }
 
   getGridOptions () {
+    const cfg = getConfigDefaults(this.config)
+    if (!cfg.faderWidth && !cfg.faderHeight) {
+      // Fluid mode: let the card span whatever width the section gives it
+      // instead of guessing a column count from pixel dimensions that no
+      // longer exist.
+      return {
+        columns: 'full',
+        rows: 'auto',
+        min_columns: 6
+      }
+    }
     const faderCount = (this.config.faders && this.config.faders.length) ? this.config.faders.length : 1
-    const isHorizontal = this.config.orientation === 'horizontal'
+    const isHorizontal = cfg.orientation === 'horizontal'
     const rawSize = isHorizontal
-      ? (this.config.faderHeight || '150')
-      : (this.config.faderWidth || '150')
-    let faderSize = parseInt(rawSize.toString().replace('px', ''))
+      ? (cfg.faderHeight || '150')
+      : (cfg.faderWidth || '150')
+    let faderSize = parseInt(rawSize.toString().replace('px', ''), 10)
+    if (!Number.isFinite(faderSize)) faderSize = 150
     if (isHorizontal) {
       faderSize = faderSize + 80 // Add extra width for horizontal layout to account for name/value display
     }

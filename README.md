@@ -40,8 +40,8 @@ This configuration applies to all faders in the card
 |------------------------|-------------------------------------------------------------------------------------------------------------------|--------------|
 | `faders`               | An array of faders - See *Fader Card Configuration*                                                               | **Required** |
 | `borderRadius`         | The border radius for the individual faders                                                                       | `12px`       |
-| `faderWidth`           | The width of each individual fader. (The short side - in horizontal orientation - the height)                     | `150px`      |
-| `faderHeight`          | The height of each individual fader. (The long side - in horizontal orientation - the width)                      | `400px`      |
+| `faderWidth`           | The width of each individual fader. (The short side - in horizontal orientation - the height). Leave unset for fluid sizing (see *Responsive layout* below). | fluid |
+| `faderHeight`          | The height of each individual fader. (The long side - in horizontal orientation - the width). Leave unset for fluid sizing (see *Responsive layout* below). | fluid |
 | `faderThumbColor`      | The color of the 'thumb' element of the fader (only valid for modern theme)                                       | `#ddd`       |
 | `faderTrackColor`      | The color of the fader track                                                                                      | `#ddd`       |
 | `faderActiveColor`     | The color of the active portion of the track when above 0                                                         | `#22ba00`    |
@@ -51,6 +51,7 @@ This configuration applies to all faders in the card
 | `relativeFader`       | If true, clicking a fader sets focus and mouse movement adjusts the value relative to the starting point, rather than setting the value directly. | `false`      |
 | `alwaysShowFaderValue` | If set, the fader value will be displayed even when the fader is not active.                                      | `false`      |
 | `showActiveButton`     | Show the Active/Mute button by default. Set to `false` to hide the button for all faders (can be overridden per fader). | `true`       |
+| `showDbScale`          | Show the printed dB scale next to the fader by default (`physical` theme, vertical orientation only). Set to `false` to hide it for all faders (can be overridden per fader). | `true`       |
 | `haCard`               | Should the card include a `<ha-card>` element? Boolean                                                            | `true`       |
 | `title`                | Add a title to the card                                                                                           |              |
 | `description`          | Add a description to the card                                                                                     |              |
@@ -61,6 +62,16 @@ This configuration applies to all faders in the card
 >  ***Note on Horizontal Faders***
 >
 >  The horizontal fader implementation is new and the layout will probably change with time.  However if you are just wanting 'horizontal' volume controls, you may be better served with other Home Assistant Cards such as the Mushroom Cards.
+
+### Responsive layout
+
+By default (when `faderWidth`/`faderHeight` are left unset) the card sizes itself fluidly: it measures the actual width Home Assistant gives it and divides that across the current faders, so fader thickness fills the card exactly rather than guessing a fixed size — faders wrap onto a new row instead of being clipped or forced into a horizontal scrollbar if even the minimum width doesn't fit. The card also requests full-width grid placement (`columns: 'full'`, `rows: 'auto'`) in Home Assistant's sections view, and fully implements `getGridOptions()` so it reports as resizable in the layout editor.
+
+Set `faderWidth`/`faderHeight` explicitly to opt back into fixed-pixel sizing.
+
+### Physical theme (X32-style)
+
+Setting `faderTheme: physical` renders each fader closer to a real Behringer X32/M32 channel strip: the dB value reads out above the fader instead of below, and a printed dB scale (+10 to -∞, calibrated to the X32's actual fader law) appears to its left, with tick marks aligned to the fader's true top/bottom travel. The scale is on by default; set `showDbScale: false` (card-level, or per-fader) to hide it — see the option tables above. Vertical orientation only; horizontal physical faders render like the modern theme.
 
 ### Fader Card Configuration
 This is the configuration for each individual fader
@@ -75,6 +86,7 @@ This is the configuration for each individual fader
 | `value_suffix`     | This string will be appended to the fader value, eg 'dB'  | Optional     |
 | `invert_active`    | If set to true, then the active state of the fader is inverted.  | Optional     |
 | `showActiveButton` | Set to `false` to hide the active/mute button for this fader. Overrides the global `showActiveButton` setting. | Optional     |
+| `showDbScale`      | Set to `false` (or `true`) to override the global `showDbScale` setting for this fader. Only has an effect on the `physical` theme, vertical orientation. | Optional     |
 | `thumb_color`      | Locally overrides the faderThumbColor    | Optional     |
 | `track_color`      | Locally overrides the faderTrackColor  | Optional     |
 | `active_color`     | Locally overrides the faderActiveColor  | Optional     |

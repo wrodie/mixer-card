@@ -3,108 +3,41 @@
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const t=window,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,s=Symbol(),n=new WeakMap;class o{constructor(t,e,n){if(this._$cssResult$=!0,n!==s)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=e;}get styleSheet(){let t=this.o;const s=this.t;if(e&&void 0===t){const e=void 0!==s&&1===s.length;e&&(t=n.get(s)),void 0===t&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),e&&n.set(s,t));}return t}toString(){return this.cssText}}const r=t=>new o("string"==typeof t?t:t+"",void 0,s),i=(t,...e)=>{const n=1===t.length?t[0]:e.reduce(((e,s,n)=>e+(t=>{if(!0===t._$cssResult$)return t.cssText;if("number"==typeof t)return t;throw Error("Value passed to 'css' function must be a 'css' function result: "+t+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(s)+t[n+1]),t[0]);return new o(n,t,s)},S=(s,n)=>{e?s.adoptedStyleSheets=n.map((t=>t instanceof CSSStyleSheet?t:t.styleSheet)):n.forEach((e=>{const n=document.createElement("style"),o=t.litNonce;void 0!==o&&n.setAttribute("nonce",o),n.textContent=e.cssText,s.appendChild(n);}));},c=e?t=>t:t=>t instanceof CSSStyleSheet?(t=>{let e="";for(const s of t.cssRules)e+=s.cssText;return r(e)})(t):t;//# sourceMappingURL=css-tag.js.map
-
+const e=window,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,i=Symbol(),r=new WeakMap;class a{constructor(e,t,r){if(this._$cssResult$=!0,r!==i)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=e,this.t=t}get styleSheet(){let e=this.o;const i=this.t;if(t&&void 0===e){const t=void 0!==i&&1===i.length;t&&(e=r.get(i)),void 0===e&&((this.o=e=new CSSStyleSheet).replaceSync(this.cssText),t&&r.set(i,e))}return e}toString(){return this.cssText}}const n=(i,r)=>{t?i.adoptedStyleSheets=r.map(e=>e instanceof CSSStyleSheet?e:e.styleSheet):r.forEach(t=>{const r=document.createElement("style"),a=e.litNonce;void 0!==a&&r.setAttribute("nonce",a),r.textContent=t.cssText,i.appendChild(r)})},o=t?e=>e:e=>e instanceof CSSStyleSheet?(e=>{let t="";for(const i of e.cssRules)t+=i.cssText;return(e=>new a("string"==typeof e?e:e+"",void 0,i))(t)})(e):e
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */var s$1;const e$1=window,r$1=e$1.trustedTypes,h=r$1?r$1.emptyScript:"",o$1=e$1.reactiveElementPolyfillSupport,n$1={toAttribute(t,i){switch(i){case Boolean:t=t?h:null;break;case Object:case Array:t=null==t?t:JSON.stringify(t);}return t},fromAttribute(t,i){let s=t;switch(i){case Boolean:s=null!==t;break;case Number:s=null===t?null:Number(t);break;case Object:case Array:try{s=JSON.parse(t);}catch(t){s=null;}}return s}},a=(t,i)=>i!==t&&(i==i||t==t),l={attribute:!0,type:String,converter:n$1,reflect:!1,hasChanged:a},d="finalized";class u extends HTMLElement{constructor(){super(),this._$Ei=new Map,this.isUpdatePending=!1,this.hasUpdated=!1,this._$El=null,this._$Eu();}static addInitializer(t){var i;this.finalize(),(null!==(i=this.h)&&void 0!==i?i:this.h=[]).push(t);}static get observedAttributes(){this.finalize();const t=[];return this.elementProperties.forEach(((i,s)=>{const e=this._$Ep(s,i);void 0!==e&&(this._$Ev.set(e,s),t.push(e));})),t}static createProperty(t,i=l){if(i.state&&(i.attribute=!1),this.finalize(),this.elementProperties.set(t,i),!i.noAccessor&&!this.prototype.hasOwnProperty(t)){const s="symbol"==typeof t?Symbol():"__"+t,e=this.getPropertyDescriptor(t,s,i);void 0!==e&&Object.defineProperty(this.prototype,t,e);}}static getPropertyDescriptor(t,i,s){return {get(){return this[i]},set(e){const r=this[t];this[i]=e,this.requestUpdate(t,r,s);},configurable:!0,enumerable:!0}}static getPropertyOptions(t){return this.elementProperties.get(t)||l}static finalize(){if(this.hasOwnProperty(d))return !1;this[d]=!0;const t=Object.getPrototypeOf(this);if(t.finalize(),void 0!==t.h&&(this.h=[...t.h]),this.elementProperties=new Map(t.elementProperties),this._$Ev=new Map,this.hasOwnProperty("properties")){const t=this.properties,i=[...Object.getOwnPropertyNames(t),...Object.getOwnPropertySymbols(t)];for(const s of i)this.createProperty(s,t[s]);}return this.elementStyles=this.finalizeStyles(this.styles),!0}static finalizeStyles(i){const s=[];if(Array.isArray(i)){const e=new Set(i.flat(1/0).reverse());for(const i of e)s.unshift(c(i));}else void 0!==i&&s.push(c(i));return s}static _$Ep(t,i){const s=i.attribute;return !1===s?void 0:"string"==typeof s?s:"string"==typeof t?t.toLowerCase():void 0}_$Eu(){var t;this._$E_=new Promise((t=>this.enableUpdating=t)),this._$AL=new Map,this._$Eg(),this.requestUpdate(),null===(t=this.constructor.h)||void 0===t||t.forEach((t=>t(this)));}addController(t){var i,s;(null!==(i=this._$ES)&&void 0!==i?i:this._$ES=[]).push(t),void 0!==this.renderRoot&&this.isConnected&&(null===(s=t.hostConnected)||void 0===s||s.call(t));}removeController(t){var i;null===(i=this._$ES)||void 0===i||i.splice(this._$ES.indexOf(t)>>>0,1);}_$Eg(){this.constructor.elementProperties.forEach(((t,i)=>{this.hasOwnProperty(i)&&(this._$Ei.set(i,this[i]),delete this[i]);}));}createRenderRoot(){var t;const s=null!==(t=this.shadowRoot)&&void 0!==t?t:this.attachShadow(this.constructor.shadowRootOptions);return S(s,this.constructor.elementStyles),s}connectedCallback(){var t;void 0===this.renderRoot&&(this.renderRoot=this.createRenderRoot()),this.enableUpdating(!0),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostConnected)||void 0===i?void 0:i.call(t)}));}enableUpdating(t){}disconnectedCallback(){var t;null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostDisconnected)||void 0===i?void 0:i.call(t)}));}attributeChangedCallback(t,i,s){this._$AK(t,s);}_$EO(t,i,s=l){var e;const r=this.constructor._$Ep(t,s);if(void 0!==r&&!0===s.reflect){const h=(void 0!==(null===(e=s.converter)||void 0===e?void 0:e.toAttribute)?s.converter:n$1).toAttribute(i,s.type);this._$El=t,null==h?this.removeAttribute(r):this.setAttribute(r,h),this._$El=null;}}_$AK(t,i){var s;const e=this.constructor,r=e._$Ev.get(t);if(void 0!==r&&this._$El!==r){const t=e.getPropertyOptions(r),h="function"==typeof t.converter?{fromAttribute:t.converter}:void 0!==(null===(s=t.converter)||void 0===s?void 0:s.fromAttribute)?t.converter:n$1;this._$El=r,this[r]=h.fromAttribute(i,t.type),this._$El=null;}}requestUpdate(t,i,s){let e=!0;void 0!==t&&(((s=s||this.constructor.getPropertyOptions(t)).hasChanged||a)(this[t],i)?(this._$AL.has(t)||this._$AL.set(t,i),!0===s.reflect&&this._$El!==t&&(void 0===this._$EC&&(this._$EC=new Map),this._$EC.set(t,s))):e=!1),!this.isUpdatePending&&e&&(this._$E_=this._$Ej());}async _$Ej(){this.isUpdatePending=!0;try{await this._$E_;}catch(t){Promise.reject(t);}const t=this.scheduleUpdate();return null!=t&&await t,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){var t;if(!this.isUpdatePending)return;this.hasUpdated,this._$Ei&&(this._$Ei.forEach(((t,i)=>this[i]=t)),this._$Ei=void 0);let i=!1;const s=this._$AL;try{i=this.shouldUpdate(s),i?(this.willUpdate(s),null===(t=this._$ES)||void 0===t||t.forEach((t=>{var i;return null===(i=t.hostUpdate)||void 0===i?void 0:i.call(t)})),this.update(s)):this._$Ek();}catch(t){throw i=!1,this._$Ek(),t}i&&this._$AE(s);}willUpdate(t){}_$AE(t){var i;null===(i=this._$ES)||void 0===i||i.forEach((t=>{var i;return null===(i=t.hostUpdated)||void 0===i?void 0:i.call(t)})),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(t)),this.updated(t);}_$Ek(){this._$AL=new Map,this.isUpdatePending=!1;}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$E_}shouldUpdate(t){return !0}update(t){void 0!==this._$EC&&(this._$EC.forEach(((t,i)=>this._$EO(i,this[i],t))),this._$EC=void 0),this._$Ek();}updated(t){}firstUpdated(t){}}u[d]=!0,u.elementProperties=new Map,u.elementStyles=[],u.shadowRootOptions={mode:"open"},null==o$1||o$1({ReactiveElement:u}),(null!==(s$1=e$1.reactiveElementVersions)&&void 0!==s$1?s$1:e$1.reactiveElementVersions=[]).push("1.6.3");//# sourceMappingURL=reactive-element.js.map
-
+ */;var s;const l=window,d=l.trustedTypes,h=d?d.emptyScript:"",c=l.reactiveElementPolyfillSupport,u={toAttribute(e,t){switch(t){case Boolean:e=e?h:null;break;case Object:case Array:e=null==e?e:JSON.stringify(e)}return e},fromAttribute(e,t){let i=e;switch(t){case Boolean:i=null!==e;break;case Number:i=null===e?null:Number(e);break;case Object:case Array:try{i=JSON.parse(e)}catch(e){i=null}}return i}},f=(e,t)=>t!==e&&(t==t||e==e),p={attribute:!0,type:String,converter:u,reflect:!1,hasChanged:f},v="finalized";class m extends HTMLElement{constructor(){super(),this._$Ei=new Map,this.isUpdatePending=!1,this.hasUpdated=!1,this._$El=null,this._$Eu()}static addInitializer(e){var t;this.finalize(),(null!==(t=this.h)&&void 0!==t?t:this.h=[]).push(e)}static get observedAttributes(){this.finalize();const e=[];return this.elementProperties.forEach((t,i)=>{const r=this._$Ep(i,t);void 0!==r&&(this._$Ev.set(r,i),e.push(r))}),e}static createProperty(e,t=p){if(t.state&&(t.attribute=!1),this.finalize(),this.elementProperties.set(e,t),!t.noAccessor&&!this.prototype.hasOwnProperty(e)){const i="symbol"==typeof e?Symbol():"__"+e,r=this.getPropertyDescriptor(e,i,t);void 0!==r&&Object.defineProperty(this.prototype,e,r)}}static getPropertyDescriptor(e,t,i){return{get(){return this[t]},set(r){const a=this[e];this[t]=r,this.requestUpdate(e,a,i)},configurable:!0,enumerable:!0}}static getPropertyOptions(e){return this.elementProperties.get(e)||p}static finalize(){if(this.hasOwnProperty(v))return!1;this[v]=!0;const e=Object.getPrototypeOf(this);if(e.finalize(),void 0!==e.h&&(this.h=[...e.h]),this.elementProperties=new Map(e.elementProperties),this._$Ev=new Map,this.hasOwnProperty("properties")){const e=this.properties,t=[...Object.getOwnPropertyNames(e),...Object.getOwnPropertySymbols(e)];for(const i of t)this.createProperty(i,e[i])}return this.elementStyles=this.finalizeStyles(this.styles),!0}static finalizeStyles(e){const t=[];if(Array.isArray(e)){const i=new Set(e.flat(1/0).reverse());for(const e of i)t.unshift(o(e))}else void 0!==e&&t.push(o(e));return t}static _$Ep(e,t){const i=t.attribute;return!1===i?void 0:"string"==typeof i?i:"string"==typeof e?e.toLowerCase():void 0}_$Eu(){var e;this._$E_=new Promise(e=>this.enableUpdating=e),this._$AL=new Map,this._$Eg(),this.requestUpdate(),null===(e=this.constructor.h)||void 0===e||e.forEach(e=>e(this))}addController(e){var t,i;(null!==(t=this._$ES)&&void 0!==t?t:this._$ES=[]).push(e),void 0!==this.renderRoot&&this.isConnected&&(null===(i=e.hostConnected)||void 0===i||i.call(e))}removeController(e){var t;null===(t=this._$ES)||void 0===t||t.splice(this._$ES.indexOf(e)>>>0,1)}_$Eg(){this.constructor.elementProperties.forEach((e,t)=>{this.hasOwnProperty(t)&&(this._$Ei.set(t,this[t]),delete this[t])})}createRenderRoot(){var e;const t=null!==(e=this.shadowRoot)&&void 0!==e?e:this.attachShadow(this.constructor.shadowRootOptions);return n(t,this.constructor.elementStyles),t}connectedCallback(){var e;void 0===this.renderRoot&&(this.renderRoot=this.createRenderRoot()),this.enableUpdating(!0),null===(e=this._$ES)||void 0===e||e.forEach(e=>{var t;return null===(t=e.hostConnected)||void 0===t?void 0:t.call(e)})}enableUpdating(e){}disconnectedCallback(){var e;null===(e=this._$ES)||void 0===e||e.forEach(e=>{var t;return null===(t=e.hostDisconnected)||void 0===t?void 0:t.call(e)})}attributeChangedCallback(e,t,i){this._$AK(e,i)}_$EO(e,t,i=p){var r;const a=this.constructor._$Ep(e,i);if(void 0!==a&&!0===i.reflect){const n=(void 0!==(null===(r=i.converter)||void 0===r?void 0:r.toAttribute)?i.converter:u).toAttribute(t,i.type);this._$El=e,null==n?this.removeAttribute(a):this.setAttribute(a,n),this._$El=null}}_$AK(e,t){var i;const r=this.constructor,a=r._$Ev.get(e);if(void 0!==a&&this._$El!==a){const e=r.getPropertyOptions(a),n="function"==typeof e.converter?{fromAttribute:e.converter}:void 0!==(null===(i=e.converter)||void 0===i?void 0:i.fromAttribute)?e.converter:u;this._$El=a,this[a]=n.fromAttribute(t,e.type),this._$El=null}}requestUpdate(e,t,i){let r=!0;void 0!==e&&(((i=i||this.constructor.getPropertyOptions(e)).hasChanged||f)(this[e],t)?(this._$AL.has(e)||this._$AL.set(e,t),!0===i.reflect&&this._$El!==e&&(void 0===this._$EC&&(this._$EC=new Map),this._$EC.set(e,i))):r=!1),!this.isUpdatePending&&r&&(this._$E_=this._$Ej())}async _$Ej(){this.isUpdatePending=!0;try{await this._$E_}catch(e){Promise.reject(e)}const e=this.scheduleUpdate();return null!=e&&await e,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){var e;if(!this.isUpdatePending)return;this.hasUpdated,this._$Ei&&(this._$Ei.forEach((e,t)=>this[t]=e),this._$Ei=void 0);let t=!1;const i=this._$AL;try{t=this.shouldUpdate(i),t?(this.willUpdate(i),null===(e=this._$ES)||void 0===e||e.forEach(e=>{var t;return null===(t=e.hostUpdate)||void 0===t?void 0:t.call(e)}),this.update(i)):this._$Ek()}catch(e){throw t=!1,this._$Ek(),e}t&&this._$AE(i)}willUpdate(e){}_$AE(e){var t;null===(t=this._$ES)||void 0===t||t.forEach(e=>{var t;return null===(t=e.hostUpdated)||void 0===t?void 0:t.call(e)}),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(e)),this.updated(e)}_$Ek(){this._$AL=new Map,this.isUpdatePending=!1}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$E_}shouldUpdate(e){return!0}update(e){void 0!==this._$EC&&(this._$EC.forEach((e,t)=>this._$EO(t,this[t],e)),this._$EC=void 0),this._$Ek()}updated(e){}firstUpdated(e){}}
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-var t$1;const i$1=window,s$2=i$1.trustedTypes,e$2=s$2?s$2.createPolicy("lit-html",{createHTML:t=>t}):void 0,o$2="$lit$",n$2=`lit$${(Math.random()+"").slice(9)}$`,l$1="?"+n$2,h$1=`<${l$1}>`,r$2=document,u$1=()=>r$2.createComment(""),d$1=t=>null===t||"object"!=typeof t&&"function"!=typeof t,c$1=Array.isArray,v=t=>c$1(t)||"function"==typeof(null==t?void 0:t[Symbol.iterator]),a$1="[ \t\n\f\r]",f=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,_=/-->/g,m=/>/g,p=RegExp(`>|${a$1}(?:([^\\s"'>=/]+)(${a$1}*=${a$1}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),g=/'/g,$=/"/g,y=/^(?:script|style|textarea|title)$/i,w=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x=w(1),T=Symbol.for("lit-noChange"),A=Symbol.for("lit-nothing"),E=new WeakMap,C=r$2.createTreeWalker(r$2,129,null,!1);function P(t,i){if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==e$2?e$2.createHTML(i):i}const V=(t,i)=>{const s=t.length-1,e=[];let l,r=2===i?"<svg>":"",u=f;for(let i=0;i<s;i++){const s=t[i];let d,c,v=-1,a=0;for(;a<s.length&&(u.lastIndex=a,c=u.exec(s),null!==c);)a=u.lastIndex,u===f?"!--"===c[1]?u=_:void 0!==c[1]?u=m:void 0!==c[2]?(y.test(c[2])&&(l=RegExp("</"+c[2],"g")),u=p):void 0!==c[3]&&(u=p):u===p?">"===c[0]?(u=null!=l?l:f,v=-1):void 0===c[1]?v=-2:(v=u.lastIndex-c[2].length,d=c[1],u=void 0===c[3]?p:'"'===c[3]?$:g):u===$||u===g?u=p:u===_||u===m?u=f:(u=p,l=void 0);const w=u===p&&t[i+1].startsWith("/>")?" ":"";r+=u===f?s+h$1:v>=0?(e.push(d),s.slice(0,v)+o$2+s.slice(v)+n$2+w):s+n$2+(-2===v?(e.push(void 0),i):w);}return [P(t,r+(t[s]||"<?>")+(2===i?"</svg>":"")),e]};class N{constructor({strings:t,_$litType$:i},e){let h;this.parts=[];let r=0,d=0;const c=t.length-1,v=this.parts,[a,f]=V(t,i);if(this.el=N.createElement(a,e),C.currentNode=this.el.content,2===i){const t=this.el.content,i=t.firstChild;i.remove(),t.append(...i.childNodes);}for(;null!==(h=C.nextNode())&&v.length<c;){if(1===h.nodeType){if(h.hasAttributes()){const t=[];for(const i of h.getAttributeNames())if(i.endsWith(o$2)||i.startsWith(n$2)){const s=f[d++];if(t.push(i),void 0!==s){const t=h.getAttribute(s.toLowerCase()+o$2).split(n$2),i=/([.?@])?(.*)/.exec(s);v.push({type:1,index:r,name:i[2],strings:t,ctor:"."===i[1]?H:"?"===i[1]?L:"@"===i[1]?z:k});}else v.push({type:6,index:r});}for(const i of t)h.removeAttribute(i);}if(y.test(h.tagName)){const t=h.textContent.split(n$2),i=t.length-1;if(i>0){h.textContent=s$2?s$2.emptyScript:"";for(let s=0;s<i;s++)h.append(t[s],u$1()),C.nextNode(),v.push({type:2,index:++r});h.append(t[i],u$1());}}}else if(8===h.nodeType)if(h.data===l$1)v.push({type:2,index:r});else {let t=-1;for(;-1!==(t=h.data.indexOf(n$2,t+1));)v.push({type:7,index:r}),t+=n$2.length-1;}r++;}}static createElement(t,i){const s=r$2.createElement("template");return s.innerHTML=t,s}}function S$1(t,i,s=t,e){var o,n,l,h;if(i===T)return i;let r=void 0!==e?null===(o=s._$Co)||void 0===o?void 0:o[e]:s._$Cl;const u=d$1(i)?void 0:i._$litDirective$;return (null==r?void 0:r.constructor)!==u&&(null===(n=null==r?void 0:r._$AO)||void 0===n||n.call(r,!1),void 0===u?r=void 0:(r=new u(t),r._$AT(t,s,e)),void 0!==e?(null!==(l=(h=s)._$Co)&&void 0!==l?l:h._$Co=[])[e]=r:s._$Cl=r),void 0!==r&&(i=S$1(t,r._$AS(t,i.values),r,e)),i}class M{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){var i;const{el:{content:s},parts:e}=this._$AD,o=(null!==(i=null==t?void 0:t.creationScope)&&void 0!==i?i:r$2).importNode(s,!0);C.currentNode=o;let n=C.nextNode(),l=0,h=0,u=e[0];for(;void 0!==u;){if(l===u.index){let i;2===u.type?i=new R(n,n.nextSibling,this,t):1===u.type?i=new u.ctor(n,u.name,u.strings,this,t):6===u.type&&(i=new Z(n,this,t)),this._$AV.push(i),u=e[++h];}l!==(null==u?void 0:u.index)&&(n=C.nextNode(),l++);}return C.currentNode=r$2,o}v(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}}class R{constructor(t,i,s,e){var o;this.type=2,this._$AH=A,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cp=null===(o=null==e?void 0:e.isConnected)||void 0===o||o;}get _$AU(){var t,i;return null!==(i=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==i?i:this._$Cp}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===(null==t?void 0:t.nodeType)&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=S$1(this,t,i),d$1(t)?t===A||null==t||""===t?(this._$AH!==A&&this._$AR(),this._$AH=A):t!==this._$AH&&t!==T&&this._(t):void 0!==t._$litType$?this.g(t):void 0!==t.nodeType?this.$(t):v(t)?this.T(t):this._(t);}k(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}$(t){this._$AH!==t&&(this._$AR(),this._$AH=this.k(t));}_(t){this._$AH!==A&&d$1(this._$AH)?this._$AA.nextSibling.data=t:this.$(r$2.createTextNode(t)),this._$AH=t;}g(t){var i;const{values:s,_$litType$:e}=t,o="number"==typeof e?this._$AC(t):(void 0===e.el&&(e.el=N.createElement(P(e.h,e.h[0]),this.options)),e);if((null===(i=this._$AH)||void 0===i?void 0:i._$AD)===o)this._$AH.v(s);else {const t=new M(o,this),i=t.u(this.options);t.v(s),this.$(i),this._$AH=t;}}_$AC(t){let i=E.get(t.strings);return void 0===i&&E.set(t.strings,i=new N(t)),i}T(t){c$1(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const o of t)e===i.length?i.push(s=new R(this.k(u$1()),this.k(u$1()),this,this.options)):s=i[e],s._$AI(o),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){var s;for(null===(s=this._$AP)||void 0===s||s.call(this,!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){var i;void 0===this._$AM&&(this._$Cp=t,null===(i=this._$AP)||void 0===i||i.call(this,t));}}class k{constructor(t,i,s,e,o){this.type=1,this._$AH=A,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=o,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=A;}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,i=this,s,e){const o=this.strings;let n=!1;if(void 0===o)t=S$1(this,t,i,0),n=!d$1(t)||t!==this._$AH&&t!==T,n&&(this._$AH=t);else {const e=t;let l,h;for(t=o[0],l=0;l<o.length-1;l++)h=S$1(this,e[s+l],i,l),h===T&&(h=this._$AH[l]),n||(n=!d$1(h)||h!==this._$AH[l]),h===A?t=A:t!==A&&(t+=(null!=h?h:"")+o[l+1]),this._$AH[l]=h;}n&&!e&&this.j(t);}j(t){t===A?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"");}}class H extends k{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===A?void 0:t;}}const I=s$2?s$2.emptyScript:"";class L extends k{constructor(){super(...arguments),this.type=4;}j(t){t&&t!==A?this.element.setAttribute(this.name,I):this.element.removeAttribute(this.name);}}class z extends k{constructor(t,i,s,e,o){super(t,i,s,e,o),this.type=5;}_$AI(t,i=this){var s;if((t=null!==(s=S$1(this,t,i,0))&&void 0!==s?s:A)===T)return;const e=this._$AH,o=t===A&&e!==A||t.capture!==e.capture||t.once!==e.once||t.passive!==e.passive,n=t!==A&&(e===A||o);o&&this.element.removeEventListener(this.name,this,e),n&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){var i,s;"function"==typeof this._$AH?this._$AH.call(null!==(s=null===(i=this.options)||void 0===i?void 0:i.host)&&void 0!==s?s:this.element,t):this._$AH.handleEvent(t);}}class Z{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){S$1(this,t);}}const B=i$1.litHtmlPolyfillSupport;null==B||B(N,R),(null!==(t$1=i$1.litHtmlVersions)&&void 0!==t$1?t$1:i$1.litHtmlVersions=[]).push("2.8.0");const D=(t,i,s)=>{var e,o;const n=null!==(e=null==s?void 0:s.renderBefore)&&void 0!==e?e:i;let l=n._$litPart$;if(void 0===l){const t=null!==(o=null==s?void 0:s.renderBefore)&&void 0!==o?o:null;n._$litPart$=l=new R(i.insertBefore(u$1(),t),t,void 0,null!=s?s:{});}return l._$AI(t),l};//# sourceMappingURL=lit-html.js.map
-
+var g;m[v]=!0,m.elementProperties=new Map,m.elementStyles=[],m.shadowRootOptions={mode:"open"},null==c||c({ReactiveElement:m}),(null!==(s=l.reactiveElementVersions)&&void 0!==s?s:l.reactiveElementVersions=[]).push("1.6.3");const b=window,_=b.trustedTypes,w=_?_.createPolicy("lit-html",{createHTML:e=>e}):void 0,y=`lit$${(Math.random()+"").slice(9)}$`,$="?"+y,x=`<${$}>`,A=document,k=()=>A.createComment(""),S=e=>null===e||"object"!=typeof e&&"function"!=typeof e,E=Array.isArray,C="[ \t\n\f\r]",F=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,T=/-->/g,O=/>/g,R=RegExp(`>|${C}(?:([^\\s"'>=/]+)(${C}*=${C}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),z=/'/g,M=/"/g,H=/^(?:script|style|textarea|title)$/i,U=(e=>(t,...i)=>({_$litType$:e,strings:t,values:i}))(1),N=Symbol.for("lit-noChange"),j=Symbol.for("lit-nothing"),P=new WeakMap,D=A.createTreeWalker(A,129,null,!1);function I(e,t){if(!Array.isArray(e)||!e.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==w?w.createHTML(t):t}const W=(e,t)=>{const i=e.length-1,r=[];let a,n=2===t?"<svg>":"",o=F;for(let t=0;t<i;t++){const i=e[t];let s,l,d=-1,h=0;for(;h<i.length&&(o.lastIndex=h,l=o.exec(i),null!==l);)h=o.lastIndex,o===F?"!--"===l[1]?o=T:void 0!==l[1]?o=O:void 0!==l[2]?(H.test(l[2])&&(a=RegExp("</"+l[2],"g")),o=R):void 0!==l[3]&&(o=R):o===R?">"===l[0]?(o=null!=a?a:F,d=-1):void 0===l[1]?d=-2:(d=o.lastIndex-l[2].length,s=l[1],o=void 0===l[3]?R:'"'===l[3]?M:z):o===M||o===z?o=R:o===T||o===O?o=F:(o=R,a=void 0);const c=o===R&&e[t+1].startsWith("/>")?" ":"";n+=o===F?i+x:d>=0?(r.push(s),i.slice(0,d)+"$lit$"+i.slice(d)+y+c):i+y+(-2===d?(r.push(void 0),t):c)}return[I(e,n+(e[i]||"<?>")+(2===t?"</svg>":"")),r]};class L{constructor({strings:e,_$litType$:t},i){let r;this.parts=[];let a=0,n=0;const o=e.length-1,s=this.parts,[l,d]=W(e,t);if(this.el=L.createElement(l,i),D.currentNode=this.el.content,2===t){const e=this.el.content,t=e.firstChild;t.remove(),e.append(...t.childNodes)}for(;null!==(r=D.nextNode())&&s.length<o;){if(1===r.nodeType){if(r.hasAttributes()){const e=[];for(const t of r.getAttributeNames())if(t.endsWith("$lit$")||t.startsWith(y)){const i=d[n++];if(e.push(t),void 0!==i){const e=r.getAttribute(i.toLowerCase()+"$lit$").split(y),t=/([.?@])?(.*)/.exec(i);s.push({type:1,index:a,name:t[2],strings:e,ctor:"."===t[1]?K:"?"===t[1]?G:"@"===t[1]?J:Y})}else s.push({type:6,index:a})}for(const t of e)r.removeAttribute(t)}if(H.test(r.tagName)){const e=r.textContent.split(y),t=e.length-1;if(t>0){r.textContent=_?_.emptyScript:"";for(let i=0;i<t;i++)r.append(e[i],k()),D.nextNode(),s.push({type:2,index:++a});r.append(e[t],k())}}}else if(8===r.nodeType)if(r.data===$)s.push({type:2,index:a});else{let e=-1;for(;-1!==(e=r.data.indexOf(y,e+1));)s.push({type:7,index:a}),e+=y.length-1}a++}}static createElement(e,t){const i=A.createElement("template");return i.innerHTML=e,i}}function B(e,t,i=e,r){var a,n,o,s;if(t===N)return t;let l=void 0!==r?null===(a=i._$Co)||void 0===a?void 0:a[r]:i._$Cl;const d=S(t)?void 0:t._$litDirective$;return(null==l?void 0:l.constructor)!==d&&(null===(n=null==l?void 0:l._$AO)||void 0===n||n.call(l,!1),void 0===d?l=void 0:(l=new d(e),l._$AT(e,i,r)),void 0!==r?(null!==(o=(s=i)._$Co)&&void 0!==o?o:s._$Co=[])[r]=l:i._$Cl=l),void 0!==l&&(t=B(e,l._$AS(e,t.values),l,r)),t}class V{constructor(e,t){this._$AV=[],this._$AN=void 0,this._$AD=e,this._$AM=t}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(e){var t;const{el:{content:i},parts:r}=this._$AD,a=(null!==(t=null==e?void 0:e.creationScope)&&void 0!==t?t:A).importNode(i,!0);D.currentNode=a;let n=D.nextNode(),o=0,s=0,l=r[0];for(;void 0!==l;){if(o===l.index){let t;2===l.type?t=new q(n,n.nextSibling,this,e):1===l.type?t=new l.ctor(n,l.name,l.strings,this,e):6===l.type&&(t=new Z(n,this,e)),this._$AV.push(t),l=r[++s]}o!==(null==l?void 0:l.index)&&(n=D.nextNode(),o++)}return D.currentNode=A,a}v(e){let t=0;for(const i of this._$AV)void 0!==i&&(void 0!==i.strings?(i._$AI(e,i,t),t+=i.strings.length-2):i._$AI(e[t])),t++}}class q{constructor(e,t,i,r){var a;this.type=2,this._$AH=j,this._$AN=void 0,this._$AA=e,this._$AB=t,this._$AM=i,this.options=r,this._$Cp=null===(a=null==r?void 0:r.isConnected)||void 0===a||a}get _$AU(){var e,t;return null!==(t=null===(e=this._$AM)||void 0===e?void 0:e._$AU)&&void 0!==t?t:this._$Cp}get parentNode(){let e=this._$AA.parentNode;const t=this._$AM;return void 0!==t&&11===(null==e?void 0:e.nodeType)&&(e=t.parentNode),e}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(e,t=this){e=B(this,e,t),S(e)?e===j||null==e||""===e?(this._$AH!==j&&this._$AR(),this._$AH=j):e!==this._$AH&&e!==N&&this._(e):void 0!==e._$litType$?this.g(e):void 0!==e.nodeType?this.$(e):(e=>E(e)||"function"==typeof(null==e?void 0:e[Symbol.iterator]))(e)?this.T(e):this._(e)}k(e){return this._$AA.parentNode.insertBefore(e,this._$AB)}$(e){this._$AH!==e&&(this._$AR(),this._$AH=this.k(e))}_(e){this._$AH!==j&&S(this._$AH)?this._$AA.nextSibling.data=e:this.$(A.createTextNode(e)),this._$AH=e}g(e){var t;const{values:i,_$litType$:r}=e,a="number"==typeof r?this._$AC(e):(void 0===r.el&&(r.el=L.createElement(I(r.h,r.h[0]),this.options)),r);if((null===(t=this._$AH)||void 0===t?void 0:t._$AD)===a)this._$AH.v(i);else{const e=new V(a,this),t=e.u(this.options);e.v(i),this.$(t),this._$AH=e}}_$AC(e){let t=P.get(e.strings);return void 0===t&&P.set(e.strings,t=new L(e)),t}T(e){E(this._$AH)||(this._$AH=[],this._$AR());const t=this._$AH;let i,r=0;for(const a of e)r===t.length?t.push(i=new q(this.k(k()),this.k(k()),this,this.options)):i=t[r],i._$AI(a),r++;r<t.length&&(this._$AR(i&&i._$AB.nextSibling,r),t.length=r)}_$AR(e=this._$AA.nextSibling,t){var i;for(null===(i=this._$AP)||void 0===i||i.call(this,!1,!0,t);e&&e!==this._$AB;){const t=e.nextSibling;e.remove(),e=t}}setConnected(e){var t;void 0===this._$AM&&(this._$Cp=e,null===(t=this._$AP)||void 0===t||t.call(this,e))}}class Y{constructor(e,t,i,r,a){this.type=1,this._$AH=j,this._$AN=void 0,this.element=e,this.name=t,this._$AM=r,this.options=a,i.length>2||""!==i[0]||""!==i[1]?(this._$AH=Array(i.length-1).fill(new String),this.strings=i):this._$AH=j}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(e,t=this,i,r){const a=this.strings;let n=!1;if(void 0===a)e=B(this,e,t,0),n=!S(e)||e!==this._$AH&&e!==N,n&&(this._$AH=e);else{const r=e;let o,s;for(e=a[0],o=0;o<a.length-1;o++)s=B(this,r[i+o],t,o),s===N&&(s=this._$AH[o]),n||(n=!S(s)||s!==this._$AH[o]),s===j?e=j:e!==j&&(e+=(null!=s?s:"")+a[o+1]),this._$AH[o]=s}n&&!r&&this.j(e)}j(e){e===j?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=e?e:"")}}class K extends Y{constructor(){super(...arguments),this.type=3}j(e){this.element[this.name]=e===j?void 0:e}}const X=_?_.emptyScript:"";class G extends Y{constructor(){super(...arguments),this.type=4}j(e){e&&e!==j?this.element.setAttribute(this.name,X):this.element.removeAttribute(this.name)}}class J extends Y{constructor(e,t,i,r,a){super(e,t,i,r,a),this.type=5}_$AI(e,t=this){var i;if((e=null!==(i=B(this,e,t,0))&&void 0!==i?i:j)===N)return;const r=this._$AH,a=e===j&&r!==j||e.capture!==r.capture||e.once!==r.once||e.passive!==r.passive,n=e!==j&&(r===j||a);a&&this.element.removeEventListener(this.name,this,r),n&&this.element.addEventListener(this.name,this,e),this._$AH=e}handleEvent(e){var t,i;"function"==typeof this._$AH?this._$AH.call(null!==(i=null===(t=this.options)||void 0===t?void 0:t.host)&&void 0!==i?i:this.element,e):this._$AH.handleEvent(e)}}class Z{constructor(e,t,i){this.element=e,this.type=6,this._$AN=void 0,this._$AM=t,this.options=i}get _$AU(){return this._$AM._$AU}_$AI(e){B(this,e)}}const Q=b.litHtmlPolyfillSupport;null==Q||Q(L,q),(null!==(g=b.litHtmlVersions)&&void 0!==g?g:b.litHtmlVersions=[]).push("2.8.0");
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */var l$2,o$3;class s$3 extends u{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=D(i,this.renderRoot,this.renderOptions);}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!0);}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!1);}render(){return T}}s$3.finalized=!0,s$3._$litElement$=!0,null===(l$2=globalThis.litElementHydrateSupport)||void 0===l$2||l$2.call(globalThis,{LitElement:s$3});const n$3=globalThis.litElementPolyfillSupport;null==n$3||n$3({LitElement:s$3});(null!==(o$3=globalThis.litElementVersions)&&void 0!==o$3?o$3:globalThis.litElementVersions=[]).push("3.3.3");//# sourceMappingURL=lit-element.js.map
-
-var t$2,r$3,a$2=function(e,t){return o$4(t).format(e)},o$4=function(e){return new Intl.DateTimeFormat(e.language,{year:"numeric",month:"long",day:"numeric"})};!function(e){e.language="language",e.system="system",e.comma_decimal="comma_decimal",e.decimal_comma="decimal_comma",e.space_comma="space_comma",e.none="none";}(t$2||(t$2={})),function(e){e.language="language",e.system="system",e.am_pm="12",e.twenty_four="24";}(r$3||(r$3={}));var b=function(e){if(e.time_format===r$3.language||e.time_format===r$3.system){var t=e.time_format===r$3.language?e.language:void 0,n=(new Date).toLocaleString(t);return n.includes("AM")||n.includes("PM")}return e.time_format===r$3.am_pm},v$1=function(e,t){return _$1(t).format(e)},_$1=function(e){return new Intl.DateTimeFormat(e.language,{year:"numeric",month:"long",day:"numeric",hour:b(e)?"numeric":"2-digit",minute:"2-digit",hour12:b(e)})},D$1=function(e,t){return S$2(t).format(e)},S$2=function(e){return new Intl.DateTimeFormat(e.language,{hour:"numeric",minute:"2-digit",hour12:b(e)})};function O(){return (O=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var n in r)Object.prototype.hasOwnProperty.call(r,n)&&(e[n]=r[n]);}return e}).apply(this,arguments)}function E$1(e){return e.substr(0,e.indexOf("."))}function L$1(e){return E$1(e.entity_id)}var P$1=function(e){return !!e.attributes.unit_of_measurement||!!e.attributes.state_class},U=function(e){switch(e.number_format){case t$2.comma_decimal:return ["en-US","en"];case t$2.decimal_comma:return ["de","es","it"];case t$2.space_comma:return ["fr","sv","cs"];case t$2.system:return;default:return e.language}},B$1=function(e,t){return void 0===t&&(t=2),Math.round(e*Math.pow(10,t))/Math.pow(10,t)},H$1=function(e,r,n){var i=r?U(r):void 0;if(Number.isNaN=Number.isNaN||function e(t){return "number"==typeof t&&e(t)},(null==r?void 0:r.number_format)!==t$2.none&&!Number.isNaN(Number(e))&&Intl)try{return new Intl.NumberFormat(i,V$1(e,n)).format(Number(e))}catch(t){return console.error(t),new Intl.NumberFormat(void 0,V$1(e,n)).format(Number(e))}return "string"==typeof e?e:B$1(e,null==n?void 0:n.maximumFractionDigits).toString()+("currency"===(null==n?void 0:n.style)?" "+n.currency:"")},V$1=function(e,t){var r=O({maximumFractionDigits:2},t);if("string"!=typeof e)return r;if(!t||!t.minimumFractionDigits&&!t.maximumFractionDigits){var n=e.indexOf(".")>-1?e.split(".")[1].length:0;r.minimumFractionDigits=n,r.maximumFractionDigits=n;}return r},W=function(e,t,r,n){var i=void 0!==n?n:t.state;if("unknown"===i||"unavailable"===i)return e("state.default."+i);if(P$1(t)){if("monetary"===t.attributes.device_class)try{return H$1(i,r,{style:"currency",currency:t.attributes.unit_of_measurement})}catch(e){}return H$1(i,r)+(t.attributes.unit_of_measurement?" "+t.attributes.unit_of_measurement:"")}var o=L$1(t);if("input_datetime"===o){var u;if(void 0===n)return t.attributes.has_date&&t.attributes.has_time?(u=new Date(t.attributes.year,t.attributes.month-1,t.attributes.day,t.attributes.hour,t.attributes.minute),v$1(u,r)):t.attributes.has_date?(u=new Date(t.attributes.year,t.attributes.month-1,t.attributes.day),a$2(u,r)):t.attributes.has_time?((u=new Date).setHours(t.attributes.hour,t.attributes.minute),D$1(u,r)):t.state;try{var c=n.split(" ");if(2===c.length)return v$1(new Date(c.join("T")),r);if(1===c.length){if(n.includes("-"))return a$2(new Date(n+"T00:00"),r);if(n.includes(":")){var m=new Date;return D$1(new Date(m.toISOString().split("T")[0]+"T"+n),r)}}return n}catch(e){return n}}return "humidifier"===o&&"on"===i&&t.attributes.humidity?t.attributes.humidity+" %":"counter"===o||"number"===o||"input_number"===o?H$1(i,r):t.attributes.device_class&&e("component."+o+".state."+t.attributes.device_class+"."+i)||e("component."+o+".state._."+i)||i};//# sourceMappingURL=index.m.js.map
-
-function getConfigDefaults(config) {
-  return {
-    borderRadius: config && config.borderRadius ? config.borderRadius : '12px',
-    faderWidth: config && config.faderWidth ? config.faderWidth : '150px',
-    faderHeight: config && config.faderHeight ? config.faderHeight : '400px',
-    faderInactiveColor: config && config.faderInactiveColor ? config.faderInactiveColor : '#f00',
-    faderThumbColor: config && config.faderThumbColor ? config.faderThumbColor : '#ddd',
-    faderTrackColor: config && config.faderTrackColor ? config.faderTrackColor : '#ddd',
-    faderActiveColor: config && config.faderActiveColor ? config.faderActiveColor : '#22ba00',
-    faderTheme: config && config.faderTheme ? config.faderTheme : 'modern',
-    updateWhileMoving: config && config.updateWhileMoving ? config.updateWhileMoving : false,
-    alwaysShowFaderValue: config && config.alwaysShowFaderValue ? config.alwaysShowFaderValue : false,
-    showActiveButton: config && config.showActiveButton !== undefined ? config.showActiveButton : true,
-    haCard: config && config.haCard !== undefined ? config.haCard : true,
-    description: config && config.description ? config.description : '',
-    title: config && config.title ? config.title : '',
-    faderKnobImage: config && config.faderKnobImage ? config.faderKnobImage : '',
-    orientation: config && config.orientation ? config.orientation : 'vertical'
-  };
-}
-function generateHeader(cfg) {
-  const header = cfg.title ? x`<h1 class='card-header'><div class='name'>${cfg.title}</div></div>` : '';
-  const desc = cfg.description ? x`<p class='mixer-description'>${cfg.description}</p>` : '';
-  return x`${header}${desc}`;
-}
-function getFaderStyle(faderColors, cfg, activeState) {
-  let style = `--fader-width: ${cfg.faderWidth}; --fader-height: ${cfg.faderHeight}; --fader-border-radius: ${cfg.borderRadius}; `;
-  style += `--fader-color: ${activeState === 'on' ? faderColors.active : faderColors.inactive}; `;
-  style += `--fader-thumb-color: ${faderColors.thumb}; --fader-track-color: ${faderColors.track}; --fader-track-inactive-color: ${faderColors.inactive};`;
-  if (cfg.faderKnobImage) {
-    style += ` --fader-knob-image: url("${cfg.faderKnobImage}");`;
-  }
-  return style;
-}
-function getFaderColor(faderRow, cfg) {
-  return {
-    track: faderRow.track_color || cfg.faderTrackColor,
-    active: faderRow.active_color || cfg.faderActiveColor,
-    inactive: faderRow.inactive_color || cfg.faderInactiveColor,
-    thumb: faderRow.thumb_color || cfg.faderThumbColor
-  };
-}
-function getFaderIcon(faderRow, stateObj, activeState) {
-  return activeState === 'on' ? 'mdi:volume-high' : 'mdi:volume-mute';
-}
-function getFaderValue(faderRow, stateObj, hass) {
-  const maxValue = typeof faderRow.max === 'number' ? faderRow.max : stateObj.attributes.max || 1;
-  const minValue = typeof faderRow.min === 'number' ? faderRow.min : stateObj.attributes.min || 0;
-  let rawValue = 0;
-  const domain = L$1(stateObj);
-  if (domain === 'media_player') {
-    rawValue = stateObj.attributes.volume_level || 0;
-  } else {
-    rawValue = stateObj.state;
-  }
-  const inputValue = Math.round((rawValue - minValue) / (maxValue - minValue) * 100);
-  let displayValue = inputValue + '%';
-  if (faderRow.value_entity_id && Object.prototype.hasOwnProperty.call(hass.states, faderRow.value_entity_id)) {
-    displayValue = W(hass.localize, hass.states[faderRow.value_entity_id], hass.language);
-  } else if (faderRow.value_attribute && Object.prototype.hasOwnProperty.call(stateObj.attributes, faderRow.value_attribute)) {
-    displayValue = stateObj.attributes[faderRow.value_attribute];
-  }
-  const suffix = faderRow.value_suffix || '';
-  if (suffix) {
-    displayValue += ` ${suffix}`;
-  }
-  return {
-    displayValue,
-    inputValue
-  };
-}
-
-const mixerCardStyles = i`
+ */
+var ee,te;class ie extends m{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0}createRenderRoot(){var e,t;const i=super.createRenderRoot();return null!==(e=(t=this.renderOptions).renderBefore)&&void 0!==e||(t.renderBefore=i.firstChild),i}update(e){const t=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(e),this._$Do=((e,t,i)=>{var r,a;const n=null!==(r=null==i?void 0:i.renderBefore)&&void 0!==r?r:t;let o=n._$litPart$;if(void 0===o){const e=null!==(a=null==i?void 0:i.renderBefore)&&void 0!==a?a:null;n._$litPart$=o=new q(t.insertBefore(k(),e),e,void 0,null!=i?i:{})}return o._$AI(e),o})(t,this.renderRoot,this.renderOptions)}connectedCallback(){var e;super.connectedCallback(),null===(e=this._$Do)||void 0===e||e.setConnected(!0)}disconnectedCallback(){var e;super.disconnectedCallback(),null===(e=this._$Do)||void 0===e||e.setConnected(!1)}render(){return N}}ie.finalized=!0,ie._$litElement$=!0,null===(ee=globalThis.litElementHydrateSupport)||void 0===ee||ee.call(globalThis,{LitElement:ie});const re=globalThis.litElementPolyfillSupport;null==re||re({LitElement:ie}),(null!==(te=globalThis.litElementVersions)&&void 0!==te?te:globalThis.litElementVersions=[]).push("3.3.3");var ae,ne,oe=function(e,t){return se(t).format(e)},se=function(e){return new Intl.DateTimeFormat(e.language,{year:"numeric",month:"long",day:"numeric"})};!function(e){e.language="language",e.system="system",e.comma_decimal="comma_decimal",e.decimal_comma="decimal_comma",e.space_comma="space_comma",e.none="none"}(ae||(ae={})),function(e){e.language="language",e.system="system",e.am_pm="12",e.twenty_four="24"}(ne||(ne={}));var le=function(e){if(e.time_format===ne.language||e.time_format===ne.system){var t=e.time_format===ne.language?e.language:void 0,i=(new Date).toLocaleString(t);return i.includes("AM")||i.includes("PM")}return e.time_format===ne.am_pm},de=function(e,t){return he(t).format(e)},he=function(e){return new Intl.DateTimeFormat(e.language,{year:"numeric",month:"long",day:"numeric",hour:le(e)?"numeric":"2-digit",minute:"2-digit",hour12:le(e)})},ce=function(e,t){return ue(t).format(e)},ue=function(e){return new Intl.DateTimeFormat(e.language,{hour:"numeric",minute:"2-digit",hour12:le(e)})};function fe(){return(fe=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var i=arguments[t];for(var r in i)Object.prototype.hasOwnProperty.call(i,r)&&(e[r]=i[r])}return e}).apply(this,arguments)}function pe(e){return e.substr(0,e.indexOf("."))}function ve(e){return pe(e.entity_id)}var me=function(e,t,i){var r=t?function(e){switch(e.number_format){case ae.comma_decimal:return["en-US","en"];case ae.decimal_comma:return["de","es","it"];case ae.space_comma:return["fr","sv","cs"];case ae.system:return;default:return e.language}}(t):void 0;if(Number.isNaN=Number.isNaN||function e(t){return"number"==typeof t&&e(t)},(null==t?void 0:t.number_format)!==ae.none&&!Number.isNaN(Number(e))&&Intl)try{return new Intl.NumberFormat(r,ge(e,i)).format(Number(e))}catch(t){return console.error(t),new Intl.NumberFormat(void 0,ge(e,i)).format(Number(e))}return"string"==typeof e?e:function(e,t){return void 0===t&&(t=2),Math.round(e*Math.pow(10,t))/Math.pow(10,t)}(e,null==i?void 0:i.maximumFractionDigits).toString()+("currency"===(null==i?void 0:i.style)?" "+i.currency:"")},ge=function(e,t){var i=fe({maximumFractionDigits:2},t);if("string"!=typeof e)return i;if(!t||!t.minimumFractionDigits&&!t.maximumFractionDigits){var r=e.indexOf(".")>-1?e.split(".")[1].length:0;i.minimumFractionDigits=r,i.maximumFractionDigits=r}return i};function be(e){return{borderRadius:e&&e.borderRadius?e.borderRadius:"12px",faderWidth:e&&e.faderWidth?e.faderWidth:null,faderHeight:e&&e.faderHeight?e.faderHeight:null,faderInactiveColor:e&&e.faderInactiveColor?e.faderInactiveColor:"#f00",faderThumbColor:e&&e.faderThumbColor?e.faderThumbColor:"#ddd",faderTrackColor:e&&e.faderTrackColor?e.faderTrackColor:"#ddd",faderActiveColor:e&&e.faderActiveColor?e.faderActiveColor:"#22ba00",faderTheme:e&&e.faderTheme?e.faderTheme:"modern",updateWhileMoving:!(!e||!e.updateWhileMoving)&&e.updateWhileMoving,alwaysShowFaderValue:!(!e||!e.alwaysShowFaderValue)&&e.alwaysShowFaderValue,showActiveButton:!e||void 0===e.showActiveButton||e.showActiveButton,showDbScale:!e||void 0===e.showDbScale||e.showDbScale,haCard:!e||void 0===e.haCard||e.haCard,description:e&&e.description?e.description:"",title:e&&e.title?e.title:"",faderKnobImage:e&&e.faderKnobImage?e.faderKnobImage:"",orientation:e&&e.orientation?e.orientation:"vertical"}}const _e=[{label:"+10",f:1,major:!0},{label:"5",f:.875,major:!1},{label:"0",f:.75,major:!0},{label:"-5",f:.625,major:!1},{label:"-10",f:.5,major:!0},{label:"-15",f:.4375,major:!1},{label:"-20",f:.375,major:!0},{label:"-25",f:.3125,major:!1},{label:"-30",f:.25,major:!0},{label:"-40",f:.1875,major:!0},{label:"-50",f:.125,major:!0},{label:"-60",f:.0625,major:!0},{label:"-∞",f:0,major:!0}];function we(e,t,i){const r="number"==typeof e.max?e.max:t.attributes.max||1,a="number"==typeof e.min?e.min:t.attributes.min||0;let n=0;n="media_player"===ve(t)?t.attributes.volume_level||0:t.state;const o=Math.round((n-a)/(r-a)*100);let s=o+"%";e.value_entity_id&&Object.prototype.hasOwnProperty.call(i.states,e.value_entity_id)?s=function(e,t,i,r){var a=void 0!==r?r:t.state;if("unknown"===a||"unavailable"===a)return e("state.default."+a);if(function(e){return!!e.attributes.unit_of_measurement||!!e.attributes.state_class}(t)){if("monetary"===t.attributes.device_class)try{return me(a,i,{style:"currency",currency:t.attributes.unit_of_measurement})}catch(e){}return me(a,i)+(t.attributes.unit_of_measurement?" "+t.attributes.unit_of_measurement:"")}var n=ve(t);if("input_datetime"===n){var o;if(void 0===r)return t.attributes.has_date&&t.attributes.has_time?(o=new Date(t.attributes.year,t.attributes.month-1,t.attributes.day,t.attributes.hour,t.attributes.minute),de(o,i)):t.attributes.has_date?(o=new Date(t.attributes.year,t.attributes.month-1,t.attributes.day),oe(o,i)):t.attributes.has_time?((o=new Date).setHours(t.attributes.hour,t.attributes.minute),ce(o,i)):t.state;try{var s=r.split(" ");if(2===s.length)return de(new Date(s.join("T")),i);if(1===s.length){if(r.includes("-"))return oe(new Date(r+"T00:00"),i);if(r.includes(":")){var l=new Date;return ce(new Date(l.toISOString().split("T")[0]+"T"+r),i)}}return r}catch(e){return r}}return"humidifier"===n&&"on"===a&&t.attributes.humidity?t.attributes.humidity+" %":"counter"===n||"number"===n||"input_number"===n?me(a,i):t.attributes.device_class&&e("component."+n+".state."+t.attributes.device_class+"."+a)||e("component."+n+".state._."+a)||a}(i.localize,i.states[e.value_entity_id],i.language):e.value_attribute&&Object.prototype.hasOwnProperty.call(t.attributes,e.value_attribute)&&(s=t.attributes[e.value_attribute]);const l=e.value_suffix||"";return l&&(s+=" "+l),{displayValue:s,inputValue:o}}const ye=((e,...t)=>{const r=1===e.length?e[0]:t.reduce((t,i,r)=>t+(e=>{if(!0===e._$cssResult$)return e.cssText;if("number"==typeof e)return e;throw Error("Value passed to 'css' function must be a 'css' function result: "+e+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(i)+e[r+1],e[0]);return new a(r,e,i)})`
     :host {
         display: block;
-        width: max-content;
-        min-width: 100%;
-        max-width: 100%;
+        width: 100%;
         box-sizing: border-box;
+        /* Fluid fader dimensions: used whenever a fader/card config doesn't
+           set an explicit faderWidth/faderHeight (see getConfigDefaults).
+           Deliberately fixed, not vw/vh-based: this card can end up in a
+           section column far narrower than the browser viewport (HA's
+           sections view splits the page into several such columns), and
+           viewport units have no way to know that — they size against the
+           whole window, not the space actually given to the card, which
+           reintroduces the original overflow/wrap bug one level up. A
+           modest fixed default plus .fader-holder's flex-wrap is what
+           actually makes this responsive: faders wrap onto a new row once
+           the card's *own* width runs out, regardless of viewport size. */
+        --fader-width: 84px;
+        --fader-height: 220px;
     }
 
     h4 {
@@ -122,13 +55,20 @@ const mixerCardStyles = i`
       padding-left: 1px;
     }
     .mixer-card {
-        margin: 20px;
+        /* padding (not margin) matches ha-card's own .card-content
+           convention, so this card lines up with sibling cards without
+           needing a card_mod offset hack. */
+        padding: 16px;
+        box-sizing: border-box;
     }
     .fader-holder {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
       width: 100%;
-      overflow-x: auto; /* Enables the scrollbar */
-      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */      
+      overflow-x: auto; /* Fallback if a single row still can't fit */
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     }
 
 
@@ -151,10 +91,22 @@ const mixerCardStyles = i`
 
     .fader-orientation-vertical .fader {
         padding: 6px 10px;
+        /* Fixed to the slider's own thickness rather than sized from the
+           name/value text below it — otherwise a longer fader name (e.g.
+           "Office Speaker") silently widens the whole column, and a couple
+           of those can be just enough to tip flex-wrap into wrapping faders
+           that would otherwise fit side by side. Text wraps within this
+           width instead (see .fader-name/.fader-value below). */
+        width: var(--fader-width);
+        flex: 0 0 auto;
+        box-sizing: content-box;
     }
     .fader-orientation-vertical .fader-value {
         margin-top: 10px;
         text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .fader-orientation-vertical .fader-name {
         margin-top: 30px;
@@ -164,6 +116,14 @@ const mixerCardStyles = i`
         text-align: center;
         font-size:14px;
         text-transform: capitalize;
+        /* Truncate rather than wrap/grow: a longer name (e.g. "Office
+           Speaker") should never widen the fader column — that's the
+           slider's job to define (--fader-width), not the label's. This
+           matches how HA's own cards handle overflowing text (tile, entity
+           rows, etc: ellipsis, not reflow). */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .fader-orientation-vertical .active-button {
@@ -258,7 +218,12 @@ const mixerCardStyles = i`
     .fader-orientation-horizontal .range-holder {
         order: 2;
         height: var(--fader-width);
-        width: var(--fader-height);
+        /* Fill whatever width the row has left, rather than a fixed
+           --fader-height, so horizontal faders track the card's actual
+           width instead of overflowing/underflowing it. */
+        flex: 1 1 auto;
+        width: auto;
+        min-width: 80px;
         position:relative;
         display: flex;
         align-items: center;
@@ -273,6 +238,7 @@ const mixerCardStyles = i`
         position: absolute;
         transform: translateY(-50%);
         left: 0;
+        width: 100%;
         height: var(--fader-width);
         background-color: var(--fader-track-color);
         transition: box-shadow 0.2s ease-in-out;
@@ -282,9 +248,38 @@ const mixerCardStyles = i`
     }
 
     /* Theme Physical */
+    /* The knob-width track extension below (so the knob's center can reach
+       the true top/bottom extremes) makes the knob itself overshoot the
+       nominal track by half its own along-track size at full travel —
+       clipping that with overflow:hidden just cuts the knob in half at the
+       extremes, which reads as a rendering bug, not a housing edge. Instead
+       give the knob room to be fully visible there: push the range-holder-
+       wrap (or bare range-holder when the dB scale is hidden, see
+       mixer-card.js) away from the value/name text above and below by
+       exactly that overshoot amount, on both sides of the direct-child
+       selector since which element is the actual direct child differs
+       depending on whether the scale renders. */
+    .fader-orientation-vertical .fader-theme-physical .fader > .range-holder,
+    .fader-orientation-vertical .fader-theme-physical .fader > .range-holder-wrap {
+        margin-top: calc(var(--fader-width) * 0.283335);
+        margin-bottom: calc(var(--fader-width) * 0.283335);
+    }
     .fader-theme-physical .range-holder input[type="range"] {
         top: 50%;
-        width: var(--fader-height);
+        /* An unstyled range input always insets its thumb's travel by half
+           the thumb's own along-track size from each end of its track —
+           so at raw value 0/1 the knob stops short of the true top/bottom
+           extremes (and of where the dB scale's +10/-∞ labels sit, see
+           renderDbScale in helpers.js). Extending the track by exactly the
+           knob's own width (matching the ratio used for the knob itself
+           below) and re-centering via the right offset cancels that inset
+           out entirely, so the knob's center lines up with the scale's
+           edges at full travel -- verified against real X32 reference
+           screenshots showing exactly that alignment.
+           (Vertical orientation only -- horizontal's own width:100% rule
+           further down wins on specificity and is unaffected.) */
+        width: calc(var(--fader-height) + (var(--fader-width) * 0.56667));
+        right: calc(50% - ((var(--fader-height) + (var(--fader-width) * 0.56667)) / 2));
         height: 5px;
         background-color: var(--fader-track-color);
     }
@@ -293,8 +288,13 @@ const mixerCardStyles = i`
     }
     .fader-theme-physical .range-holder input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none;
-        height:40px;
-        width:85px;
+        /* Scaled from --fader-width (thickness) rather than a fixed 40x85px,
+           so the knob shrinks/grows with the track instead of overflowing
+           it at small fluid sizes. Ratio matches the old fixed values
+           exactly at the legacy 150px default, so background-size: cover
+           crops the SVG the same way as before at any scale. */
+        height: calc(var(--fader-width) * 0.26667);
+        width: calc(var(--fader-width) * 0.56667);
         cursor: pointer;
         transition: box-shadow 0.2s ease-in-out;
         background-image: var(--fader-knob-image, url("/hacsfiles/mixer-card/fader.svg"));
@@ -334,296 +334,134 @@ const mixerCardStyles = i`
         top: calc((var(--fader-width) - 80px) / 2);
     }
 
-`;
+    /* Both themes above set an explicit width on the range input (driven
+       by --fader-height, meant as the vertical-orientation "length" after
+       rotation). In horizontal orientation that same input is never
+       rotated, so pin its width back to 100% of the flexed range-holder
+       (higher specificity than the theme rules so it wins regardless of
+       theme). */
+    .fader-orientation-horizontal .fader-theme-modern .range-holder input[type="range"],
+    .fader-orientation-horizontal .fader-theme-physical .range-holder input[type="range"] {
+        width: 100%;
+    }
 
-/* jshint esversion: 8 */
-class MixerCard extends s$3 {
-  constructor() {
-    super();
-    // For relative fader tracking
-    this._relativeFaderActive = false;
-    this._relativeFaderStates = {}; // Stores state for each active relative fader, keyed by entity_id
-    this._relativeFaderSensitivity = 0.2; // percent per pixel
-    this._onRelativeFaderMove = this._onRelativeFaderMove.bind(this);
-    this._onRelativeFaderUp = this._onRelativeFaderUp.bind(this);
-  }
-  static get properties() {
-    return {
-      hass: {},
-      config: {},
-      active: {}
-    };
-  }
-  static get styles() {
-    return mixerCardStyles;
-  }
-  render() {
-    const cfg = getConfigDefaults(this.config);
-    const faderTemplates = [];
-    this.faderColors = {};
-    if (!this.config || !this.config.faders || !Array.isArray(this.config.faders)) {
-      throw new Error('Invalid configuration: "faders" must be an array.');
+    /* X32-style layout (physical theme, vertical orientation only — see
+       isX32Style in mixer-card.js). Value readout above the fader instead
+       of below, plus a printed dB scale to its left. */
+    .fader-value-top {
+        margin-top: 0;
+        margin-bottom: 8px;
     }
-    for (let faderIndex = 0; faderIndex < this.config.faders.length; faderIndex++) {
-      const faderRow = this.config.faders[faderIndex];
-      const stateObj = this.hass.states[faderRow.entity_id];
-      if (!stateObj) {
-        console.warn(`Entity ${faderRow.entity_id} not found in Home Assistant.`);
-        continue;
-      }
-      faderTemplates.push(this.renderFader(faderRow, stateObj, cfg));
+    .range-holder-wrap {
+        display: flex;
+        align-items: stretch;
+        /* No gap: the scale's own tick lines (below) bridge the space to
+           the slider, so it reads as connected rather than floating. */
+        gap: 0;
     }
-    const headerSection = generateHeader(cfg);
-    const card = x`
-      ${headerSection}
+    /* The scale sits beside the slider, so the fader column needs to be
+       wider than just the slider's own thickness to fit both — but only
+       when the scale is actually rendered (showDbScale: false drops the
+       .has-db-scale class along with the scale markup itself, see
+       renderFader in mixer-card.js). */
+    .fader-orientation-vertical .fader.has-db-scale {
+        width: calc(var(--fader-width) + 26px);
+    }
+    /* .fader-value-top/.fader-name center themselves across the *whole*
+       fader box by default, which now includes the scale's 22px + 4px gap
+       to the left — so their centered text skews visibly left of the
+       slider itself. Push the centering context right by exactly that
+       width so it lines up with the slider, not the scale+slider box. */
+    .fader-orientation-vertical .fader.has-db-scale .fader-value-top,
+    .fader-orientation-vertical .fader.has-db-scale .fader-name {
+        margin-left: 26px;
+    }
+    .fader-db-scale {
+        position: relative;
+        /* Was 22px + a 4px gap to the slider; the gap moved to 0 above, so
+           this absorbs it — same total footprint, just tighter to the
+           fader (see .fader's own +26px width allowance below). */
+        width: 26px;
+        flex: 0 0 auto;
+        font-size: 9px;
+        line-height: 1;
+        color: var(--secondary-text-color, #888);
+    }
+    .fader-db-scale .db-tick {
+        position: absolute;
+        right: 0;
+        transform: translateY(-50%);
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+    .fader-db-scale .db-tick-line {
+        flex: 0 0 auto;
+        height: 1px;
+        background: currentColor;
+        width: 3px;
+    }
+    .fader-db-scale .db-tick.major .db-tick-line {
+        width: 6px;
+    }
+`;customElements.define("custom-mixer-card",class extends ie{constructor(){super(),this._relativeFaderActive=!1,this._relativeFaderStates={},this._relativeFaderSensitivity=.2,this._onRelativeFaderMove=this._onRelativeFaderMove.bind(this),this._onRelativeFaderUp=this._onRelativeFaderUp.bind(this)}static get properties(){return{hass:{},config:{},active:{}}}static get styles(){return ye}render(){const e=be(this.config),t=[];if(this.faderColors={},!this.config||!this.config.faders||!Array.isArray(this.config.faders))throw new Error('Invalid configuration: "faders" must be an array.');for(let i=0;i<this.config.faders.length;i++){const r=this.config.faders[i],a=this.hass.states[r.entity_id];a?t.push(this.renderFader(r,a,e)):console.warn(`Entity ${r.entity_id} not found in Home Assistant.`)}const i=function(e){const t=e.title?U`<h1 class='card-header'><div class='name'>${e.title}</div></div>`:"",i=e.description?U`<p class='mixer-description'>${e.description}</p>`:"";return U`${t}${i}`}(e),r=U`
+      ${i}
       <div>
-        <div class='mixer-card fader-orientation-${cfg.orientation}'>
-          <div class='fader-holder fader-theme-${cfg.faderTheme}'>          
-            ${faderTemplates}
+        <div class='mixer-card fader-orientation-${e.orientation}'>
+          <div class='fader-holder fader-theme-${e.faderTheme}'>          
+            ${t}
           </div>
         </div>
       </div>
-    `;
-    if (!cfg.haCard) {
-      return card;
-    }
-    return x`<ha-card class="mixer-card-ha-card">${card}</ha-card>`;
-  }
-  renderFader(faderRow, stateObj, cfg) {
-    const unavailable = stateObj.state === 'unavailable';
-    const domain = L$1(stateObj);
-    const maxValue = typeof faderRow.max === 'number' ? faderRow.max : stateObj.attributes.max || 1;
-    const minValue = typeof faderRow.min === 'number' ? faderRow.min : stateObj.attributes.min || 0;
-    if (!['number', 'media_player', 'input_number'].includes(domain)) {
-      return null;
-    }
-    const faderName = faderRow.name || this._entity_property(faderRow.entity_id, '-name');
-    const invertActive = faderRow.invert_active || false;
-    let activeState = faderRow.active_entity_id ? this._entity_property(faderRow.active_entity_id, 'state') : 'on';
-    if (domain === 'media_player') {
-      activeState = this._entity_property(faderRow.entity_id, '-muted') ? 'off' : 'on';
-    }
-    if (invertActive) {
-      activeState = activeState === 'on' ? 'off' : 'on';
-    }
-    const icon = getFaderIcon(faderRow, stateObj, activeState);
-    const {
-      displayValue,
-      inputValue
-    } = getFaderValue(faderRow, stateObj, this.hass);
-    const activeEntity = faderRow.active_entity_id || (domain === 'media_player' ? faderRow.entity_id : '');
-    const faderColors = getFaderColor(faderRow, cfg);
-    const faderTrackColor = faderColors.track;
-    const faderActiveColor = faderColors.active;
-    const faderInactiveColor = faderColors.inactive;
-    const faderThumbColor = faderColors.thumb;
-    this.faderColors[`fader_range_${faderRow.entity_id}`] = {
-      track_color: faderTrackColor,
-      active_color: faderActiveColor,
-      inactive_color: faderInactiveColor,
-      thumb_color: faderThumbColor
-    };
-    const showActiveButton = typeof faderRow.showActiveButton === 'boolean' ? faderRow.showActiveButton : cfg.showActiveButton;
-    const activeButton = showActiveButton ? this._renderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon) : x`&nbsp;`;
-    const inputClasses = `${activeState === 'off' ? 'fader-inactive' : 'fader-active'}${unavailable ? ' fader-unavailable' : ''}`;
-    const inputId = `fader_range_${faderRow.entity_id}`;
-    const inputStyle = getFaderStyle(faderColors, cfg, activeState);
-    let rangeInput;
-    if (this.config && this.config.relativeFader) {
-      let rangeInputStyle;
-      if (cfg.faderTheme === 'physical') {
-        rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:5px;`;
-      } else {
-        rangeInputStyle = `${inputStyle.replace(/;+\s*$/, '')}; width:var(--fader-height); height:var(--fader-width);`;
-      }
-      rangeInput = x`
+    `;return e.haCard?U`<ha-card class="mixer-card-ha-card">${r}</ha-card>`:r}renderFader(e,t,i){const r="unavailable"===t.state,a=ve(t),n="number"==typeof e.max?e.max:t.attributes.max||1,o="number"==typeof e.min?e.min:t.attributes.min||0;if(!["number","media_player","input_number"].includes(a))return null;const s=e.name||this._entity_property(e.entity_id,"-name"),l=e.invert_active||!1;let d=e.active_entity_id?this._entity_property(e.active_entity_id,"state"):"on";"media_player"===a&&(d=this._entity_property(e.entity_id,"-muted")?"off":"on"),l&&(d="on"===d?"off":"on");const h=function(e,t,i){return"on"===i?"mdi:volume-high":"mdi:volume-mute"}(0,0,d),{displayValue:c,inputValue:u}=we(e,t,this.hass),f=e.active_entity_id||("media_player"===a?e.entity_id:""),p=function(e,t){return{track:e.track_color||t.faderTrackColor,active:e.active_color||t.faderActiveColor,inactive:e.inactive_color||t.faderInactiveColor,thumb:e.thumb_color||t.faderThumbColor}}(e,i),v=p.track,m=p.active,g=p.inactive,b=p.thumb;this.faderColors["fader_range_"+e.entity_id]={track_color:v,active_color:m,inactive_color:g,thumb_color:b};const _=("boolean"==typeof e.showActiveButton?e.showActiveButton:i.showActiveButton)?this._renderActiveButton(f,d,r,m,g,h):U`&nbsp;`,w=`${"off"===d?"fader-inactive":"fader-active"}${r?" fader-unavailable":""}`,y="fader_range_"+e.entity_id,$=function(e,t,i){let r=`--fader-border-radius: ${t.borderRadius}; `;return t.faderWidth&&(r+=`--fader-width: ${t.faderWidth}; `),t.faderHeight&&(r+=`--fader-height: ${t.faderHeight}; `),r+=`--fader-color: ${"on"===i?e.active:e.inactive}; `,r+=`--fader-thumb-color: ${e.thumb}; --fader-track-color: ${e.track}; --fader-track-inactive-color: ${e.inactive};`,t.faderKnobImage&&(r+=` --fader-knob-image: url("${t.faderKnobImage}");`),r}(p,i,d);let x;if(this.config&&this.config.relativeFader){let e;e="physical"===i.faderTheme?$.replace(/;+\s*$/,"")+"; width:var(--fader-height); height:5px;":$.replace(/;+\s*$/,"")+"; width:var(--fader-height); height:var(--fader-width);",x=U`
         <input type='range'
-          class='${inputClasses}'
-          id='${inputId}'
-          style='${rangeInputStyle}'
-          .value='${inputValue}'
-          @mousedown=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}
-          @touchstart=${e => this._onRelativeFaderDown(e, stateObj, minValue, maxValue)}>
-      `;
-    } else if (cfg.updateWhileMoving) {
-      rangeInput = x`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' .value='${inputValue}' @input=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
-    } else {
-      rangeInput = x`<input type='range' class='${inputClasses}' id='${inputId}' style='${inputStyle}' .value='${inputValue}' @change=${e => this._setFaderLevel(stateObj, e.target.value)}>`;
-    }
-    return x`
-      <div class='fader' id='fader_${faderRow.entity_id}'>
-        <div class='range-holder' style='--fader-height: ${cfg.faderHeight};--fader-width: ${cfg.faderWidth};'>
-          ${rangeInput}
-        </div>
+          class='${w}'
+          id='${y}'
+          style='${e}'
+          .value='${u}'
+          @mousedown=${e=>this._onRelativeFaderDown(e,t,o,n)}
+          @touchstart=${e=>this._onRelativeFaderDown(e,t,o,n)}>
+      `}else x=i.updateWhileMoving?U`<input type='range' class='${w}' id='${y}' style='${$}' .value='${u}' @input=${e=>this._setFaderLevel(t,e.target.value)}>`:U`<input type='range' class='${w}' id='${y}' style='${$}' .value='${u}' @change=${e=>this._setFaderLevel(t,e.target.value)}>`;const A=`${i.faderHeight?`--fader-height: ${i.faderHeight};`:""}${i.faderWidth?`--fader-width: ${i.faderWidth};`:""}`,k="on"===d||i.alwaysShowFaderValue?c:U`<br>`,S="physical"===i.faderTheme&&"horizontal"!==i.orientation,E="boolean"==typeof e.showDbScale?e.showDbScale:i.showDbScale,C=S&&E,F=C?U`
+          <div class='range-holder-wrap'>
+            ${U`
+    <div class="fader-db-scale">
+      ${_e.map(e=>{const t=100*(1-e.f)+"%";return U`
+          <span class="db-tick ${e.major?"major":"minor"}" style="top: ${t}">
+            <span class="db-tick-label">${e.label}</span>
+            <span class="db-tick-line"></span>
+          </span>
+        `})}
+    </div>
+  `}
+            <div class='range-holder' style='${A}'>
+              ${x}
+            </div>
+          </div>
+        `:U`
+          <div class='range-holder' style='${A}'>
+            ${x}
+          </div>
+        `;return U`
+      <div class='fader ${C?"has-db-scale":""}' id='fader_${e.entity_id}'>
+        ${S?U`<div class='fader-value fader-value-top'>${k}</div>`:""}
+        ${F}
         <div class='fader-data'>
-          <div class='fader-name'>${faderName}</div>
-          <div class='fader-value'>${activeState === 'on' || cfg.alwaysShowFaderValue ? displayValue : x`<br>`}</div>
-          <div class='active-button-holder ${unavailable ? 'button-disabled' : ''}'>${activeButton}</div>
+          <div class='fader-name'>${s}</div>
+          ${S?"":U`<div class='fader-value'>${k}</div>`}
+          <div class='active-button-holder ${r?"button-disabled":""}'>${_}</div>
         </div>
       </div>
-    `;
-  }
-  get relativeFaderPointerEvents() {
-    return this._relativeFaderActive ? 'auto' : 'none';
-  }
-  _onRelativeFaderDown(e, stateObj, min, max) {
-    e.preventDefault();
-    // Support both mouse and touch
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    this._relativeFaderActive = true;
-    this.requestUpdate();
-    this._relativeFaderStartY = clientY;
-    this._relativeFaderStateObj = stateObj;
-    this._relativeFaderMin = min;
-    this._relativeFaderMax = max;
-    // Get input element
-    this._relativeFaderInput = e.target;
-    this._relativeFaderStartValue = Number(e.target.value);
-    window.addEventListener('mousemove', this._onRelativeFaderMove);
-    window.addEventListener('touchmove', this._onRelativeFaderMove);
-    window.addEventListener('mouseup', this._onRelativeFaderUp);
-    window.addEventListener('touchend', this._onRelativeFaderUp);
-  }
-  _onRelativeFaderMove(e) {
-    if (!this._relativeFaderActive) return;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    const deltaY = this._relativeFaderStartY - clientY; // up is increase
-    let newValue = this._relativeFaderStartValue + deltaY * this._relativeFaderSensitivity;
-    newValue = Math.max(0, Math.min(100, newValue));
-    this._relativeFaderInput.value = newValue;
-    this._setFaderLevel(this._relativeFaderStateObj, newValue);
-  }
-  _onRelativeFaderUp(e) {
-    if (!this._relativeFaderActive) return;
-    this._relativeFaderActive = false;
-    this._relativeFaderStates = {}; // Stores state for each active relative fader, keyed by entity_id
-    this.requestUpdate();
-    window.removeEventListener('mousemove', this._onRelativeFaderMove);
-    window.removeEventListener('touchmove', this._onRelativeFaderMove);
-    window.removeEventListener('mouseup', this._onRelativeFaderUp);
-    window.removeEventListener('touchend', this._onRelativeFaderUp);
-    this._relativeFaderStateObj = null;
-    this._relativeFaderInput = null;
-  }
-  _renderActiveButton(activeEntity, activeState, unavailable, faderActiveColor, faderInactiveColor, icon) {
-    return activeEntity ? x`
+    `}get relativeFaderPointerEvents(){return this._relativeFaderActive?"auto":"none"}_onRelativeFaderDown(e,t,i,r){e.preventDefault();const a=e.touches?e.touches[0].clientY:e.clientY;this._relativeFaderActive=!0,this.requestUpdate(),this._relativeFaderStartY=a,this._relativeFaderStateObj=t,this._relativeFaderMin=i,this._relativeFaderMax=r,this._relativeFaderInput=e.target,this._relativeFaderStartValue=Number(e.target.value),window.addEventListener("mousemove",this._onRelativeFaderMove),window.addEventListener("touchmove",this._onRelativeFaderMove),window.addEventListener("mouseup",this._onRelativeFaderUp),window.addEventListener("touchend",this._onRelativeFaderUp)}_onRelativeFaderMove(e){if(!this._relativeFaderActive)return;const t=e.touches?e.touches[0].clientY:e.clientY,i=this._relativeFaderStartY-t;let r=this._relativeFaderStartValue+i*this._relativeFaderSensitivity;r=Math.max(0,Math.min(100,r)),this._relativeFaderInput.value=r,this._setFaderLevel(this._relativeFaderStateObj,r)}_onRelativeFaderUp(e){this._relativeFaderActive&&(this._relativeFaderActive=!1,this._relativeFaderStates={},this.requestUpdate(),window.removeEventListener("mousemove",this._onRelativeFaderMove),window.removeEventListener("touchmove",this._onRelativeFaderMove),window.removeEventListener("mouseup",this._onRelativeFaderUp),window.removeEventListener("touchend",this._onRelativeFaderUp),this._relativeFaderStateObj=null,this._relativeFaderInput=null)}_renderActiveButton(e,t,i,r,a,n){return e?U`
           <div 
-              .key="${activeEntity}_${activeState}"
+              .key="${e}_${t}"
               class="active-button" 
-              ?disabled="${unavailable}"
-              @click="${e => this._toggleActive(e)}"
-              data-entity="${activeEntity}"
-              data-current-state="${activeState}">
-            <span class="color" style="color:${activeState === 'on' ? faderActiveColor : faderInactiveColor};">
-              <ha-icon .icon="${icon}"></ha-icon>
+              ?disabled="${i}"
+              @click="${e=>this._toggleActive(e)}"
+              data-entity="${e}"
+              data-current-state="${t}">
+            <span class="color" style="color:${"on"===t?r:a};">
+              <ha-icon .icon="${n}"></ha-icon>
             </span>
           </div>
-        ` : x`&nbsp;`;
-  }
-  _entity_property(entity, property) {
-    const state = this.hass.states[entity];
-    if (!state) return '';
-    switch (property) {
-      case '-name':
-        return state.attributes.friendly_name;
-      case '-volume':
-        return state.attributes.volume_level;
-      case '-muted':
-        return state.attributes.is_volume_muted;
-      default:
-        return state[property];
-    }
-  }
-  _setFaderLevel(state, value) {
-    const domain = L$1(state);
-    const faderRow = this.config && this.config.faders ? this.config.faders.find(f => f.entity_id === state.entity_id) : undefined;
-    const maxValue = faderRow && typeof faderRow.max === 'number' ? faderRow.max : state.attributes.max || 1;
-    const minValue = faderRow && typeof faderRow.min === 'number' ? faderRow.min : state.attributes.min || 0;
-    if (domain === 'media_player') {
-      this.hass.callService('media_player', 'volume_set', {
-        entity_id: state.entity_id,
-        volume_level: value / 100 * (maxValue - minValue) + minValue
-      });
-    } else {
-      // Support per-fader max value from config if present
-      this.hass.callService(domain, 'set_value', {
-        entity_id: state.entity_id,
-        value: value / 100 * (maxValue - minValue) + minValue
-      });
-    }
-  }
-  _previewLevel(entityId, value) {
-    const el = this.shadowRoot.getElementById(entityId);
-    const colors = this.faderColors[entityId];
-    if (el && colors) {
-      if (!el.className.includes('fader-inactive')) {
-        el.style.background = `linear-gradient(to right, ${colors.active_color} ${value}%, ${colors.track_color} ${value}%)`;
-      } else {
-        el.style.background = '';
-      }
-    }
-  }
-  _toggleActive(e) {
-    // Prefer currentTarget (the button) but fall back to finding the button from the click target
-    const el = e && e.currentTarget ? e.currentTarget : e && e.target && e.target.closest ? e.target.closest('.active-button') : e && e.target;
-    const dataset = el ? el.dataset : {};
-    const {
-      entity
-    } = dataset || {};
-    if (!entity) return;
-    const domain = E$1(entity);
-    const serviceData = {
-      entity_id: entity
-    };
-    let service = '';
-    if (domain === 'media_player') {
-      // Use actual entity muted state, not the displayed (possibly inverted) state
-      const isMuted = !!this._entity_property(entity, '-muted');
-      serviceData.is_volume_muted = !isMuted;
-      service = 'volume_mute';
-    } else {
-      service = 'toggle';
-    }
-    this.hass.callService(domain, service, serviceData);
-    this.update_track_color();
-  }
-  async update_track_color() {
-    const children = this.shadowRoot.querySelectorAll('.fader input[type="range"]');
-    await Promise.all(Array.from(children).map(c => c.updateComplete));
-    Array.from(children).map(c => this._previewLevel(c.id, c.value));
-  }
-  async firstUpdated() {
-    await this.update_track_color();
-  }
-  async updated() {
-    await this.update_track_color();
-  }
-  setConfig(config) {
-    if (!config || !config.faders || !Array.isArray(config.faders)) {
-      throw new Error('Invalid configuration: "faders" must be an array.');
-    }
-    this.config = config;
-  }
-  getCardSize() {
-    return this.config.faders.length + 1;
-  }
-  getGridOptions() {
-    const faderCount = this.config.faders && this.config.faders.length ? this.config.faders.length : 1;
-    const isHorizontal = this.config.orientation === 'horizontal';
-    const rawSize = isHorizontal ? this.config.faderHeight || '150' : this.config.faderWidth || '150';
-    let faderSize = parseInt(rawSize.toString().replace('px', ''));
-    if (isHorizontal) {
-      faderSize = faderSize + 80; // Add extra width for horizontal layout to account for name/value display
-    }
-
-    const totalFaderWidth = faderCount * (faderSize + 20); // Add 20px per fader for spacing
-
-    const columnsNeeded = Math.max(2, Math.min(48, Math.ceil(totalFaderWidth / 30)));
-    return {
-      columns: columnsNeeded,
-      min_columns: 1,
-      max_columns: 48
-    };
-  }
-}
-customElements.define('custom-mixer-card', MixerCard);
+        `:U`&nbsp;`}_entity_property(e,t){const i=this.hass.states[e];if(!i)return"";switch(t){case"-name":return i.attributes.friendly_name;case"-volume":return i.attributes.volume_level;case"-muted":return i.attributes.is_volume_muted;default:return i[t]}}_setFaderLevel(e,t){const i=ve(e),r=this.config&&this.config.faders?this.config.faders.find(t=>t.entity_id===e.entity_id):void 0,a=r&&"number"==typeof r.max?r.max:e.attributes.max||1,n=r&&"number"==typeof r.min?r.min:e.attributes.min||0;"media_player"===i?this.hass.callService("media_player","volume_set",{entity_id:e.entity_id,volume_level:t/100*(a-n)+n}):this.hass.callService(i,"set_value",{entity_id:e.entity_id,value:t/100*(a-n)+n})}_previewLevel(e,t){const i=this.shadowRoot.getElementById(e),r=this.faderColors[e];i&&r&&(i.className.includes("fader-inactive")?i.style.background="":i.style.background=`linear-gradient(to right, ${r.active_color} ${t}%, ${r.track_color} ${t}%)`)}_toggleActive(e){const t=e&&e.currentTarget?e.currentTarget:e&&e.target&&e.target.closest?e.target.closest(".active-button"):e&&e.target,i=t?t.dataset:{},{entity:r}=i||{};if(!r)return;const a=pe(r),n={entity_id:r};let o="";if("media_player"===a){const e=!!this._entity_property(r,"-muted");n.is_volume_muted=!e,o="volume_mute"}else o="toggle";this.hass.callService(a,o,n),this.update_track_color()}async update_track_color(){const e=this.shadowRoot.querySelectorAll('.fader input[type="range"]');await Promise.all(Array.from(e).map(e=>e.updateComplete)),Array.from(e).map(e=>this._previewLevel(e.id,e.value))}async firstUpdated(){await this.update_track_color(),this._setupFaderWidthObserver()}async updated(){await this.update_track_color(),this._recomputeFaderWidth()}disconnectedCallback(){super.disconnectedCallback(),this._faderWidthObserver&&(this._faderWidthObserver.disconnect(),this._faderWidthObserver=null)}_setupFaderWidthObserver(){const e=this.shadowRoot.querySelector(".fader-holder");e&&(this._faderWidthObserver=new ResizeObserver(()=>this._recomputeFaderWidth()),this._faderWidthObserver.observe(e),this._recomputeFaderWidth())}_recomputeFaderWidth(){const e=be(this.config);if(e.faderWidth||"horizontal"===e.orientation)return;const t=this.shadowRoot.querySelector(".fader-holder");if(!t)return;const i=this.config.faders&&this.config.faders.length?this.config.faders.length:1,r=20+("physical"===e.faderTheme&&e.showDbScale?26:0),a=(t.clientWidth-8*(i-1))/i,n=Math.floor(a-r),o=Math.max(44,Math.min(150,n));this.style.setProperty("--fader-width",o+"px")}setConfig(e){if(!e||!e.faders||!Array.isArray(e.faders))throw new Error('Invalid configuration: "faders" must be an array.');this.config=e}getCardSize(){const e=be(this.config),t=this.config.faders&&this.config.faders.length?this.config.faders.length:1;if("horizontal"===e.orientation)return t+1;const i=parseInt((e.faderHeight||"").toString().replace("px",""),10);return(Number.isFinite(i)&&i>0?Math.ceil(i/50):5)+1}getGridOptions(){const e=be(this.config);if(!e.faderWidth&&!e.faderHeight)return{columns:"full",rows:"auto",min_columns:6};const t=this.config.faders&&this.config.faders.length?this.config.faders.length:1,i="horizontal"===e.orientation,r=i?e.faderHeight||"150":e.faderWidth||"150";let a=parseInt(r.toString().replace("px",""),10);Number.isFinite(a)||(a=150),i&&(a+=80);const n=t*(a+20);return{columns:Math.max(2,Math.min(48,Math.ceil(n/30))),min_columns:1,max_columns:48}}});
